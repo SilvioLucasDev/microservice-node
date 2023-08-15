@@ -16,5 +16,5 @@
       "@/tests/*": ["../tests/*"]
     },
   },
-  "include": ["src"]
+  "include": ["src", "tests"]
 }
