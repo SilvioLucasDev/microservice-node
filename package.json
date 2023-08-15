@@ -1,8 +1,24 @@
 {
   "name": "microservice-node",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "Microservice in node using messaging services with clean architecture and TDD",
+  "keywords": [
+    "clean architecture",
+    "clean code",
+    "tdd",
+    "ddd",
+    "solid",
+    "design patterns",
+    "node",
+    "typescript",
+    "jest",
+    "rabbitmq",
+    "kafka"
+  ],
+  "author": {
+    "name": "Silvio Lucas - SLDS",
+    "email": "silviolucas_santos@hotmail.com"
+  },
   "scripts": {
     "start": "node dist/main",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
@@ -15,9 +31,10 @@
     "test:coverage": "npm test -- --coverage",
     "test:integration": "npm test -- --watch -c jest.integration.config.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "dependencies": {
+    "module-alias": "^2.2.3",
+    "rimraf": "^5.0.1"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.3",
     "@types/module-alias": "^2.0.2",
@@ -28,9 +45,5 @@
     "lint-staged": "^14.0.0",
     "ts-jest": "^29.1.1",
     "typescript": "^5.1.6"
-  },
-  "dependencies": {
-    "module-alias": "^2.2.3",
-    "rimraf": "^5.0.1"
   }
 }
