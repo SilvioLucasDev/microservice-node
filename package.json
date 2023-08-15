@@ -8,11 +8,12 @@
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "lint": "eslint . ",
     "lint:fix": "npm run lint -- --fix",
+    "prepare": "husky install",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
     "test:coverage": "npm test -- --coverage",
-    "prepare": "husky install"
+    "test:integration": "npm test -- --watch -c jest.integration.config.js"
   },
   "keywords": [],
   "author": "",
