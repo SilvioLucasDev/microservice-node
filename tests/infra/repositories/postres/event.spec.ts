@@ -42,4 +42,12 @@ describe('PgEventRepository', () => {
       price: '300'
     })
   })
+
+  it('should return undefined if event not exists', async () => {
+    prismaMock.event.findFirst.mockResolvedValueOnce(null)
+
+    const event = await sut.get({ id: 'any_id' })
+
+    expect(event).toBeUndefined()
+  })
 })
