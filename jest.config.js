@@ -2,8 +2,10 @@ module.exports = {
   clearMocks: true,
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
+    '!<rootDir>/src/**/index.ts',
     '!<rootDir>/src/main/**',
-    '!<rootDir>/src/**/index.ts'
+    '!<rootDir>/src/domain/event/*.ts',
+    '!<rootDir>/src/infra/repositories/postgres/helpers/connection.ts'
   ],
   coverageDirectory: "coverage",
   coverageProvider: 'babel',
