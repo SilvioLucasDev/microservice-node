@@ -32,6 +32,9 @@
     "test:coverage": "npm test -- --coverage",
     "test:integration": "npm test -- --watch -c jest.integration.config.js"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "dependencies": {
     "@prisma/client": "^5.1.1",
     "module-alias": "^2.2.3",
