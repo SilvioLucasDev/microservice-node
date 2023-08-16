@@ -1,5 +1,5 @@
 import { PurchaseTicket } from '@/applications/use-cases'
-import { type TicketRepository, type EventRepository } from '@/domain/contracts/repos'
+import { type SaveTicket, type GetEvent } from '@/domain/contracts/repos'
 import { Ticket } from '@/domain/entities'
 import { EventNotFound } from '@/domain/errors'
 
@@ -7,8 +7,8 @@ import { type MockProxy, mock } from 'jest-mock-extended'
 
 describe('PurchaseTicket', () => {
   let sut: PurchaseTicket
-  let eventRepository: MockProxy<EventRepository>
-  let ticketRepository: MockProxy<TicketRepository>
+  let eventRepository: MockProxy<GetEvent>
+  let ticketRepository: MockProxy<SaveTicket>
   let ticketCreateMock: jest.SpyInstance
 
   beforeAll(() => {

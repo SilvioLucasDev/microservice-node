@@ -1,4 +1,4 @@
-export interface EventRepository {
+export interface GetEvent {
   get: (input: Input) => Promise<Output>
 }
 type Input = {

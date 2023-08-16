@@ -1,6 +1,6 @@
 import { type Ticket } from '@/domain/entities'
 
-export interface TicketRepository {
+export interface SaveTicket {
   save: (ticket: Input) => Promise<void>
 }
 
