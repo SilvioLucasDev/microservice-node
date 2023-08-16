@@ -1,5 +1,4 @@
 module.exports = {
-  clearMocks: true,
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/main/**',
@@ -19,4 +18,5 @@ module.exports = {
   transform: {
     '\\.ts$': 'ts-jest'
   },
+  setupFilesAfterEnv: ['<rootDir>/tests/infra/repositories/postres/helpers/connection.ts']
 };
