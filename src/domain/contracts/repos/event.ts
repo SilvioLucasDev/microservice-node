@@ -8,4 +8,4 @@ type Input = {
 type Output = {
   id: string
   price: string
-}
+} | undefined
