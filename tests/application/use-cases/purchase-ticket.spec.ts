@@ -1,29 +1,7 @@
+import { PurchaseTicket } from '@/applications/use-cases'
+import { type EventRepository } from '@/domain/contracts/repos'
+
 import { type MockProxy, mock } from 'jest-mock-extended'
-
-class PurchaseTicket {
-  constructor (
-    private readonly eventRepository: EventRepository
-  ) {}
-
-  async execute ({ eventId, email, creditCardToken }: Input): Promise<void> {
-    await this.eventRepository.get(eventId)
-  }
-}
-
-type Input = {
-  eventId: string
-  email: string
-  creditCardToken: string
-}
-
-interface EventRepository {
-  get: (id: string) => Promise<Output>
-}
-
-type Output = {
-  id: string
-  price: string
-}
 
 describe('PurchaseTicket', () => {
   let sut: PurchaseTicket
@@ -40,6 +18,7 @@ describe('PurchaseTicket', () => {
   it('should call EventRepository with correct value', async () => {
     await sut.execute({ eventId: 'any_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
 
-    expect(eventRepository.get).toHaveBeenCalledWith('any_event_id')
+    expect(eventRepository.get).toHaveBeenCalledWith({ id: 'any_event_id' })
+    expect(eventRepository.get).toHaveBeenCalledTimes(1)
   })
 })
