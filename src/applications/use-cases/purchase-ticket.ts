@@ -8,8 +8,8 @@ export class PurchaseTicket {
   constructor (
     private readonly eventRepository: GetEvent,
     private readonly ticketRepository: SaveTicket,
-    private readonly queue: Publish,
-    private readonly crypto: UUIDGenerator
+    private readonly crypto: UUIDGenerator,
+    private readonly queue: Publish
   ) {}
 
   async execute ({ eventId, email, creditCardToken }: Input): Promise<any> {

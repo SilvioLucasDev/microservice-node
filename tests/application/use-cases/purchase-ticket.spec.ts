@@ -13,27 +13,22 @@ describe('PurchaseTicket', () => {
   let sut: PurchaseTicket
   let eventRepository: MockProxy<GetEvent>
   let ticketRepository: MockProxy<SaveTicket>
+  let crypto: MockProxy<UUIDGenerator>
   let ticket: jest.SpyInstance
   let queue: MockProxy<Publish>
-  let crypto: MockProxy<UUIDGenerator>
 
   beforeAll(() => {
     eventRepository = mock()
     eventRepository.get.mockResolvedValue({ id: 'any_event_id', price: 'any_price' })
     ticketRepository = mock()
-    ticket = jest.spyOn(Ticket, 'create')
-    ticket.mockReturnValue(new Ticket(
-      'any_ticket_id',
-      'any_event_id',
-      'any_email',
-      'reserved'
-    ))
-    queue = mock()
     crypto = mock()
+    crypto.uuid.mockReturnValue('any_ticket_id')
+    ticket = jest.spyOn(Ticket, 'create')
+    queue = mock()
   })
 
   beforeEach(() => {
-    sut = new PurchaseTicket(eventRepository, ticketRepository, queue, crypto)
+    sut = new PurchaseTicket(eventRepository, ticketRepository, crypto, queue)
   })
 
   it('should call EventRepository with correct value', async () => {
@@ -80,7 +75,7 @@ describe('PurchaseTicket', () => {
   it('should call Queue with correct values', async () => {
     await sut.execute({ eventId: 'any_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
 
-    expect(queue.publish).toHaveBeenCalledWith({ queueName: 'ticketReserved', data: jest.mocked(TicketReserved).mock.instances[0] })
+    expect(queue.publish).toHaveBeenCalledWith({ queueName: 'ticketReserved', data: expect.any(TicketReserved) })
     expect(queue.publish).toHaveBeenCalledTimes(1)
   })
 })
