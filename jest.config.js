@@ -19,6 +19,5 @@ module.exports = {
   transform: {
     '\\.ts$': 'ts-jest'
   },
-
-  setupFilesAfterEnv: ['<rootDir>/tests/infra/repositories/postres/helpers/connection.ts']
+  setupFilesAfterEnv: ['<rootDir>/tests/infra/repositories/postres/mocks/connection.ts']
 };
