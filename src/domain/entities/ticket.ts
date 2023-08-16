@@ -1,3 +1,5 @@
+import { type UUIDGenerator } from '../contracts/adapters'
+
 export class Ticket {
   constructor (
     readonly id: string,
@@ -6,8 +8,8 @@ export class Ticket {
     readonly status: string
   ) {}
 
-  static create ({ eventId, email }: Input): Ticket {
-    const id = 'hash'
+  static create ({ eventId, email }: Input, crypto: UUIDGenerator): Ticket {
+    const id = crypto.uuid()
     const initialStatus = 'reserved'
     return new Ticket(id, eventId, email, initialStatus)
   }

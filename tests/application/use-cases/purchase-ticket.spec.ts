@@ -1,5 +1,5 @@
 import { PurchaseTicket } from '@/applications/use-cases'
-import { type Publish } from '@/domain/contracts/adapters'
+import { type UUIDGenerator, type Publish } from '@/domain/contracts/adapters'
 import { type SaveTicket, type GetEvent } from '@/domain/contracts/repos'
 import { Ticket } from '@/domain/entities'
 import { EventNotFound } from '@/domain/errors'
@@ -15,6 +15,7 @@ describe('PurchaseTicket', () => {
   let ticketRepository: MockProxy<SaveTicket>
   let ticket: jest.SpyInstance
   let queue: MockProxy<Publish>
+  let crypto: MockProxy<UUIDGenerator>
 
   beforeAll(() => {
     eventRepository = mock()
@@ -28,10 +29,11 @@ describe('PurchaseTicket', () => {
       'reserved'
     ))
     queue = mock()
+    crypto = mock()
   })
 
   beforeEach(() => {
-    sut = new PurchaseTicket(eventRepository, ticketRepository, queue)
+    sut = new PurchaseTicket(eventRepository, ticketRepository, queue, crypto)
   })
 
   it('should call EventRepository with correct value', async () => {
@@ -52,7 +54,7 @@ describe('PurchaseTicket', () => {
   it('should call Ticket with correct values', async () => {
     await sut.execute({ eventId: 'any_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
 
-    expect(ticket).toHaveBeenCalledWith({ eventId: 'any_event_id', email: 'any_email' })
+    expect(ticket).toHaveBeenCalledWith({ eventId: 'any_event_id', email: 'any_email' }, crypto)
     expect(ticket).toHaveBeenCalledTimes(1)
   })
 
