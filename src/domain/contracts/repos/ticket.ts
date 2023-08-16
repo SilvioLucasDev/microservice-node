@@ -1,7 +1,9 @@
 import { type Ticket } from '@/domain/entities'
 
 export interface SaveTicket {
-  save: (ticket: Input) => Promise<void>
+  save: (ticket: SaveTicket.Input) => Promise<void>
 }
 
-type Input = Ticket
+export namespace SaveTicket {
+  export type Input = Ticket
+}

@@ -1,8 +1,10 @@
 export interface Publish {
-  publish: (input: Input) => Promise<void>
+  publish: (input: Publish.Input) => Promise<void>
 }
 
-type Input = {
-  queueName: string
-  data: any
+export namespace Publish {
+  export type Input = {
+    queueName: string
+    data: any
+  }
 }
