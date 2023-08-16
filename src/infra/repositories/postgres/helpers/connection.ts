@@ -5,6 +5,10 @@ class PrismaConnection {
 
   private constructor () {
     PrismaConnection.instance = new PrismaClient()
+
+    const prismateste = new PrismaClient()
+
+    await prismateste.$disconnect()
   }
 
   public static getInstance (): PrismaClient {

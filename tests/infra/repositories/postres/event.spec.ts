@@ -2,7 +2,15 @@ import { prismaMock } from '@/tests/infra/repositories/postres/mocks'
 import { PgEventRepository } from '@/infra/repositories/postgres'
 
 describe('PgEventRepository', () => {
-  const sut = new PgEventRepository()
+  let sut: PgEventRepository
+
+  beforeEach(() => {
+    sut = new PgEventRepository()
+  })
+
+  afterAll(async () => {
+    await prismaMock.$disconnect()
+  })
 
   it('should return event if exists', async () => {
     const result = {
