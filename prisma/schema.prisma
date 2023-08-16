@@ -6,3 +6,41 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Event {
+  id          String       @id
+  description String
+  price       Float
+  capacity    Int
+
+  tickets     Ticket[]
+  transactions Transaction[]
+
+  @@map("events")
+}
+
+model Ticket {
+  id          String       @id
+  event_id    String
+  email       String       @unique
+  status      String
+
+  event       Event     @relation(fields: [event_id], references: [id])
+  transactions Transaction?
+
+  @@map("tickets")
+}
+
+model Transaction {
+  id             String       @id
+  ticket_id      String       @unique
+  event_id       String
+  tid            String
+  price          Float
+  status         String
+
+  event          Event     @relation(fields: [event_id], references: [id])
+  ticket         Ticket?    @relation(fields: [ticket_id], references: [id])
+
+  @@map("transactions")
+}
