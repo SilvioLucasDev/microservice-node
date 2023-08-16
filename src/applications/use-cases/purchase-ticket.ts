@@ -1,4 +1,4 @@
-import { type Publish } from '@/domain/contracts/gateways'
+import { type Publish } from '@/domain/contracts/adapters'
 import { type SaveTicket, type GetEvent } from '@/domain/contracts/repos'
 import { Ticket } from '@/domain/entities'
 import { EventNotFound } from '@/domain/errors'
