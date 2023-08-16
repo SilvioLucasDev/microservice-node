@@ -1,4 +1,4 @@
-import { PurchaseTicket } from '@/applications/use-cases'
+import { PurchaseTicket } from '@/application/use-cases'
 import { type UUIDGenerator, type Publish } from '@/domain/contracts/adapters'
 import { type SaveTicket, type GetEvent } from '@/domain/contracts/repos'
 import { Ticket } from '@/domain/entities'
