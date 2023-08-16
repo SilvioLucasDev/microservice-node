@@ -2,20 +2,29 @@ import { PurchaseTicket } from '@/applications/use-cases'
 import { type SaveTicket, type GetEvent } from '@/domain/contracts/repos'
 import { Ticket } from '@/domain/entities'
 import { EventNotFound } from '@/domain/errors'
+import { TicketReserved } from '@/domain/event'
 
 import { type MockProxy, mock } from 'jest-mock-extended'
+
+jest.mock('@/domain/event/ticket-reserved')
 
 describe('PurchaseTicket', () => {
   let sut: PurchaseTicket
   let eventRepository: MockProxy<GetEvent>
   let ticketRepository: MockProxy<SaveTicket>
-  let ticketCreateMock: jest.SpyInstance
+  let ticket: jest.SpyInstance
 
   beforeAll(() => {
     eventRepository = mock()
-    eventRepository.get.mockResolvedValue({ id: 'any_id', price: 'any_price' })
+    eventRepository.get.mockResolvedValue({ id: 'any_event_id', price: 'any_price' })
     ticketRepository = mock()
-    ticketCreateMock = jest.spyOn(Ticket, 'create')
+    ticket = jest.spyOn(Ticket, 'create')
+    ticket.mockReturnValue(new Ticket(
+      'any_ticket_id',
+      'any_event_id',
+      'any_email',
+      'reserved'
+    ))
   })
 
   beforeEach(() => {
@@ -40,8 +49,8 @@ describe('PurchaseTicket', () => {
   it('should call Ticket with correct values', async () => {
     await sut.execute({ eventId: 'any_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
 
-    expect(ticketCreateMock).toHaveBeenCalledWith({ eventId: 'any_event_id', email: 'any_email' })
-    expect(ticketCreateMock).toHaveBeenCalledTimes(1)
+    expect(ticket).toHaveBeenCalledWith({ eventId: 'any_event_id', email: 'any_email' })
+    expect(ticket).toHaveBeenCalledTimes(1)
   })
 
   it('should call TicketRepository with Ticket', async () => {
@@ -49,5 +58,17 @@ describe('PurchaseTicket', () => {
 
     expect(ticketRepository.save).toHaveBeenCalledWith(expect.any(Ticket))
     expect(ticketRepository.save).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call TicketReserved with correct values', async () => {
+    await sut.execute({ eventId: 'any_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
+
+    expect(TicketReserved).toHaveBeenCalledWith(
+      'any_ticket_id',
+      'any_event_id',
+      'any_credit_card_token',
+      'any_price'
+    )
+    expect(TicketReserved).toHaveBeenCalledTimes(1)
   })
 })
