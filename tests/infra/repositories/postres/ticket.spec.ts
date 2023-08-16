@@ -1,15 +1,5 @@
 import { prismaMock } from '@/tests/infra/repositories/postres/mocks'
-
-import { type SaveTicket } from '@/domain/contracts/repos'
-import prisma from '@/infra/repositories/postgres/helpers/connection'
-
-class PgTicketRepository implements SaveTicket {
-  async save (input: SaveTicket.Input): Promise<void> {
-    await prisma.ticket.create({
-      data: { ...input, event_id: input.eventId }
-    })
-  }
-}
+import { PgTicketRepository } from '@/infra/repositories/postgres'
 
 describe('PgTicketRepository', () => {
   let sut: PgTicketRepository
