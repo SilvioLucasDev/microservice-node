@@ -1,4 +1,4 @@
-import { prismaMock } from './mocks'
+import { prismaMock } from '@/tests/infra/repositories/postres/mocks'
 import { PgEventRepository } from '@/infra/repositories/postgres'
 
 describe('PgEventRepository', () => {

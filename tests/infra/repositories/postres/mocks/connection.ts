@@ -1,6 +1,5 @@
 import { type PrismaClient } from '@prisma/client'
 import { mockDeep, mockReset, type DeepMockProxy } from 'jest-mock-extended'
-
 import prisma from '@/infra/repositories/postgres/helpers/connection'
 
 jest.mock('@/infra/repositories/postgres/helpers/connection', () => ({
