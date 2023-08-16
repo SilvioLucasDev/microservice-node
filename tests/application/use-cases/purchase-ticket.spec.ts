@@ -1,4 +1,5 @@
 import { PurchaseTicket } from '@/applications/use-cases'
+import { type Publish } from '@/domain/contracts/gateways'
 import { type SaveTicket, type GetEvent } from '@/domain/contracts/repos'
 import { Ticket } from '@/domain/entities'
 import { EventNotFound } from '@/domain/errors'
@@ -13,6 +14,7 @@ describe('PurchaseTicket', () => {
   let eventRepository: MockProxy<GetEvent>
   let ticketRepository: MockProxy<SaveTicket>
   let ticket: jest.SpyInstance
+  let queue: MockProxy<Publish>
 
   beforeAll(() => {
     eventRepository = mock()
@@ -25,10 +27,11 @@ describe('PurchaseTicket', () => {
       'any_email',
       'reserved'
     ))
+    queue = mock()
   })
 
   beforeEach(() => {
-    sut = new PurchaseTicket(eventRepository, ticketRepository)
+    sut = new PurchaseTicket(eventRepository, ticketRepository, queue)
   })
 
   it('should call EventRepository with correct value', async () => {
@@ -70,5 +73,12 @@ describe('PurchaseTicket', () => {
       'any_price'
     )
     expect(TicketReserved).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call Queue with correct values', async () => {
+    await sut.execute({ eventId: 'any_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
+
+    expect(queue.publish).toHaveBeenCalledWith({ queueName: 'ticketReserved', data: jest.mocked(TicketReserved).mock.instances[0] })
+    expect(queue.publish).toHaveBeenCalledTimes(1)
   })
 })
