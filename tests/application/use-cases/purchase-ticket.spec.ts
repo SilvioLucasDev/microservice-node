@@ -2,7 +2,7 @@ import { PurchaseTicket } from '@/application/use-cases'
 import { type UUIDGenerator, type Publish } from '@/domain/contracts/adapters'
 import { type SaveTicket, type GetEvent } from '@/domain/contracts/repos'
 import { Ticket } from '@/domain/entities'
-import { EventNotFound } from '@/domain/errors'
+import { EventNotFoundError } from '@/domain/errors'
 import { TicketReserved } from '@/domain/event'
 
 import { type MockProxy, mock } from 'jest-mock-extended'
@@ -38,12 +38,12 @@ describe('PurchaseTicket', () => {
     expect(eventRepository.get).toHaveBeenCalledTimes(1)
   })
 
-  it('should throw EventNotFound if EventRepository returns undefined', async () => {
+  it('should throw EventNotFoundError if EventRepository returns undefined', async () => {
     eventRepository.get.mockResolvedValueOnce(undefined)
 
     const promise = sut.execute({ eventId: 'any_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
 
-    await expect(promise).rejects.toThrow(new EventNotFound())
+    await expect(promise).rejects.toThrow(new EventNotFoundError())
   })
 
   it('should call Ticket with correct values', async () => {

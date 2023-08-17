@@ -1,6 +1,6 @@
-export class EventNotFound extends Error {
+export class EventNotFoundError extends Error {
   constructor () {
     super('Event not found')
-    this.name = 'EventNotFound'
+    this.name = 'EventNotFoundError'
   }
 }
