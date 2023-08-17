@@ -8,16 +8,12 @@ export class RabbitMQAdapter implements Publish {
   private channel?: Channel
 
   private async connectQueue (queueName: string): Promise<void> {
-    try {
-      if (!this.connection) this.connection = await amqp.connect('amqp://localhost')
-      this.channel = await this.connection.createChannel()
-      await this.channel.assertQueue(queueName, { durable: true })
-    } catch {
-      throw new QueueConnectionError()
-    }
+    if (!this.connection) this.connection = await amqp.connect('amqp://localhost')
+    this.channel = await this.connection.createChannel()
+    await this.channel.assertQueue(queueName, { durable: true })
   }
 
-  async close (): Promise<void> {
+  private async close (): Promise<void> {
     await this.channel!.close()
     this.channel = undefined
     await this.connection!.close()
@@ -25,8 +21,13 @@ export class RabbitMQAdapter implements Publish {
   }
 
   async publish ({ queueName, data }: Publish.Input): Promise<void> {
-    await this.connectQueue(queueName)
-    this.channel!.sendToQueue(queueName, Buffer.from(JSON.stringify(data)))
-    await this.close()
+    try {
+      await this.connectQueue(queueName)
+      this.channel!.sendToQueue(queueName, Buffer.from(JSON.stringify(data)))
+    } catch (error) {
+      throw new QueueConnectionError()
+    } finally {
+      await this.close()
+    }
   }
 }

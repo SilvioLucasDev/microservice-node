@@ -30,4 +30,14 @@ describe('RabbitMQAdapter', () => {
       expect(JSON.parse(message.content.toString())).toBe(data)
     }
   })
+
+  // it('should rethrow if connect throw', async () => {
+  //   jest.doMock('mock-amqplib', () => ({
+  //     connect: jest.fn().mockResolvedValueOnce(new Error('connection_error'))
+  //   }))
+
+  //   const promise = sut.publish({ queueName, data })
+
+  //   await expect(promise).rejects.toThrow(new QueueConnectionError())
+  // })
 })
