@@ -26,4 +26,10 @@ describe('UUIDHandler', () => {
 
     expect(v4).toHaveBeenCalledTimes(1)
   })
+
+  it('should return correct uuid', () => {
+    const uuid = sut.uuid()
+
+    expect(uuid).toBe('any_uuid')
+  })
 })
