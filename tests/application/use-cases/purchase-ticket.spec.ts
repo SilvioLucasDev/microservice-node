@@ -9,7 +9,7 @@ import { type MockProxy, mock } from 'jest-mock-extended'
 
 jest.mock('@/domain/event/ticket-reserved')
 
-describe('PurchaseTicket', () => {
+describe('PurchaseTicketUseCase', () => {
   let sut: PurchaseTicket
   let eventRepository: MockProxy<GetEvent>
   let ticketRepository: MockProxy<SaveTicket>

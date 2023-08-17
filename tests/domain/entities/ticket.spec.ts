@@ -3,7 +3,7 @@ import { Ticket } from '@/domain/entities'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 
-describe('Ticket', () => {
+describe('TicketEntity', () => {
   let sut: Ticket
   let crypto: MockProxy<UUIDGenerator>
 

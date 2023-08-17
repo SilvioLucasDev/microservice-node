@@ -1,18 +1,18 @@
-import { UUIDHandler } from '@/infra/adapters'
+import { UUIDAdapter } from '@/infra/adapters'
 
 import { v4 } from 'uuid'
 
 jest.mock('uuid')
 
-describe('UUIDHandler', () => {
-  let sut: UUIDHandler
+describe('UUIDAdapter ', () => {
+  let sut: UUIDAdapter
 
   beforeAll(() =>
     jest.mocked(v4).mockReturnValue('any_uuid')
   )
 
   beforeEach(() => {
-    sut = new UUIDHandler()
+    sut = new UUIDAdapter()
   })
 
   it('should call uuid.v4', () => {

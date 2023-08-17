@@ -1,3 +1,3 @@
-export * from './uuid-handler'
+export * from './uuid'
 export * from './rabbitmq'
 export * from './errors'
