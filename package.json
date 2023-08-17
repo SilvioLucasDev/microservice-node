@@ -37,11 +37,13 @@
   },
   "dependencies": {
     "@prisma/client": "^5.1.1",
+    "amqplib": "^0.10.3",
     "module-alias": "^2.2.3",
     "rimraf": "^5.0.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.1",
     "@types/jest": "^29.5.3",
     "@types/module-alias": "^2.0.2",
     "@types/node": "^20.5.0",
