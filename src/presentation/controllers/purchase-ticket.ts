@@ -1,21 +1,19 @@
 import { badRequest, serverError, type HttpResponse, ok } from '@/presentation/helpers'
 import { type PurchaseTicket } from '@/application/use-cases'
 import { EventNotFoundError } from '@/application/errors'
+import { RequiredFieldError } from '../errors'
 
 export class PurchaseTicketController {
   constructor (
     private readonly purchaseTicket: PurchaseTicket
   ) {}
 
-  async handle (httpRequest: httpRequest): Promise<HttpResponse<Model>> {
+  async handle ({ eventId, email, creditCardToken }: httpRequest): Promise<HttpResponse<Model>> {
     try {
-      if (httpRequest.eventId === undefined || httpRequest.eventId === null || httpRequest.eventId === '' ||
-      httpRequest.email === undefined || httpRequest.email === null || httpRequest.email === '' ||
-      httpRequest.creditCardToken === undefined || httpRequest.creditCardToken === null || httpRequest.creditCardToken === ''
-      ) {
-        return badRequest(new Error('The fields in required'))
-      }
-      const result = await this.purchaseTicket.execute({ eventId: httpRequest.eventId, email: httpRequest.email, creditCardToken: httpRequest.creditCardToken })
+      if (eventId === undefined || eventId === null || eventId === '') return badRequest(new RequiredFieldError('eventId'))
+      if (email === undefined || email === null || email === '') return badRequest(new RequiredFieldError('email'))
+      if (creditCardToken === undefined || creditCardToken === null || creditCardToken === '') return badRequest(new RequiredFieldError('creditCardToken'))
+      const result = await this.purchaseTicket.execute({ eventId, email, creditCardToken })
       return ok({ ticketId: result.ticketId })
     } catch (error) {
       if (error instanceof EventNotFoundError) return badRequest(error)

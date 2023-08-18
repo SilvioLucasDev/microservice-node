@@ -1,6 +1,6 @@
 import { PurchaseTicketController } from '@/presentation/controllers'
 import { type PurchaseTicket } from '@/application/use-cases'
-import { ServerError } from '@/presentation/errors'
+import { RequiredFieldError, ServerError } from '@/presentation/errors'
 import { EventNotFoundError } from '@/application/errors'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
@@ -24,12 +24,12 @@ describe('PurchaseTicketController', () => {
     sut = new PurchaseTicketController(purchaseTicket)
   })
 
-  it('should return 400 if params is missing', async () => {
-    const httpResponse = await sut.handle({ eventId: null, email: null, creditCardToken: null })
+  it('should return 400 if eventId is invalid', async () => {
+    const httpResponse = await sut.handle({ eventId: null, email, creditCardToken })
 
     expect(httpResponse).toEqual({
       statusCode: 400,
-      data: new Error('The fields in required')
+      data: new RequiredFieldError('eventId')
     })
   })
 
