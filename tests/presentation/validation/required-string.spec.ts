@@ -1,0 +1,12 @@
+import { RequiredStringValidator } from '@/presentation/validation'
+import { RequiredFieldError } from '@/presentation/errors'
+
+describe('RequiredStringValidator', () => {
+  it('should return RequiredFieldError if value is empty', () => {
+    const sut = new RequiredStringValidator('', 'any_field')
+
+    const error = sut.validate()
+
+    expect(error).toEqual(new RequiredFieldError('any_field'))
+  })
+})
