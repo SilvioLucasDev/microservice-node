@@ -1,9 +1,12 @@
 import { PurchaseTicketController } from '@/presentation/controllers'
 import { type PurchaseTicket } from '@/application/use-cases'
-import { RequiredFieldError, ServerError } from '@/presentation/errors'
+import { ServerError } from '@/presentation/errors'
 import { EventNotFoundError } from '@/application/errors'
+import { RequiredStringValidator, ValidationComposite } from '@/presentation/validation'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
+
+jest.mock('@/presentation/validation/composite')
 
 describe('PurchaseTicketController', () => {
   let sut: PurchaseTicketController
@@ -24,30 +27,23 @@ describe('PurchaseTicketController', () => {
     sut = new PurchaseTicketController(purchaseTicket)
   })
 
-  it('should return 400 if eventId is invalid', async () => {
-    const httpResponse = await sut.handle({ eventId: null as any, email, creditCardToken })
+  it('should return 400 if validation fails', async () => {
+    const error = new Error('validation_error')
+    const ValidationCompositeSpy = jest.fn().mockImplementationOnce(() => ({
+      validate: jest.fn().mockReturnValueOnce(error)
+    }))
+    jest.mocked(ValidationComposite).mockImplementationOnce(ValidationCompositeSpy)
 
+    const httpResponse = await sut.handle({ eventId, email, creditCardToken })
+
+    expect(ValidationComposite).toHaveBeenCalledWith([
+      new RequiredStringValidator('any_event_id', 'eventId'),
+      new RequiredStringValidator('any_email', 'email'),
+      new RequiredStringValidator('any_credit_card_token', 'creditCardToken')
+    ])
     expect(httpResponse).toEqual({
       statusCode: 400,
-      data: new RequiredFieldError('eventId')
-    })
-  })
-
-  it('should return 400 if email is invalid', async () => {
-    const httpResponse = await sut.handle({ eventId, email: null as any, creditCardToken })
-
-    expect(httpResponse).toEqual({
-      statusCode: 400,
-      data: new RequiredFieldError('email')
-    })
-  })
-
-  it('should return 400 if creditCardToken is invalid', async () => {
-    const httpResponse = await sut.handle({ eventId, email, creditCardToken: null as any })
-
-    expect(httpResponse).toEqual({
-      statusCode: 400,
-      data: new RequiredFieldError('creditCardToken')
+      data: error
     })
   })
 

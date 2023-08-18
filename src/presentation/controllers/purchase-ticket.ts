@@ -1,7 +1,7 @@
 import { badRequest, serverError, type HttpResponse, ok } from '@/presentation/helpers'
 import { type PurchaseTicket } from '@/application/use-cases'
 import { EventNotFoundError } from '@/application/errors'
-import { RequiredStringValidator } from '@/presentation/validation'
+import { RequiredStringValidator, ValidationComposite } from '@/presentation/validation'
 
 export class PurchaseTicketController {
   constructor (private readonly purchaseTicket: PurchaseTicket) {}
@@ -19,16 +19,11 @@ export class PurchaseTicketController {
   }
 
   private validate ({ creditCardToken, email, eventId }: HttpRequest): Error | undefined {
-    const fieldsToValidate = [
+    return new ValidationComposite([
       new RequiredStringValidator(eventId, 'eventId'),
       new RequiredStringValidator(email, 'email'),
       new RequiredStringValidator(creditCardToken, 'creditCardToken')
-    ]
-
-    for (const field of fieldsToValidate) {
-      const error = field.validate()
-      if (error !== undefined) return error
-    }
+    ]).validate()
   }
 }
 type HttpRequest = {
