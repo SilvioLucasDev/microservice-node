@@ -15,4 +15,15 @@ describe('ExpressRouter', () => {
 
     expect(controller.handle).toHaveBeenCalledWith({ any: 'any' })
   })
+
+  it('should call handle with empty request', async () => {
+    const req = getMockReq()
+    const { res } = getMockRes()
+    const controller = mock<PurchaseTicketController>()
+    const sut = new ExpressRouter(controller)
+
+    await sut.adapt(req, res)
+
+    expect(controller.handle).toHaveBeenCalledWith({})
+  })
 })
