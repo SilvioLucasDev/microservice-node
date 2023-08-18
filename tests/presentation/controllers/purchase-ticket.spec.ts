@@ -60,4 +60,15 @@ describe('PurchaseTicketController', () => {
       data: new EventNotFoundError()
     })
   })
+
+  it('should return 200 if purchase ticket succeeds', async () => {
+    const httpResponse = await sut.handle({ eventId: 'any_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: {
+        ticketId: 'any_ticket_id'
+      }
+    })
+  })
 })
