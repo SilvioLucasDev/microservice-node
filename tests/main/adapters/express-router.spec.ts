@@ -1,15 +1,15 @@
-import { ExpressRouter } from '@/main/adapters'
+import { ExpressRouterAdapter } from '@/main/adapters'
 import { type Controller } from '@/presentation/controllers'
 
 import { getMockReq, getMockRes } from '@jest-mock/express'
 import { type Request, type Response } from 'express'
 import { type MockProxy, mock } from 'jest-mock-extended'
 
-describe('ExpressRouter', () => {
+describe('ExpressRouterAdapter', () => {
   let req: Request
   let res: Response
   let controller: MockProxy<Controller>
-  let sut: ExpressRouter
+  let sut: ExpressRouterAdapter
 
   beforeEach(() => {
     req = getMockReq({ body: { any: 'any' } })
@@ -19,7 +19,7 @@ describe('ExpressRouter', () => {
       statusCode: 200,
       data: { data: 'any_data' }
     })
-    sut = new ExpressRouter(controller)
+    sut = new ExpressRouterAdapter(controller)
   })
 
   it('should call handle with correct request', async () => {

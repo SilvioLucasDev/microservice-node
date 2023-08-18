@@ -1,7 +1,8 @@
+import { makePurchaseTicketController } from '@/main/factories/presentation/controllers'
+import { ExpressRouterAdapter as Adapt } from '@/main/adapters'
+
 import { type Router } from 'express'
 
 export default (router: Router): void => {
-  router.post('/api/ticket/purchase', (req, res) => {
-    res.send({ data: 'any_data' })
-  })
+  router.post('/api/ticket/purchase', new Adapt(makePurchaseTicketController()).adapt)
 }
