@@ -7,7 +7,7 @@ export class RequiredStringValidator {
   ) {}
 
   validate (): Error | undefined {
-    if (this.value === '' || this.value === null) {
+    if (this.value === '' || this.value === null || this.value === undefined) {
       return new RequiredFieldError(this.fieldName)
     }
   }
