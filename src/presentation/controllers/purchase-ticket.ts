@@ -1,7 +1,6 @@
-import { badRequest, type HttpResponse } from '@/presentation/helpers'
+import { badRequest, serverError, type HttpResponse } from '@/presentation/helpers'
 import { type PurchaseTicket } from '@/application/use-cases'
 import { EventNotFoundError } from '@/application/errors'
-import { ServerError } from '@/presentation/errors'
 
 export class PurchaseTicketController {
   constructor (
@@ -23,10 +22,7 @@ export class PurchaseTicketController {
       }
     } catch (error) {
       if (error instanceof EventNotFoundError) return badRequest(error)
-      return {
-        statusCode: 500,
-        data: new ServerError(error as Error)
-      }
+      return serverError(error as Error)
     }
   }
 }
