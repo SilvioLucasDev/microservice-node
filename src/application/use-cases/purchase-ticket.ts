@@ -1,7 +1,7 @@
 import { type UUIDGenerator, type Publish } from '@/domain/contracts/adapters'
 import { type SaveTicket, type GetEvent } from '@/domain/contracts/repos'
 import { Ticket } from '@/domain/entities'
-import { EventNotFoundError } from '@/domain/errors'
+import { EventNotFoundError } from '@/application/errors'
 import { TicketReserved } from '@/domain/event'
 
 export class PurchaseTicket {

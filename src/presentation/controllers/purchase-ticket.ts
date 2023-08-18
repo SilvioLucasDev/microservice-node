@@ -1,7 +1,7 @@
-import { type HttpResponse } from '@/application/helpers'
+import { type HttpResponse } from '@/presentation/helpers'
 import { type PurchaseTicket } from '@/application/use-cases'
-import { EventNotFoundError } from '@/domain/errors'
-import { ServerError } from '@/application/errors'
+import { EventNotFoundError } from '@/application/errors'
+import { ServerError } from '@/presentation/errors'
 
 export class PurchaseTicketController {
   constructor (

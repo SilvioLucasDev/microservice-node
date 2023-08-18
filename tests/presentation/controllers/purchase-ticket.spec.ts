@@ -1,7 +1,7 @@
 import { PurchaseTicketController } from '@/presentation/controllers'
 import { type PurchaseTicket } from '@/application/use-cases'
-import { ServerError } from '@/application/errors'
-import { EventNotFoundError } from '@/domain/errors'
+import { ServerError } from '@/presentation/errors'
+import { EventNotFoundError } from '@/application/errors'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 

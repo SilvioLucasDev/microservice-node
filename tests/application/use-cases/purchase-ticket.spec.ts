@@ -2,7 +2,7 @@ import { PurchaseTicket } from '@/application/use-cases'
 import { type UUIDGenerator, type Publish } from '@/domain/contracts/adapters'
 import { type SaveTicket, type GetEvent } from '@/domain/contracts/repos'
 import { Ticket } from '@/domain/entities'
-import { EventNotFoundError } from '@/domain/errors'
+import { EventNotFoundError } from '@/application/errors'
 import { TicketReserved } from '@/domain/event'
 
 import { type MockProxy, mock } from 'jest-mock-extended'
