@@ -25,7 +25,7 @@ describe('PurchaseTicketController', () => {
   })
 
   it('should return 400 if eventId is invalid', async () => {
-    const httpResponse = await sut.handle({ eventId: null, email, creditCardToken })
+    const httpResponse = await sut.handle({ eventId: null as any, email, creditCardToken })
 
     expect(httpResponse).toEqual({
       statusCode: 400,
@@ -34,7 +34,7 @@ describe('PurchaseTicketController', () => {
   })
 
   it('should return 400 if email is invalid', async () => {
-    const httpResponse = await sut.handle({ eventId, email: null, creditCardToken })
+    const httpResponse = await sut.handle({ eventId, email: null as any, creditCardToken })
 
     expect(httpResponse).toEqual({
       statusCode: 400,
@@ -43,7 +43,7 @@ describe('PurchaseTicketController', () => {
   })
 
   it('should return 400 if creditCardToken is invalid', async () => {
-    const httpResponse = await sut.handle({ eventId, email, creditCardToken: null })
+    const httpResponse = await sut.handle({ eventId, email, creditCardToken: null as any })
 
     expect(httpResponse).toEqual({
       statusCode: 400,
