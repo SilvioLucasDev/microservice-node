@@ -9,4 +9,12 @@ describe('RequiredStringValidator', () => {
 
     expect(error).toEqual(new RequiredFieldError('any_field'))
   })
+
+  it('should return RequiredFieldError if value is null', () => {
+    const sut = new RequiredStringValidator(null as any, 'any_field')
+
+    const error = sut.validate()
+
+    expect(error).toEqual(new RequiredFieldError('any_field'))
+  })
 })
