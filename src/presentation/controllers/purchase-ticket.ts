@@ -19,14 +19,16 @@ export class PurchaseTicketController {
   }
 
   private validate ({ creditCardToken, email, eventId }: HttpRequest): Error | undefined {
-    const eventIdIsValid = new RequiredStringValidator(eventId, 'eventId').validate()
-    if (eventIdIsValid !== undefined) return eventIdIsValid
+    const fieldsToValidate = [
+      new RequiredStringValidator(eventId, 'eventId'),
+      new RequiredStringValidator(email, 'email'),
+      new RequiredStringValidator(creditCardToken, 'creditCardToken')
+    ]
 
-    const emailIsValid = new RequiredStringValidator(email, 'email').validate()
-    if (emailIsValid !== undefined) return emailIsValid
-
-    const creditCardTokenIsValid = new RequiredStringValidator(creditCardToken, 'creditCardToken').validate()
-    if (creditCardTokenIsValid !== undefined) return creditCardTokenIsValid
+    for (const field of fieldsToValidate) {
+      const error = field.validate()
+      if (error !== undefined) return error
+    }
   }
 }
 type HttpRequest = {
