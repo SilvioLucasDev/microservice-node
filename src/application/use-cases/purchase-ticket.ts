@@ -4,7 +4,7 @@ import { Ticket } from '@/domain/entities'
 import { EventNotFoundError } from '@/application/errors'
 import { TicketReserved } from '@/domain/event'
 
-export class PurchaseTicket {
+export class PurchaseTicketUseCase {
   constructor (
     private readonly eventRepository: GetEvent,
     private readonly ticketRepository: SaveTicket,

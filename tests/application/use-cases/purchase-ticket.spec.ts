@@ -1,4 +1,4 @@
-import { PurchaseTicket } from '@/application/use-cases'
+import { PurchaseTicketUseCase } from '@/application/use-cases'
 import { type UUIDGenerator, type Publish } from '@/domain/contracts/adapters'
 import { type SaveTicket, type GetEvent } from '@/domain/contracts/repos'
 import { Ticket } from '@/domain/entities'
@@ -10,7 +10,7 @@ import { type MockProxy, mock } from 'jest-mock-extended'
 jest.mock('@/domain/event/ticket-reserved')
 
 describe('PurchaseTicketUseCase', () => {
-  let sut: PurchaseTicket
+  let sut: PurchaseTicketUseCase
   let eventRepository: MockProxy<GetEvent>
   let ticketRepository: MockProxy<SaveTicket>
   let crypto: MockProxy<UUIDGenerator>
@@ -34,7 +34,7 @@ describe('PurchaseTicketUseCase', () => {
   })
 
   beforeEach(() => {
-    sut = new PurchaseTicket(eventRepository, ticketRepository, crypto, queue)
+    sut = new PurchaseTicketUseCase(eventRepository, ticketRepository, crypto, queue)
   })
 
   it('should call EventRepository with correct value', async () => {

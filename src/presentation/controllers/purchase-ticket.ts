@@ -1,16 +1,16 @@
 import { badRequest, serverError, type HttpResponse, ok } from '@/presentation/helpers'
-import { type PurchaseTicket } from '@/application/use-cases'
+import { type PurchaseTicketUseCase } from '@/application/use-cases'
 import { EventNotFoundError } from '@/application/errors'
 import { RequiredString, ValidationComposite } from '@/presentation/validation'
 
 export class PurchaseTicketController {
-  constructor (private readonly purchaseTicket: PurchaseTicket) {}
+  constructor (private readonly purchaseTicketUseCase: PurchaseTicketUseCase) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse<Model>> {
     try {
       const error = this.validate(httpRequest)
       if (error !== undefined) return badRequest(error)
-      const result = await this.purchaseTicket.execute({ eventId: httpRequest.eventId, email: httpRequest.email, creditCardToken: httpRequest.creditCardToken })
+      const result = await this.purchaseTicketUseCase.execute({ eventId: httpRequest.eventId, email: httpRequest.email, creditCardToken: httpRequest.creditCardToken })
       return ok({ ticketId: result.ticketId })
     } catch (error) {
       if (error instanceof EventNotFoundError) return badRequest(error)
