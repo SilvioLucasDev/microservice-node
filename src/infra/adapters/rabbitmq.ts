@@ -13,9 +13,9 @@ export class RabbitMQAdapter implements Publish {
   }
 
   private async close (): Promise<void> {
-    await this.channel!.close()
+    if (this.channel) await this.channel.close()
     this.channel = undefined
-    await this.connection!.close()
+    if (this.connection) await this.connection.close()
     this.connection = undefined
   }
 
