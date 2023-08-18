@@ -7,7 +7,7 @@ export class PurchaseTicketController {
     private readonly purchaseTicket: PurchaseTicket
   ) {}
 
-  async handle (httpRequest: httpRequest): Promise<HttpResponse> {
+  async handle (httpRequest: httpRequest): Promise<HttpResponse<Model>> {
     try {
       if (httpRequest.eventId === undefined || httpRequest.eventId === null || httpRequest.eventId === '' ||
       httpRequest.email === undefined || httpRequest.email === null || httpRequest.email === '' ||
@@ -28,4 +28,8 @@ type httpRequest = {
   eventId: string | null | undefined
   email: string | null | undefined
   creditCardToken: string | null | undefined
+}
+
+type Model = Error | {
+  ticketId: string
 }
