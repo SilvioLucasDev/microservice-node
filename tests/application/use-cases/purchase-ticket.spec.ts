@@ -16,6 +16,9 @@ describe('PurchaseTicketUseCase', () => {
   let crypto: MockProxy<UUIDGenerator>
   let ticket: jest.SpyInstance
   let queue: MockProxy<Publish>
+  let eventId: string
+  let email: string
+  let creditCardToken: string
 
   beforeAll(() => {
     eventRepository = mock()
@@ -25,6 +28,9 @@ describe('PurchaseTicketUseCase', () => {
     crypto.uuid.mockReturnValue('any_ticket_id')
     ticket = jest.spyOn(Ticket, 'create')
     queue = mock()
+    eventId = 'any_event_id'
+    email = 'any_email'
+    creditCardToken = 'any_credit_card_token'
   })
 
   beforeEach(() => {
@@ -32,7 +38,7 @@ describe('PurchaseTicketUseCase', () => {
   })
 
   it('should call EventRepository with correct value', async () => {
-    await sut.execute({ eventId: 'any_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
+    await sut.execute({ eventId, email, creditCardToken })
 
     expect(eventRepository.get).toHaveBeenCalledWith({ id: 'any_event_id' })
     expect(eventRepository.get).toHaveBeenCalledTimes(1)
@@ -41,27 +47,27 @@ describe('PurchaseTicketUseCase', () => {
   it('should throw EventNotFoundError if EventRepository returns undefined', async () => {
     eventRepository.get.mockResolvedValueOnce(undefined)
 
-    const promise = sut.execute({ eventId: 'any_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
+    const promise = sut.execute({ eventId, email, creditCardToken })
 
     await expect(promise).rejects.toThrow(new EventNotFoundError())
   })
 
   it('should call Ticket with correct values', async () => {
-    await sut.execute({ eventId: 'any_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
+    await sut.execute({ eventId, email, creditCardToken })
 
-    expect(ticket).toHaveBeenCalledWith({ eventId: 'any_event_id', email: 'any_email' }, crypto)
+    expect(ticket).toHaveBeenCalledWith({ eventId, email }, crypto)
     expect(ticket).toHaveBeenCalledTimes(1)
   })
 
   it('should call TicketRepository with Ticket', async () => {
-    await sut.execute({ eventId: 'any_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
+    await sut.execute({ eventId, email, creditCardToken })
 
     expect(ticketRepository.save).toHaveBeenCalledWith(expect.any(Ticket))
     expect(ticketRepository.save).toHaveBeenCalledTimes(1)
   })
 
   it('should call TicketReserved with correct values', async () => {
-    await sut.execute({ eventId: 'any_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
+    await sut.execute({ eventId, email, creditCardToken })
 
     expect(TicketReserved).toHaveBeenCalledWith(
       'any_ticket_id',
@@ -73,7 +79,7 @@ describe('PurchaseTicketUseCase', () => {
   })
 
   it('should call Queue with correct values', async () => {
-    await sut.execute({ eventId: 'any_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
+    await sut.execute({ eventId, email, creditCardToken })
 
     expect(queue.publish).toHaveBeenCalledWith({ queueName: 'ticketReserved', data: expect.any(TicketReserved) })
     expect(queue.publish).toHaveBeenCalledTimes(1)

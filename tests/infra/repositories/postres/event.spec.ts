@@ -3,9 +3,11 @@ import { PgEventRepository } from '@/infra/repositories/postgres'
 
 describe('PgEventRepository', () => {
   let sut: PgEventRepository
+  let id: string
 
   beforeEach(() => {
     sut = new PgEventRepository()
+    id = 'any_id'
   })
 
   afterAll(async () => {
@@ -14,17 +16,17 @@ describe('PgEventRepository', () => {
 
   it('should return event if exists', async () => {
     const result = {
-      id: 'any_id',
+      id,
       description: 'any_description',
       price: 300,
       capacity: 10000
     }
     prismaMock.event.findFirst.mockResolvedValueOnce(result)
 
-    const event = await sut.get({ id: 'any_id' })
+    const event = await sut.get({ id })
 
     expect(event).toEqual({
-      id: 'any_id',
+      id,
       price: '300'
     })
   })
@@ -32,7 +34,7 @@ describe('PgEventRepository', () => {
   it('should return undefined if event not exists', async () => {
     prismaMock.event.findFirst.mockResolvedValueOnce(null)
 
-    const event = await sut.get({ id: 'any_id' })
+    const event = await sut.get({ id })
 
     expect(event).toBeUndefined()
   })
