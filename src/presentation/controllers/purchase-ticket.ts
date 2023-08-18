@@ -1,6 +1,7 @@
+import { type HttpResponse } from '@/application/helpers'
 import { type PurchaseTicket } from '@/application/use-cases'
 import { EventNotFoundError } from '@/domain/errors'
-import { ServerError } from '@/tests/presentation/controllers/purchase-ticket.spec'
+import { ServerError } from '@/application/errors'
 
 export class PurchaseTicketController {
   constructor (
@@ -18,7 +19,6 @@ export class PurchaseTicketController {
           data: new Error('The fields in required')
         }
       }
-
       const result = await this.purchaseTicket.execute({ eventId: httpRequest.eventId, email: httpRequest.email, creditCardToken: httpRequest.creditCardToken })
       return {
         statusCode: 200,
@@ -37,9 +37,4 @@ export class PurchaseTicketController {
       }
     }
   }
-}
-
-type HttpResponse = {
-  statusCode: number
-  data: any
 }
