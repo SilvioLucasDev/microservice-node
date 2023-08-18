@@ -1,12 +1,10 @@
 import { badRequest, serverError, type HttpResponse, ok } from '@/presentation/helpers'
 import { type PurchaseTicket } from '@/application/use-cases'
 import { EventNotFoundError } from '@/application/errors'
-import { RequiredFieldError } from '../errors'
+import { RequiredFieldError } from '@/presentation/errors'
 
 export class PurchaseTicketController {
-  constructor (
-    private readonly purchaseTicket: PurchaseTicket
-  ) {}
+  constructor (private readonly purchaseTicket: PurchaseTicket) {}
 
   async handle ({ eventId, email, creditCardToken }: httpRequest): Promise<HttpResponse<Model>> {
     try {
