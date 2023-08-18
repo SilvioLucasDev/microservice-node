@@ -12,13 +12,14 @@ export class PurchaseTicket {
     private readonly queue: Publish
   ) {}
 
-  async execute ({ eventId, email, creditCardToken }: Input): Promise<any> {
+  async execute ({ eventId, email, creditCardToken }: Input): Promise<Output> {
     const event = await this.eventRepository.get({ id: eventId })
     if (event === undefined) throw new EventNotFoundError()
     const ticket = Ticket.create({ eventId, email }, this.crypto)
     await this.ticketRepository.save(ticket)
     const ticketReserved = new TicketReserved(ticket.id, event.id, creditCardToken, event.price)
     await this.queue.publish({ queueName: 'ticketReserved', data: ticketReserved })
+    return { ticketId: ticket.id }
   }
 }
 
@@ -27,3 +28,7 @@ type Input = {
   email: string
   creditCardToken: string
 }
+
+type Output = {
+  ticketId: string
+} | Error
