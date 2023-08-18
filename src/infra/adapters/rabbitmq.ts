@@ -1,5 +1,4 @@
 import { type Publish } from '@/domain/contracts/adapters'
-import { QueueConnectionError } from '@/infra/adapters'
 
 import amqp, { type Channel, type Connection } from 'amqplib'
 
@@ -24,8 +23,6 @@ export class RabbitMQAdapter implements Publish {
     try {
       await this.connectQueue(queueName)
       this.channel!.sendToQueue(queueName, Buffer.from(JSON.stringify(data)))
-    } catch (error) {
-      throw new QueueConnectionError()
     } finally {
       await this.close()
     }
