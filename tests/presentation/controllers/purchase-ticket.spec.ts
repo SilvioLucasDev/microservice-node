@@ -33,6 +33,15 @@ describe('PurchaseTicketController', () => {
     })
   })
 
+  it('should return 400 if email is invalid', async () => {
+    const httpResponse = await sut.handle({ eventId, email: null, creditCardToken })
+
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: new RequiredFieldError('email')
+    })
+  })
+
   it('should call PurchaseTicket with correct params', async () => {
     await sut.handle({ eventId, email, creditCardToken })
 
