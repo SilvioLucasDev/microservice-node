@@ -4,5 +4,5 @@ import { ExpressRouterAdapter as Adapt } from '@/main/adapters'
 import { type Router } from 'express'
 
 export default (router: Router): void => {
-  router.post('/api/ticket/purchase', new Adapt(makePurchaseTicketController()).adapt)
+  router.post('/ticket/purchase', new Adapt(makePurchaseTicketController()).adapt)
 }
