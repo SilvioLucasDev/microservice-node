@@ -1,4 +1,4 @@
-import { badRequest, serverError, type HttpResponse } from '@/presentation/helpers'
+import { badRequest, serverError, type HttpResponse, ok } from '@/presentation/helpers'
 import { type PurchaseTicket } from '@/application/use-cases'
 import { EventNotFoundError } from '@/application/errors'
 
@@ -16,10 +16,7 @@ export class PurchaseTicketController {
         return badRequest(new Error('The fields in required'))
       }
       const result = await this.purchaseTicket.execute({ eventId: httpRequest.eventId, email: httpRequest.email, creditCardToken: httpRequest.creditCardToken })
-      return {
-        statusCode: 200,
-        data: { ticketId: result.ticketId }
-      }
+      return ok({ ticketId: result.ticketId })
     } catch (error) {
       if (error instanceof EventNotFoundError) return badRequest(error)
       return serverError(error as Error)
