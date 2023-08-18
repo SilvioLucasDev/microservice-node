@@ -25,4 +25,13 @@ describe('ValidationComposite', () => {
 
     expect(error).toBeUndefined()
   })
+
+  it('should return the first error', () => {
+    validator1.validate.mockReturnValueOnce(new Error('error_1'))
+    validator1.validate.mockReturnValueOnce(new Error('error_2'))
+
+    const error = sut.validate()
+
+    expect(error).toEqual(new Error('error_1'))
+  })
 })
