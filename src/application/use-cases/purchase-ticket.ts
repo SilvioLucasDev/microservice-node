@@ -31,4 +31,4 @@ type Input = {
 
 type Output = {
   ticketId: string
-} | Error
+}
