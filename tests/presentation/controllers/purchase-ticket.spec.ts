@@ -2,7 +2,7 @@ import { PurchaseTicketController } from '@/presentation/controllers'
 import { type PurchaseTicket } from '@/application/use-cases'
 import { ServerError } from '@/presentation/errors'
 import { EventNotFoundError } from '@/application/errors'
-import { RequiredStringValidator, ValidationComposite } from '@/presentation/validation'
+import { RequiredString, ValidationComposite } from '@/presentation/validation'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 
@@ -37,9 +37,9 @@ describe('PurchaseTicketController', () => {
     const httpResponse = await sut.handle({ eventId, email, creditCardToken })
 
     expect(ValidationComposite).toHaveBeenCalledWith([
-      new RequiredStringValidator('any_event_id', 'eventId'),
-      new RequiredStringValidator('any_email', 'email'),
-      new RequiredStringValidator('any_credit_card_token', 'creditCardToken')
+      new RequiredString('any_event_id', 'eventId'),
+      new RequiredString('any_email', 'email'),
+      new RequiredString('any_credit_card_token', 'creditCardToken')
     ])
     expect(httpResponse).toEqual({
       statusCode: 400,
