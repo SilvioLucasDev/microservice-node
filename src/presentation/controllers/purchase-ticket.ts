@@ -7,7 +7,7 @@ export class PurchaseTicketController {
     private readonly purchaseTicket: PurchaseTicket
   ) {}
 
-  async handle (httpRequest: any): Promise<any> {
+  async handle (httpRequest: any): Promise<HttpResponse> {
     try {
       if (httpRequest.eventId === undefined || httpRequest.eventId === null || httpRequest.eventId === '' ||
       httpRequest.email === undefined || httpRequest.email === null || httpRequest.email === '' ||
@@ -19,7 +19,11 @@ export class PurchaseTicketController {
         }
       }
 
-      await this.purchaseTicket.execute({ eventId: httpRequest.eventId, email: httpRequest.email, creditCardToken: httpRequest.creditCardToken })
+      const result = await this.purchaseTicket.execute({ eventId: httpRequest.eventId, email: httpRequest.email, creditCardToken: httpRequest.creditCardToken })
+      return {
+        statusCode: 200,
+        data: { ticketId: result.ticketId }
+      }
     } catch (error) {
       if (error instanceof EventNotFoundError) {
         return {
@@ -33,4 +37,9 @@ export class PurchaseTicketController {
       }
     }
   }
+}
+
+type HttpResponse = {
+  statusCode: number
+  data: any
 }
