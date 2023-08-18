@@ -2,8 +2,9 @@ import { badRequest, serverError, type HttpResponse, ok } from '@/presentation/h
 import { type PurchaseTicketUseCase } from '@/application/use-cases'
 import { EventNotFoundError } from '@/application/errors'
 import { RequiredString, ValidationComposite } from '@/presentation/validation'
+import { type Controller } from '@/presentation/controllers'
 
-export class PurchaseTicketController {
+export class PurchaseTicketController implements Controller {
   constructor (private readonly purchaseTicketUseCase: PurchaseTicketUseCase) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse<Model>> {
