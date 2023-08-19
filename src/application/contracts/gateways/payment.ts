@@ -6,7 +6,7 @@ export namespace MakePayment {
   export type Input = {
     email: string
     creditCardToken: string
-    price: number
+    price: string
   }
 
   export type Output = {
