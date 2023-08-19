@@ -1,29 +1,34 @@
-import { ExpressRouterAdapter } from '@/main/adapters'
+import { adaptExpressRoute } from '@/main/adapters'
 import { type Controller } from '@/presentation/controllers'
 
 import { getMockReq, getMockRes } from '@jest-mock/express'
-import { type Request, type Response } from 'express'
+import { type RequestHandler, type Request, type Response, type NextFunction } from 'express'
 import { type MockProxy, mock } from 'jest-mock-extended'
 
 describe('ExpressRouterAdapter', () => {
   let req: Request
   let res: Response
+  let next: NextFunction
   let controller: MockProxy<Controller>
-  let sut: ExpressRouterAdapter
+  let sut: RequestHandler
 
-  beforeEach(() => {
+  beforeAll(() => {
     req = getMockReq({ body: { any: 'any' } })
     res = getMockRes().res
+    next = getMockRes().next
     controller = mock()
     controller.handle.mockResolvedValue({
       statusCode: 200,
       data: { data: 'any_data' }
     })
-    sut = new ExpressRouterAdapter(controller)
+  })
+
+  beforeEach(() => {
+    sut = adaptExpressRoute(controller)
   })
 
   it('should call handle with correct request', async () => {
-    await sut.adapt(req, res)
+    await sut(req, res, next)
 
     expect(controller.handle).toHaveBeenCalledWith({ any: 'any' })
     expect(controller.handle).toHaveBeenCalledTimes(1)
@@ -32,14 +37,14 @@ describe('ExpressRouterAdapter', () => {
   it('should call handle with empty request', async () => {
     const req = getMockReq()
 
-    await sut.adapt(req, res)
+    await sut(req, res, next)
 
     expect(controller.handle).toHaveBeenCalledWith({})
     expect(controller.handle).toHaveBeenCalledTimes(1)
   })
 
   it('should responde with 200 and valid data', async () => {
-    await sut.adapt(req, res)
+    await sut(req, res, next)
 
     expect(res.status).toHaveBeenCalledWith(200)
     expect(res.status).toHaveBeenCalledTimes(1)
@@ -53,7 +58,7 @@ describe('ExpressRouterAdapter', () => {
       data: null
     })
 
-    await sut.adapt(req, res)
+    await sut(req, res, next)
 
     expect(res.status).toHaveBeenCalledWith(204)
     expect(res.status).toHaveBeenCalledTimes(1)
@@ -67,7 +72,7 @@ describe('ExpressRouterAdapter', () => {
       data: new Error('any_error')
     })
 
-    await sut.adapt(req, res)
+    await sut(req, res, next)
 
     expect(res.status).toHaveBeenCalledWith(400)
     expect(res.status).toHaveBeenCalledTimes(1)
@@ -81,7 +86,7 @@ describe('ExpressRouterAdapter', () => {
       data: new Error('any_error')
     })
 
-    await sut.adapt(req, res)
+    await sut(req, res, next)
 
     expect(res.status).toHaveBeenCalledWith(500)
     expect(res.status).toHaveBeenCalledTimes(1)
