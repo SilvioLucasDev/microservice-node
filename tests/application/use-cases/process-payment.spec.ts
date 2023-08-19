@@ -3,11 +3,11 @@ import { type MakePayment } from '@/application/contracts/gateways'
 import { type Publish, type UUIDGenerator } from '@/application/contracts/adapters'
 import { Transaction } from '@/domain/entities'
 import { type SaveTransaction } from '@/application/contracts/repositories'
-import { PaymentApproved } from '@/domain/event'
+import { PaymentProcessed } from '@/domain/event'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 
-jest.mock('@/domain/event/payment-approved')
+jest.mock('@/domain/event/payment-processed')
 
 describe('ProcessPaymentUseCase', () => {
   let sut: ProcessPaymentUseCase
@@ -62,19 +62,20 @@ describe('ProcessPaymentUseCase', () => {
     expect(transactionRepository.save).toHaveBeenCalledTimes(1)
   })
 
-  it('should calls PaymentApproved with correct values', async () => {
+  it('should calls PaymentProcessed with correct values', async () => {
     await sut.execute({ ticketId, email, eventId, price, creditCardToken })
 
-    expect(PaymentApproved).toHaveBeenCalledWith(
-      'any_ticket_id'
+    expect(PaymentProcessed).toHaveBeenCalledWith(
+      'any_ticket_id',
+      'approved'
     )
-    expect(PaymentApproved).toHaveBeenCalledTimes(1)
+    expect(PaymentProcessed).toHaveBeenCalledTimes(1)
   })
 
   it('should calls Queue with correct values', async () => {
     await sut.execute({ ticketId, email, eventId, price, creditCardToken })
 
-    expect(queue.publish).toHaveBeenCalledWith({ queueName: 'paymentApproved', data: expect.any(PaymentApproved) })
+    expect(queue.publish).toHaveBeenCalledWith({ queueName: 'paymentProcessed', data: expect.any(PaymentProcessed) })
     expect(queue.publish).toHaveBeenCalledTimes(1)
   })
 })

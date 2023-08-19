@@ -1,2 +1,2 @@
 export * from './ticket-reserved'
-export * from './payment-approved'
+export * from './payment-processed'
