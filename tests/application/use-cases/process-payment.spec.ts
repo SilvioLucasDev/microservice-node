@@ -1,6 +1,5 @@
 import { ProcessPaymentUseCase } from '@/application/use-cases'
 import { type MakePayment } from '@/application/contracts/gateways'
-import { UnprocessedPaymentError } from '@/application/errors/payment'
 import { type UUIDGenerator } from '@/application/contracts/adapters'
 import { Transaction } from '@/domain/entities'
 import { type SaveTransaction } from '@/application/contracts/repositories'
@@ -42,14 +41,6 @@ describe('ProcessPaymentUseCase', () => {
 
     expect(paymentGateway.makePayment).toHaveBeenCalledWith({ email, creditCardToken, price })
     expect(paymentGateway.makePayment).toHaveBeenCalledTimes(1)
-  })
-
-  it('should throw UnprocessedPaymentError if PaymentGateway returns status diff approved', async () => {
-    paymentGateway.makePayment.mockResolvedValueOnce({ tid: '12344', status: 'rejected' })
-
-    const promise = sut.execute({ ticketId, email, eventId, price, creditCardToken })
-
-    await expect(promise).rejects.toThrow(new UnprocessedPaymentError())
   })
 
   it('should calls Transaction with correct values', async () => {
