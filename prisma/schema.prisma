@@ -35,7 +35,6 @@ model Transaction {
   id             String       @id
   ticket_id      String       @unique
   event_id       String
-  tid            String       @unique
   price          Float
   status         String
 
