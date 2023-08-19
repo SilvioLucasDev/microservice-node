@@ -8,3 +8,14 @@ export namespace Publish {
     data: any
   }
 }
+
+export interface Consume {
+  consume: (input: Publish.Input) => Promise<void>
+}
+
+export namespace Consume {
+  export type Input = {
+    queueName: string
+    callback: (arg: any) => Promise<void>
+  }
+}
