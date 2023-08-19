@@ -1,4 +1,4 @@
-import { type UUIDGenerator } from '@/domain/contracts/adapters'
+import { type UUIDGenerator } from '@/application/contracts/adapters'
 
 export class Ticket {
   constructor (

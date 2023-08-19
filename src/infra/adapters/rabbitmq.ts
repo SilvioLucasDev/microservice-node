@@ -1,4 +1,4 @@
-import { type Publish } from '@/domain/contracts/adapters'
+import { type Publish } from '@/application/contracts/adapters'
 
 import amqp, { type Channel, type Connection } from 'amqplib'
 

@@ -1,4 +1,4 @@
-import { type SaveTicket } from '@/domain/contracts/repos'
+import { type SaveTicket } from '@/application/contracts/repositories'
 import prisma from '@/infra/repositories/postgres/helpers/connection'
 
 export class PgTicketRepository implements SaveTicket {

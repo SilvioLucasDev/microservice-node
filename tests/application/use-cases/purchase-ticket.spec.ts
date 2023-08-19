@@ -1,6 +1,6 @@
 import { PurchaseTicketUseCase } from '@/application/use-cases'
-import { type UUIDGenerator, type Publish } from '@/domain/contracts/adapters'
-import { type SaveTicket, type GetEvent } from '@/domain/contracts/repos'
+import { type UUIDGenerator, type Publish } from '@/application/contracts/adapters'
+import { type SaveTicket, type GetEvent } from '@/application/contracts/repositories'
 import { Ticket } from '@/domain/entities'
 import { EventNotFoundError } from '@/application/errors'
 import { TicketReserved } from '@/domain/event'

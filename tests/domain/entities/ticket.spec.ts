@@ -1,4 +1,4 @@
-import { type UUIDGenerator } from '@/domain/contracts/adapters'
+import { type UUIDGenerator } from '@/application/contracts/adapters'
 import { Ticket } from '@/domain/entities'
 
 import { mock, type MockProxy } from 'jest-mock-extended'

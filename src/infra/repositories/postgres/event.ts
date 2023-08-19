@@ -1,4 +1,4 @@
-import { type GetEvent } from '@/domain/contracts/repos'
+import { type GetEvent } from '@/application/contracts/repositories'
 import prisma from '@/infra/repositories/postgres/helpers/connection'
 
 export class PgEventRepository implements GetEvent {
