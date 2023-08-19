@@ -4,7 +4,7 @@ import { type Validator } from '@/presentation/validation'
 export class Required implements Validator {
   constructor (
     readonly value: any,
-    readonly fieldName?: string
+    readonly fieldName: string
   ) {}
 
   validate (): Error | undefined {
