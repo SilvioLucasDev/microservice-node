@@ -37,7 +37,7 @@ describe('PurchaseTicketUseCase', () => {
     sut = new PurchaseTicketUseCase(eventRepository, ticketRepository, crypto, queue)
   })
 
-  it('should call EventRepository with correct value', async () => {
+  it('should call method get of EventRepository with correct value', async () => {
     await sut.execute({ eventId, email, creditCardToken })
 
     expect(eventRepository.get).toHaveBeenCalledWith({ id: 'any_event_id' })
