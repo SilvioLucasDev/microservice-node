@@ -52,21 +52,21 @@ describe('PurchaseTicketUseCase', () => {
     await expect(promise).rejects.toThrow(new EventNotFoundError())
   })
 
-  it('should create Ticket with correct values', async () => {
+  it('should calls Ticket with correct values', async () => {
     await sut.execute({ eventId, email, creditCardToken })
 
     expect(ticket).toHaveBeenCalledWith({ eventId, email }, crypto)
     expect(ticket).toHaveBeenCalledTimes(1)
   })
 
-  it('should call TicketRepository with instance of Ticket', async () => {
+  it('should calls TicketRepository with instance of Ticket', async () => {
     await sut.execute({ eventId, email, creditCardToken })
 
     expect(ticketRepository.save).toHaveBeenCalledWith(expect.any(Ticket))
     expect(ticketRepository.save).toHaveBeenCalledTimes(1)
   })
 
-  it('should create TicketReserved with correct values', async () => {
+  it('should calls TicketReserved with correct values', async () => {
     await sut.execute({ eventId, email, creditCardToken })
 
     expect(TicketReserved).toHaveBeenCalledWith(
@@ -78,7 +78,7 @@ describe('PurchaseTicketUseCase', () => {
     expect(TicketReserved).toHaveBeenCalledTimes(1)
   })
 
-  it('should call Queue with correct values', async () => {
+  it('should calls Queue with correct values', async () => {
     await sut.execute({ eventId, email, creditCardToken })
 
     expect(queue.publish).toHaveBeenCalledWith({ queueName: 'ticketReserved', data: expect.any(TicketReserved) })

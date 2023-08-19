@@ -2,6 +2,7 @@ import { ProcessPaymentUseCase } from '@/application/use-cases'
 import { type MakePayment } from '@/application/contracts/gateways'
 import { UnprocessedPaymentError } from '@/application/errors/payment'
 import { type UUIDGenerator } from '@/application/contracts/adapters'
+import { Transaction } from '@/domain/entities'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 
@@ -9,6 +10,7 @@ describe('ProcessPaymentUseCase', () => {
   let sut: ProcessPaymentUseCase
   let paymentGateway: MockProxy<MakePayment>
   let crypto: MockProxy<UUIDGenerator>
+  let transaction: jest.SpyInstance
   let ticketId: string
   let email: string
   let eventId: string
@@ -20,6 +22,7 @@ describe('ProcessPaymentUseCase', () => {
     paymentGateway.makePayment.mockResolvedValue({ tid: '12344', status: 'approved' })
     crypto = mock()
     crypto.uuid.mockReturnValue('any_ticket_id')
+    transaction = jest.spyOn(Transaction, 'create')
     ticketId = 'any_ticket_id'
     email = 'any_email'
     eventId = 'any_event_id'
@@ -44,5 +47,12 @@ describe('ProcessPaymentUseCase', () => {
     const promise = sut.execute({ ticketId, email, eventId, price, creditCardToken })
 
     await expect(promise).rejects.toThrow(new UnprocessedPaymentError())
+  })
+
+  it('should calls Transaction with correct values', async () => {
+    await sut.execute({ ticketId, email, eventId, price, creditCardToken })
+
+    expect(transaction).toHaveBeenCalledWith({ eventId, ticketId, price }, crypto)
+    expect(transaction).toHaveBeenCalledTimes(1)
   })
 })
