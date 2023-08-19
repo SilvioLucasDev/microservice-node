@@ -2,6 +2,7 @@ import { type MakePayment } from '@/application/contracts/gateways'
 import { type UUIDGenerator } from '@/application/contracts/adapters'
 import { Transaction } from '@/domain/entities'
 import { type SaveTransaction } from '@/application/contracts/repositories'
+import { PaymentApproved } from '@/domain/event'
 
 export class ProcessPaymentUseCase {
   constructor (
@@ -14,6 +15,8 @@ export class ProcessPaymentUseCase {
     await this.paymentGateway.makePayment({ email, creditCardToken, price })
     const transaction = Transaction.create({ eventId, ticketId, price }, this.crypto)
     await this.transactionRepository.save(transaction)
+    // eslint-disable-next-line no-new
+    new PaymentApproved(ticketId)
   }
 }
 
