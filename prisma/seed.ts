@@ -25,6 +25,7 @@ async function main() {
       id: '8f63e4e0-ae83-46ad-a5c6-b7fe474d2928',
       ticket_id: ticket.id,
       event_id: event.id,
+      tid: '66199ac9-c147-445d-8204-a24f5c5a11e6',
       price: 300,
       status: 'pending'
     }
