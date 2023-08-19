@@ -3,6 +3,7 @@ import { type MakePayment } from '@/application/contracts/gateways'
 import { UnprocessedPaymentError } from '@/application/errors/payment'
 import { type UUIDGenerator } from '@/application/contracts/adapters'
 import { Transaction } from '@/domain/entities'
+import { type SaveTransaction } from '@/application/contracts/repositories'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 
@@ -11,6 +12,7 @@ describe('ProcessPaymentUseCase', () => {
   let paymentGateway: MockProxy<MakePayment>
   let crypto: MockProxy<UUIDGenerator>
   let transaction: jest.SpyInstance
+  let transactionRepository: MockProxy<SaveTransaction>
   let ticketId: string
   let email: string
   let eventId: string
@@ -23,6 +25,7 @@ describe('ProcessPaymentUseCase', () => {
     crypto = mock()
     crypto.uuid.mockReturnValue('any_ticket_id')
     transaction = jest.spyOn(Transaction, 'create')
+    transactionRepository = mock()
     ticketId = 'any_ticket_id'
     email = 'any_email'
     eventId = 'any_event_id'
@@ -31,7 +34,7 @@ describe('ProcessPaymentUseCase', () => {
   })
 
   beforeEach(() => {
-    sut = new ProcessPaymentUseCase(paymentGateway, crypto)
+    sut = new ProcessPaymentUseCase(paymentGateway, crypto, transactionRepository)
   })
 
   it('should call method makePayment of PaymentGateway with correct values', async () => {
@@ -54,5 +57,12 @@ describe('ProcessPaymentUseCase', () => {
 
     expect(transaction).toHaveBeenCalledWith({ eventId, ticketId, price }, crypto)
     expect(transaction).toHaveBeenCalledTimes(1)
+  })
+
+  it('should calls TransactionRepository with instance of Transaction', async () => {
+    await sut.execute({ ticketId, email, eventId, price, creditCardToken })
+
+    expect(transactionRepository.save).toHaveBeenCalledWith(expect.any(Transaction))
+    expect(transactionRepository.save).toHaveBeenCalledTimes(1)
   })
 })
