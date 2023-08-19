@@ -1,4 +1,5 @@
 import { EventRepositoryMock, RabbitMQAdapterMock, TicketRepositoryMock } from '@/tests/main/routes/mocks'
+import { EventNotFoundError } from '@/application/errors'
 import { app } from '@/main/config/app'
 
 import request from 'supertest'
@@ -21,6 +22,15 @@ describe('Ticket Routes', () => {
 
       expect(status).toBe(200)
       expect(body.ticketId).toBeDefined()
+    })
+
+    it('should return 400 with EventNotFound', async () => {
+      const { status, body } = await request(app)
+        .post('/v1/api/ticket/purchase')
+        .send({ eventId: 'invalid_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
+
+      expect(status).toBe(400)
+      expect(body.error).toBe(new EventNotFoundError().message)
     })
   })
 })
