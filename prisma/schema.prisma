@@ -22,7 +22,7 @@ model Event {
 model Ticket {
   id          String       @id
   event_id    String
-  email       String       @unique
+  email       String
   status      String
 
   event       Event     @relation(fields: [event_id], references: [id])
@@ -35,7 +35,7 @@ model Transaction {
   id             String       @id
   ticket_id      String       @unique
   event_id       String
-  tid            String
+  tid            String       @unique
   price          Float
   status         String
 
