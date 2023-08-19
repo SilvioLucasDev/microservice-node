@@ -1,5 +1,5 @@
 export interface MakePayment {
-  makePayment: (input: MakePayment.Input) => Promise<void>
+  makePayment: (input: MakePayment.Input) => Promise<MakePayment.Output>
 }
 
 export namespace MakePayment {
