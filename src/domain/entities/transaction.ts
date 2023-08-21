@@ -5,19 +5,21 @@ export class Transaction {
     readonly id: string,
     readonly eventId: string,
     readonly ticketId: string,
+    readonly tid: string,
     readonly price: string,
     readonly status: string
   ) {}
 
-  static create ({ eventId, ticketId, price }: Input, crypto: UUIDGenerator): Transaction {
+  static create ({ eventId, ticketId, tid, price }: Input, crypto: UUIDGenerator): Transaction {
     const id = crypto.uuid()
     const initialStatus = 'processing'
-    return new Transaction(id, eventId, ticketId, price, initialStatus)
+    return new Transaction(id, eventId, ticketId, tid, price, initialStatus)
   }
 }
 
 type Input = {
   eventId: string
   ticketId: string
+  tid: string
   price: string
 }

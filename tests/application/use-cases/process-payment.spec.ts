@@ -19,12 +19,13 @@ describe('ProcessPaymentUseCase', () => {
   let ticketId: string
   let email: string
   let eventId: string
+  let tid: string
   let price: string
   let creditCardToken: string
 
   beforeAll(() => {
     paymentGateway = mock()
-    paymentGateway.makePayment.mockResolvedValue({ tid: '12344', status: 'approved' })
+    paymentGateway.makePayment.mockResolvedValue({ tid: 'any_tid', status: 'approved' })
     crypto = mock()
     crypto.uuid.mockReturnValue('any_ticket_id')
     transaction = jest.spyOn(Transaction, 'create')
@@ -33,6 +34,7 @@ describe('ProcessPaymentUseCase', () => {
     ticketId = 'any_ticket_id'
     email = 'any_email'
     eventId = 'any_event_id'
+    tid = 'any_tid'
     price = 'any_price'
     creditCardToken = 'any_credit_card_token'
   })
@@ -51,7 +53,7 @@ describe('ProcessPaymentUseCase', () => {
   it('should calls Transaction with correct values', async () => {
     await sut.execute({ ticketId, email, eventId, price, creditCardToken })
 
-    expect(transaction).toHaveBeenCalledWith({ eventId, ticketId, price }, crypto)
+    expect(transaction).toHaveBeenCalledWith({ eventId, ticketId, tid, price }, crypto)
     expect(transaction).toHaveBeenCalledTimes(1)
   })
 

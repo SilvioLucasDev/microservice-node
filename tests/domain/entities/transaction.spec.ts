@@ -13,7 +13,7 @@ describe('TransactionEntity', () => {
   })
 
   beforeEach(() => {
-    sut = Transaction.create({ eventId: 'any_event_id', ticketId: 'any_ticket_id', price: 'any_price' }, crypto)
+    sut = Transaction.create({ eventId: 'any_event_id', ticketId: 'any_ticket_id', tid: 'any_tid', price: 'any_price' }, crypto)
   })
 
   it('should return instance of Transaction with correct values', () => {
@@ -21,6 +21,7 @@ describe('TransactionEntity', () => {
       'any_transaction_id',
       'any_event_id',
       'any_ticket_id',
+      'any_tid',
       'any_price',
       'processing'
     ))
