@@ -30,4 +30,18 @@ describe('RabbitMQAdapter', () => {
       expect(JSON.parse(message.content.toString())).toBe(data)
     }
   })
+
+  it('should consume a message from the queue', async () => {
+    sut['connection'] = await amqp.connect()
+    await sut.publish({ queueName, data })
+
+    sut['connection'] = await amqp.connect()
+    await sut.consume({
+      queueName,
+      callback: async (input: any) => {
+        console.log(input)
+        expect(input).toBe(data)
+      }
+    })
+  })
 })
