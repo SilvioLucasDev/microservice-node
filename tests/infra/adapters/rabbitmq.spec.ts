@@ -1,4 +1,4 @@
-import { RabbitMQAdapter } from '@/infra/adapters'
+import { RabbitMQAdapter } from '@/infra/adapters/queue'
 
 import amqp from 'mock-amqplib'
 

@@ -4,7 +4,7 @@ import { SetupExpress } from '@/main/config/express'
 
 import request from 'supertest'
 
-jest.mock('@/infra/adapters/rabbitmq', () => ({
+jest.mock('@/infra/adapters/queue/rabbitmq', () => ({
   RabbitMQAdapter: RabbitMQAdapterMock
 }))
 
