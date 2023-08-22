@@ -1,8 +1,8 @@
+import { type On } from '@/application/contracts/adapters'
 import { makePurchaseTicketController } from '@/main/factories/presentation/controllers'
-import { type ExpressAdapter } from '@/presentation/adapters/express'
 
 export class TicketRouter {
-  constructor (httpServer: ExpressAdapter) {
+  constructor (httpServer: On) {
     httpServer.on({
       method: 'post',
       url: '/ticket/purchase',
