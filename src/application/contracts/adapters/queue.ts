@@ -10,7 +10,7 @@ export namespace Publish {
 }
 
 export interface Consume {
-  consume: (input: Publish.Input) => Promise<void>
+  consume: (input: Consume.Input) => Promise<void>
 }
 
 export namespace Consume {
