@@ -1,4 +1,3 @@
-/* eslint-disable no-new */
 import { type Consume } from '@/application/contracts/adapters'
 import { QueueController } from '@/infra/adapters/queue'
 
