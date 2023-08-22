@@ -1,6 +1,6 @@
 import { type Consume, type Publish } from '@/application/contracts/adapters'
 
-import amqp, { type Message, type Channel, type Connection } from 'amqplib'
+import amqp, { type Channel, type Connection } from 'amqplib'
 
 export class RabbitMQAdapter implements Publish, Consume {
   private connection?: Connection
@@ -30,16 +30,10 @@ export class RabbitMQAdapter implements Publish, Consume {
 
   async consume ({ queueName, callback }: Consume.Input): Promise<void> {
     await this.connectQueue(queueName)
-
-    await this.channel!.consume(queueName, async (msg: Message | null) => {
-      if (!msg) return
+    await this.channel!.consume(queueName, async (msg: any) => {
       const input = JSON.parse(msg.content.toString())
-      try {
-        await callback(input)
-        this.channel!.ack(msg)
-      } catch (e: any) {
-        console.log(e.message)
-      }
+      await callback(input)
+      this.channel!.ack(msg)
     })
   }
 }
