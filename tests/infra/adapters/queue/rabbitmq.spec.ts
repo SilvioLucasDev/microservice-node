@@ -39,7 +39,6 @@ describe('RabbitMQAdapter', () => {
     await sut.consume({
       queueName,
       callback: async (input: any) => {
-        console.log(input)
         expect(input).toBe(data)
       }
     })
