@@ -1,5 +1,4 @@
 import './config/module-alias'
-import { app } from '@/main/config/app'
-import { env } from '@/main/config/env'
+import { SetupExpress } from '@/main/config/express'
 
-app.listen(env.port, () => console.log(`Server running at http://localhost:${env.port}`))
+new SetupExpress().init()

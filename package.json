@@ -30,7 +30,7 @@
     "test:watch": "npm test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
     "test:coverage": "npm test -- --coverage",
-    "test:integration": "npm test -- --watch -c jest.integration.config.js"
+    "test:integration": "npm test -- --detectOpenHandles --watch -c jest.integration.config.js"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

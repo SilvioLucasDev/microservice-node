@@ -1,4 +1,4 @@
-import { adaptExpressRoute } from '@/main/adapters'
+import { expressRouterAdapter } from '@/main/adapters'
 import { type Controller } from '@/presentation/controllers'
 
 import { getMockReq, getMockRes } from '@jest-mock/express'
@@ -24,7 +24,7 @@ describe('ExpressRouterAdapter', () => {
   })
 
   beforeEach(() => {
-    sut = adaptExpressRoute(controller)
+    sut = expressRouterAdapter(controller)
   })
 
   it('should call handle with correct request', async () => {
