@@ -2,8 +2,9 @@ import express, { type Request, type Response } from 'express'
 import { env } from '@/main/config/env'
 
 import cors from 'cors'
+import { type Listen, type On } from '@/application/contracts/adapters'
 
-export class ExpressAdapter {
+export class ExpressAdapter implements On, Listen {
   app: any
 
   constructor () {
@@ -12,7 +13,7 @@ export class ExpressAdapter {
     this.app.use(cors())
   }
 
-  on (method: string, url: string, callback: any): void {
+  on ({ method, url, callback }: On.Input): void {
     this.app[method](`/v1/api${url.replace(/\{|\}/g, '')}`, async function (req: Request, res: Response) {
       const { statusCode, data } = await callback(req.params, req.body)
       const json = [200, 204].includes(statusCode) ? data : { error: data.message }
