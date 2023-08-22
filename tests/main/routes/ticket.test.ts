@@ -1,7 +1,7 @@
 import { EventRepositoryMock, RabbitMQAdapterMock, TicketRepositoryMock } from '@/tests/main/routes/mocks'
 import { EventNotFoundError } from '@/application/errors'
 import { TicketRouter } from '@/main/routes'
-import { ExpressAdapter } from '@/main/adapters'
+import { ExpressAdapter } from '@/presentation/adapters'
 
 import request from 'supertest'
 
