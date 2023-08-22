@@ -1,7 +1,6 @@
 import './config/module-alias'
-import { SetupExpress } from '@/main/config/express'
-
 import { makeQueueController as initQueue } from '@/main/factories/infra/adapters/queue'
+import { makeHttpServer as initHttpServer } from './factories/routes'
 
-new SetupExpress().init()
+initHttpServer()
 initQueue()

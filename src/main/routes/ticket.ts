@@ -1,8 +1,10 @@
-import { makePurchaseTicketController } from '@/main/factories/presentation/controllers'
-import { expressRouterAdapter as adapt } from '@/main/adapters'
+import { makePurchaseTicketController } from '../factories/presentation/controllers'
+import { type ExpressAdapter } from '../adapters/express'
 
-import { type Router } from 'express'
-
-export default (router: Router): void => {
-  router.post('/ticket/purchase', adapt(makePurchaseTicketController()))
+export class TicketRouter {
+  constructor (httpServer: ExpressAdapter) {
+    httpServer.on('post', '/ticket/purchase', async (params: any, body: any) => {
+      return await makePurchaseTicketController().handle(body)
+    })
+  }
 }

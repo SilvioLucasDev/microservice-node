@@ -1,6 +1,7 @@
 import { EventRepositoryMock, RabbitMQAdapterMock, TicketRepositoryMock } from '@/tests/main/routes/mocks'
 import { EventNotFoundError } from '@/application/errors'
-import { SetupExpress } from '@/main/config/express'
+import { TicketRouter } from '@/main/routes'
+import { ExpressAdapter } from '@/main/adapters'
 
 import request from 'supertest'
 
@@ -14,16 +15,17 @@ jest.mock('@/infra/repositories/postgres', () => ({
 }))
 
 describe('Ticket Routes', () => {
-  let setupExpress: SetupExpress
+  let httpServer: ExpressAdapter
 
   beforeAll(() => {
-    setupExpress = new SetupExpress()
-    setupExpress.init()
+    httpServer = new ExpressAdapter()
+    new TicketRouter(httpServer)
+    httpServer.listen()
   })
 
   describe('POST /ticket/purchase', () => {
     it('should return 200 with ticketID', async () => {
-      const { status, body } = await request(setupExpress.app)
+      const { status, body } = await request(httpServer.app)
         .post('/v1/api/ticket/purchase')
         .send({ eventId: 'any_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
 
@@ -32,7 +34,7 @@ describe('Ticket Routes', () => {
     })
 
     it('should return 400 with EventNotFound', async () => {
-      const { status, body } = await request(setupExpress.app)
+      const { status, body } = await request(httpServer.app)
         .post('/v1/api/ticket/purchase')
         .send({ eventId: 'invalid_event_id', email: 'any_email', creditCardToken: 'any_credit_card_token' })
 

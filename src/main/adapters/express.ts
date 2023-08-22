@@ -1,11 +1,26 @@
-import { type Controller } from '@/presentation/controllers'
+import express, { type Request, type Response } from 'express'
+import { env } from '@/main/config/env'
 
-import { type RequestHandler } from 'express'
+import cors from 'cors'
 
-export const expressRouterAdapter = (controller: Controller): RequestHandler => {
-  return async (req, res) => {
-    const { statusCode, data } = await controller.handle({ ...req.body })
-    const json = [200, 204].includes(statusCode) ? data : { error: data.message }
-    res.status(statusCode).json(json)
+export class ExpressAdapter {
+  app: any
+
+  constructor () {
+    this.app = express()
+    this.app.use(express.json())
+    this.app.use(cors())
+  }
+
+  on (method: string, url: string, callback: any): void {
+    this.app[method](`/v1/api${url.replace(/\{|\}/g, '')}`, async function (req: Request, res: Response) {
+      const { statusCode, data } = await callback(req.params, req.body)
+      const json = [200, 204].includes(statusCode) ? data : { error: data.message }
+      res.status(statusCode).json(json)
+    })
+  }
+
+  listen (): void {
+    this.app.listen(env.port, () => console.log(`Server running at http://localhost:${env.port}`))
   }
 }
