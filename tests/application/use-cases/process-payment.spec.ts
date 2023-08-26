@@ -69,7 +69,6 @@ describe('ProcessPaymentUseCase', () => {
 
     expect(PaymentProcessed).toHaveBeenCalledWith(
       'any_ticket_id',
-      'any_email',
       'approved'
     )
     expect(PaymentProcessed).toHaveBeenCalledTimes(1)

@@ -17,6 +17,7 @@ describe('PgEventRepository', () => {
   it('should return event if exists', async () => {
     const result = {
       id,
+      name: 'any_name',
       description: 'any_description',
       price: 300,
       capacity: 10000
