@@ -18,3 +18,18 @@ export namespace UpdateStatusTicket {
     status: string
   }
 }
+
+export interface FindDetailsByIdTicket {
+  findDetailsById: (id: FindDetailsByIdTicket.Input) => Promise<FindDetailsByIdTicket.Output>
+}
+
+export namespace FindDetailsByIdTicket {
+  export type Input = {
+    id: string
+  }
+
+  export type Output = {
+    email: string
+    eventName: string
+  }
+}
