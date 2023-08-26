@@ -3,6 +3,7 @@ import { Email, Ticket } from '@/domain/entities'
 import { TicketProcessed } from '@/domain/event'
 import { env } from '@/main/config/env'
 import { type Publish } from '@/application/contracts/adapters'
+
 export class ProcessTicketUseCase {
   constructor (
     private readonly ticketRepository: UpdateStatusTicket & FindDetailsByIdTicket,
