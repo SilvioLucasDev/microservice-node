@@ -7,10 +7,12 @@ describe('ProcessTicketUseCase', () => {
   let sut: ProcessTicketUseCase
   let ticketRepository: MockProxy<UpdateStatusTicket>
   let ticketId: string
+  let email: string
 
   beforeAll(() => {
     ticketRepository = mock()
     ticketId = 'any_ticket_id'
+    email = 'any_email'
   })
 
   beforeEach(() => {
@@ -18,14 +20,14 @@ describe('ProcessTicketUseCase', () => {
   })
 
   it('should calls TicketRepository with correct value if payment is approved', async () => {
-    await sut.execute({ ticketId, status: 'approved' })
+    await sut.execute({ ticketId, status: 'approved', email })
 
     expect(ticketRepository.updateStatus).toHaveBeenCalledWith({ id: ticketId, status: 'approved' })
     expect(ticketRepository.updateStatus).toHaveBeenCalledTimes(1)
   })
 
   it('should calls TicketRepository with correct value if payment is approved', async () => {
-    await sut.execute({ ticketId, status: 'rejected' })
+    await sut.execute({ ticketId, status: 'rejected', email })
 
     expect(ticketRepository.updateStatus).toHaveBeenCalledWith({ id: ticketId, status: 'cancelled' })
     expect(ticketRepository.updateStatus).toHaveBeenCalledTimes(1)

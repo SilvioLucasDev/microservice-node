@@ -73,7 +73,8 @@ describe('PurchaseTicketUseCase', () => {
       'any_ticket_id',
       'any_event_id',
       'any_credit_card_token',
-      'any_price'
+      'any_price',
+      'any_email'
     )
     expect(TicketReserved).toHaveBeenCalledTimes(1)
   })

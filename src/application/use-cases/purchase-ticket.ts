@@ -17,7 +17,7 @@ export class PurchaseTicketUseCase {
     if (event === undefined) throw new EventNotFoundError()
     const ticket = Ticket.create({ eventId, email }, this.crypto)
     await this.ticketRepository.save(ticket)
-    const ticketReserved = new TicketReserved(ticket.id, event.id, creditCardToken, event.price)
+    const ticketReserved = new TicketReserved(ticket.id, event.id, creditCardToken, event.price, email)
     await this.queue.publish({ queueName: 'ticketReserved', data: ticketReserved })
     return { ticketId: ticket.id, status: ticket.status }
   }
