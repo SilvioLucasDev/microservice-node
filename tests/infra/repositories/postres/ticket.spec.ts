@@ -37,4 +37,12 @@ describe('PgTicketRepository', () => {
 
     await expect(result).resolves.toBeUndefined()
   })
+
+  it('should return undefined an update ticket', async () => {
+    prismaMock.ticket.update.mockResolvedValue({ id, event_id: eventId, email, status })
+
+    const result = sut.updateStatus({ id, status })
+
+    await expect(result).resolves.toBeUndefined()
+  })
 })
