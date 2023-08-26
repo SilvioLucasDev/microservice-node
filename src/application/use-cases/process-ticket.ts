@@ -6,14 +6,14 @@ export class ProcessTicketUseCase {
     private readonly ticketRepository: UpdateStatusTicket
   ) {}
 
-  async execute ({ ticketId, statusPayment }: Input): Promise<void> {
-    const statusTicket = statusPayment === 'approved' ? Ticket.approve() : Ticket.cancel()
+  async execute ({ ticketId, status }: Input): Promise<void> {
+    const statusTicket = status === 'approved' ? Ticket.approve() : Ticket.cancel()
     await this.ticketRepository.updateStatus({ id: ticketId, status: statusTicket })
-    // Mandar e-mail para cliente
+    console.log('Email enviado para cliente')
   }
 }
 
 type Input = {
   ticketId: string
-  statusPayment: string
+  status: string
 }

@@ -18,14 +18,14 @@ describe('ProcessTicketUseCase', () => {
   })
 
   it('should calls TicketRepository with correct value if payment is approved', async () => {
-    await sut.execute({ ticketId, statusPayment: 'approved' })
+    await sut.execute({ ticketId, status: 'approved' })
 
     expect(ticketRepository.updateStatus).toHaveBeenCalledWith({ id: ticketId, status: 'approved' })
     expect(ticketRepository.updateStatus).toHaveBeenCalledTimes(1)
   })
 
   it('should calls TicketRepository with correct value if payment is approved', async () => {
-    await sut.execute({ ticketId, statusPayment: 'rejected' })
+    await sut.execute({ ticketId, status: 'rejected' })
 
     expect(ticketRepository.updateStatus).toHaveBeenCalledWith({ id: ticketId, status: 'cancelled' })
     expect(ticketRepository.updateStatus).toHaveBeenCalledTimes(1)
