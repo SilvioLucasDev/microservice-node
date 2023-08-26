@@ -14,7 +14,7 @@ export class ProcessPaymentUseCase {
 
   async execute ({ ticketId, email, eventId, price, creditCardToken }: Input): Promise<void> {
     const payment = await this.paymentGateway.makePayment({ email, creditCardToken, price })
-    const transaction = Transaction.create({ eventId, ticketId, tid: payment.tid, price }, this.crypto)
+    const transaction = Transaction.create({ eventId, ticketId, tid: payment.tid, price, status: payment.status }, this.crypto)
     await this.transactionRepository.save(transaction)
     const paymentProcessed = new PaymentProcessed(ticketId, payment.status)
     await this.queue.publish({ queueName: 'paymentProcessed', data: paymentProcessed })

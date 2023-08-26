@@ -53,7 +53,7 @@ describe('ProcessPaymentUseCase', () => {
   it('should calls Transaction with correct values', async () => {
     await sut.execute({ ticketId, email, eventId, price, creditCardToken })
 
-    expect(transaction).toHaveBeenCalledWith({ eventId, ticketId, tid, price }, crypto)
+    expect(transaction).toHaveBeenCalledWith({ eventId, ticketId, tid, price, status: 'approved' }, crypto)
     expect(transaction).toHaveBeenCalledTimes(1)
   })
 

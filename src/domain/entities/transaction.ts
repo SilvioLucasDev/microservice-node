@@ -10,10 +10,9 @@ export class Transaction {
     readonly status: string
   ) {}
 
-  static create ({ eventId, ticketId, tid, price }: Input, crypto: UUIDGenerator): Transaction {
+  static create ({ eventId, ticketId, tid, price, status }: Input, crypto: UUIDGenerator): Transaction {
     const id = crypto.uuid()
-    const initialStatus = 'processing'
-    return new Transaction(id, eventId, ticketId, tid, price, initialStatus)
+    return new Transaction(id, eventId, ticketId, tid, price, status)
   }
 }
 
@@ -22,4 +21,5 @@ type Input = {
   ticketId: string
   tid: string
   price: string
+  status: string
 }
