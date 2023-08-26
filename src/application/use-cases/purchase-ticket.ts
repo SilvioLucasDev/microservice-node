@@ -19,7 +19,7 @@ export class PurchaseTicketUseCase {
     await this.ticketRepository.save(ticket)
     const ticketReserved = new TicketReserved(ticket.id, event.id, creditCardToken, event.price)
     await this.queue.publish({ queueName: 'ticketReserved', data: ticketReserved })
-    return { ticketId: ticket.id }
+    return { ticketId: ticket.id, status: ticket.status }
   }
 }
 
@@ -31,4 +31,5 @@ type Input = {
 
 type Output = {
   ticketId: string
+  status: string
 }

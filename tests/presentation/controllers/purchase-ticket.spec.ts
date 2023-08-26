@@ -17,7 +17,7 @@ describe('PurchaseTicketController', () => {
 
   beforeAll(() => {
     PurchaseTicketUseCase = mock()
-    PurchaseTicketUseCase.execute.mockResolvedValue({ ticketId: 'any_ticket_id' })
+    PurchaseTicketUseCase.execute.mockResolvedValue({ ticketId: 'any_ticket_id', status: 'any_status' })
     eventId = 'any_event_id'
     email = 'any_email'
     creditCardToken = 'any_credit_card_token'
@@ -82,7 +82,8 @@ describe('PurchaseTicketController', () => {
     expect(httpResponse).toEqual({
       statusCode: 200,
       data: {
-        ticketId: 'any_ticket_id'
+        ticketId: 'any_ticket_id',
+        status: 'any_status'
       }
     })
   })

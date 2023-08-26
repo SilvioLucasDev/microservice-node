@@ -31,6 +31,7 @@ describe('Ticket Routes', () => {
 
       expect(status).toBe(200)
       expect(body.ticketId).toBeDefined()
+      expect(body.status).toBe('reserved')
     })
 
     it('should return 400 with EventNotFound', async () => {

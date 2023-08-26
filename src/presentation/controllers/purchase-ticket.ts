@@ -12,7 +12,7 @@ export class PurchaseTicketController implements Controller {
       const error = this.validate(httpRequest)
       if (error !== undefined) return badRequest(error)
       const result = await this.purchaseTicketUseCase.execute({ eventId: httpRequest.eventId, email: httpRequest.email, creditCardToken: httpRequest.creditCardToken })
-      return ok({ ticketId: result.ticketId })
+      return ok({ ticketId: result.ticketId, status: result.status })
     } catch (error) {
       if (error instanceof EventNotFoundError) return badRequest(error)
       return serverError(error as Error)
@@ -35,4 +35,5 @@ type HttpRequest = {
 
 type Model = Error | {
   ticketId: string
+  status: string
 }
