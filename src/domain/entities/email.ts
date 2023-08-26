@@ -6,14 +6,14 @@ export class Email {
   ) {
   }
 
-  static create ({ ticketId, email, event, ticketStatus }: Input): Email {
+  static create ({ ticketId, email, eventName, ticketStatus }: Input): Email {
     let body
     if (ticketStatus === 'approved') {
-      body = `Olá, tudo bem?! <br><br> O pagamento do ticket: ${ticketId} para o evento ${event} foi realizado com sucesso!`
+      body = `Olá, tudo bem?! <br><br> O pagamento do ticket: ${ticketId} para o evento ${eventName} foi realizado com sucesso!`
     } else {
-      body = `Olá, tudo bem?! <br><br> Não foi possível realizar o pagamento do ticket: ${ticketId} para o evento ${event}`
+      body = `Olá, tudo bem?! <br><br> Não foi possível realizar o pagamento do ticket: ${ticketId} para o evento ${eventName}`
     }
-    const subject = `Ticket Purchase | ${event}`
+    const subject = `Ticket Purchase | ${eventName}`
     return new Email(subject, email, body)
   }
 }
@@ -21,6 +21,6 @@ export class Email {
 type Input = {
   ticketId: string
   email: string
-  event: string
+  eventName: string
   ticketStatus: string
 }

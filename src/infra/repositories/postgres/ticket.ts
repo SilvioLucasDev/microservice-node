@@ -24,9 +24,6 @@ export class PgTicketRepository implements SaveTicket, UpdateStatusTicket, FindD
         }
       }
     })
-
-    console.log(ticket)
-
     return {
       email: ticket!.email,
       eventName: ticket!.event.name
