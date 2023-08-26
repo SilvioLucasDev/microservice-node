@@ -1,8 +1,8 @@
 export class Email {
   constructor (
-    private readonly subject: string,
-    private readonly email: string,
-    private readonly body: string
+    readonly subject: string,
+    readonly email: string,
+    readonly body: string
   ) {
   }
 
