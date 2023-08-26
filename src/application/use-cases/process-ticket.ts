@@ -1,5 +1,5 @@
 import { type FindDetailsByIdTicket, type UpdateStatusTicket } from '@/application/contracts/repositories'
-import { Ticket } from '@/domain/entities'
+import { Email, Ticket } from '@/domain/entities'
 
 export class ProcessTicketUseCase {
   constructor (
@@ -7,15 +7,14 @@ export class ProcessTicketUseCase {
   ) {}
 
   async execute ({ ticketId, status }: Input): Promise<void> {
-    const statusTicket = status === 'approved' ? Ticket.approve() : Ticket.cancel()
-    await this.ticketRepository.updateStatus({ id: ticketId, status: statusTicket })
-    this.ticketRepository.findDetailsById({ id: ticketId })
-    console.log('Email enviado para ??')
+    const ticketStatus = status === 'approved' ? Ticket.approve() : Ticket.cancel()
+    await this.ticketRepository.updateStatus({ id: ticketId, status: ticketStatus })
+    const { email, eventName } = await this.ticketRepository.findDetailsById({ id: ticketId })
+    Email.create({ ticketId, email, eventName, ticketStatus })
   }
 }
 
 type Input = {
   ticketId: string
   status: string
-  email: string
 }
