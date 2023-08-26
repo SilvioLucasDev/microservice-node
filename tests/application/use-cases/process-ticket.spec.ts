@@ -1,8 +1,12 @@
 import { ProcessTicketUseCase } from '@/application/use-cases'
 import { type FindDetailsByIdTicket, type UpdateStatusTicket } from '@/application/contracts/repositories'
 import { Email } from '@/domain/entities'
+import { TicketProcessed } from '@/domain/event'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
+import { env } from '@/main/config/env'
+
+jest.mock('@/domain/event/ticket-processed')
 
 describe('ProcessTicketUseCase', () => {
   let sut: ProcessTicketUseCase
@@ -51,5 +55,17 @@ describe('ProcessTicketUseCase', () => {
 
     expect(emailEntity).toHaveBeenCalledWith({ ticketId, email, eventName: 'any_event_name', ticketStatus: 'approved' })
     expect(emailEntity).toHaveBeenCalledTimes(1)
+  })
+
+  it('should calls TicketReserved with correct values', async () => {
+    await sut.execute({ ticketId, status })
+
+    expect(TicketProcessed).toHaveBeenCalledWith(
+      env.emailService,
+      'Ticket Purchase | any_event_name',
+      'any_email',
+      'Olá, tudo bem?! <br><br> O pagamento do ticket: any_ticket_id para o evento any_event_name foi realizado com sucesso!'
+    )
+    expect(TicketProcessed).toHaveBeenCalledTimes(1)
   })
 })
