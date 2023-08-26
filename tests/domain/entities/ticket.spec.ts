@@ -24,4 +24,15 @@ describe('TicketEntity', () => {
       'reserved'
     ))
   })
+
+  it('should return instance of Ticket with status approved', () => {
+    sut.approve()
+
+    expect(sut).toStrictEqual(new Ticket(
+      'any_ticket_id',
+      'any_event_id',
+      'any_email',
+      'approved'
+    ))
+  })
 })
