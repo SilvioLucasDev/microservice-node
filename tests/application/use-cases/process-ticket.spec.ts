@@ -1,29 +1,33 @@
 import { ProcessTicketUseCase } from '@/application/use-cases'
-import { type FindByIdTicket, type SaveTicket } from '@/application/contracts/repositories'
+import { type UpdateStatusTicket } from '@/application/contracts/repositories'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 
 describe('ProcessTicketUseCase', () => {
   let sut: ProcessTicketUseCase
-  let ticketRepository: MockProxy<SaveTicket & FindByIdTicket>
-
+  let ticketRepository: MockProxy<UpdateStatusTicket>
   let ticketId: string
-  let status: string
 
   beforeAll(() => {
     ticketRepository = mock()
     ticketId = 'any_ticket_id'
-    status = 'any_status'
   })
 
   beforeEach(() => {
     sut = new ProcessTicketUseCase(ticketRepository)
   })
 
-  it('should calls TicketRepository with correct value', async () => {
-    await sut.execute({ ticketId, status })
+  it('should calls TicketRepository with correct value if payment is approved', async () => {
+    await sut.execute({ ticketId, statusPayment: 'approved' })
 
-    expect(ticketRepository.findById).toHaveBeenCalledWith({ id: ticketId })
-    expect(ticketRepository.findById).toHaveBeenCalledTimes(1)
+    expect(ticketRepository.updateStatus).toHaveBeenCalledWith({ id: ticketId, status: 'approved' })
+    expect(ticketRepository.updateStatus).toHaveBeenCalledTimes(1)
+  })
+
+  it('should calls TicketRepository with correct value if payment is approved', async () => {
+    await sut.execute({ ticketId, statusPayment: 'rejected' })
+
+    expect(ticketRepository.updateStatus).toHaveBeenCalledWith({ id: ticketId, status: 'cancelled' })
+    expect(ticketRepository.updateStatus).toHaveBeenCalledTimes(1)
   })
 })
