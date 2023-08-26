@@ -67,7 +67,7 @@ describe('ProcessTicketUseCase', () => {
       env.emailService,
       'Ticket Purchase | any_event_name',
       'any_email',
-      'Olá, tudo bem?! <br><br> O pagamento do ticket: any_ticket_id para o evento any_event_name foi realizado com sucesso!'
+      'Hello! <br><br> Ticket payment: any_ticket_id for the any_event_name event was successfully completed!'
     )
     expect(TicketProcessed).toHaveBeenCalledTimes(1)
   })
