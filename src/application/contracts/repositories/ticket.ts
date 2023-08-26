@@ -8,14 +8,13 @@ export namespace SaveTicket {
   export type Input = Ticket
 }
 
-export interface FindByIdTicket {
-  findById: (id: FindByIdTicket.Input) => Promise<void>
+export interface UpdateStatusTicket {
+  updateStatus: (id: UpdateStatusTicket.Input) => Promise<void>
 }
 
-export namespace FindByIdTicket {
+export namespace UpdateStatusTicket {
   export type Input = {
     id: string
+    status: string
   }
-
-  export type Output = Ticket
 }
