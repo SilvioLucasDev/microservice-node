@@ -14,12 +14,12 @@ export class Ticket {
     return new Ticket(id, eventId, email, initialStatus)
   }
 
-  approve (): void {
-    this.status = 'approved'
+  static approve (): string {
+    return 'approved'
   }
 
-  cancel (): void {
-    this.status = 'cancelled'
+  static cancel (): string {
+    return 'cancelled'
   }
 }
 

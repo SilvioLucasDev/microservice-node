@@ -26,24 +26,14 @@ describe('TicketEntity', () => {
   })
 
   it('should return instance of Ticket with status approved', () => {
-    sut.approve()
+    const statusTicket = Ticket.approve()
 
-    expect(sut).toStrictEqual(new Ticket(
-      'any_ticket_id',
-      'any_event_id',
-      'any_email',
-      'approved'
-    ))
+    expect(statusTicket).toBe('approved')
   })
 
   it('should return instance of Ticket with status approved', () => {
-    sut.cancel()
+    const statusTicket = Ticket.cancel()
 
-    expect(sut).toStrictEqual(new Ticket(
-      'any_ticket_id',
-      'any_event_id',
-      'any_email',
-      'cancelled'
-    ))
+    expect(statusTicket).toBe('cancelled')
   })
 })
