@@ -8,40 +8,46 @@ datasource db {
 }
 
 model Event {
-  id          String       @id
-  name        String
-  description String
-  price       Float
-  capacity    Int
+  id           String        @id
+  name         String
+  description  String
+  price        Float
+  capacity     Int
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
 
-  tickets     Ticket[]
+  tickets      Ticket[]
   transactions Transaction[]
 
   @@map("events")
 }
 
 model Ticket {
-  id          String       @id
-  event_id    String
-  email       String
-  status      String
+  id           String       @id
+  event_id     String
+  email        String
+  status       String
+  created_at   DateTime     @default(now())
+  updated_at   DateTime     @updatedAt
 
-  event       Event     @relation(fields: [event_id], references: [id])
+  event        Event        @relation(fields: [event_id], references: [id])
   transactions Transaction?
 
   @@map("tickets")
 }
 
 model Transaction {
-  id             String       @id
-  ticket_id      String       @unique
-  event_id       String
-  tid            String       @unique
-  price          Float
-  status         String
+  id         String   @id
+  ticket_id  String   @unique
+  event_id   String
+  tid        String   @unique
+  price      Float
+  status     String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-  event          Event     @relation(fields: [event_id], references: [id])
-  ticket         Ticket?    @relation(fields: [ticket_id], references: [id])
+  event      Event    @relation(fields: [event_id], references: [id])
+  ticket     Ticket?  @relation(fields: [ticket_id], references: [id])
 
   @@map("transactions")
 }
