@@ -14,6 +14,8 @@ describe('PgTransactionRepository', () => {
   let tid: string
   let price: number
   let status: string
+  let createdAt: Date
+  let updatedAt: Date
 
   beforeEach(() => {
     sut = new PgTransactionRepository()
@@ -24,6 +26,8 @@ describe('PgTransactionRepository', () => {
     tid = 'any_tid'
     price = 300
     status = 'any_status'
+    createdAt = new Date()
+    updatedAt = new Date()
   })
 
   afterAll(async () => {
@@ -31,7 +35,7 @@ describe('PgTransactionRepository', () => {
   })
 
   it('should return undefined an create new transaction', async () => {
-    prismaMock.transaction.create.mockResolvedValue({ id, ticket_id: ticketId, event_id: eventId, tid, price, status })
+    prismaMock.transaction.create.mockResolvedValue({ id, ticket_id: ticketId, event_id: eventId, tid, price, status, created_at: createdAt, updated_at: updatedAt })
 
     const transaction = Transaction.create({ eventId, ticketId, tid, price: price.toString(), status }, crypto)
     const result = sut.save(transaction)

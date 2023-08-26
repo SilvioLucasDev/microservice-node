@@ -1,6 +1,6 @@
 {
   "name": "microservice-node",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Microservice in node using messaging services with clean architecture and TDD",
   "keywords": [
     "clean architecture",

@@ -20,7 +20,9 @@ describe('PgEventRepository', () => {
       name: 'any_name',
       description: 'any_description',
       price: 300,
-      capacity: 10000
+      capacity: 10000,
+      created_at: new Date(),
+      updated_at: new Date()
     }
     prismaMock.event.findFirst.mockResolvedValueOnce(result)
 

@@ -12,6 +12,8 @@ describe('PgTicketRepository', () => {
   let eventId: string
   let email: string
   let status: string
+  let createdAt: Date
+  let updatedAt: Date
 
   beforeAll(() => {
     crypto = mock()
@@ -19,6 +21,8 @@ describe('PgTicketRepository', () => {
     eventId = 'any_event_id'
     email = 'any_email@hotmail.com'
     status = 'any_status'
+    createdAt = new Date()
+    updatedAt = new Date()
   })
 
   beforeEach(() => {
@@ -30,7 +34,7 @@ describe('PgTicketRepository', () => {
   })
 
   it('should return undefined an create new ticket', async () => {
-    prismaMock.ticket.create.mockResolvedValue({ id, event_id: eventId, email, status })
+    prismaMock.ticket.create.mockResolvedValue({ id, event_id: eventId, email, status, created_at: createdAt, updated_at: updatedAt })
 
     const ticket = Ticket.create({ eventId, email }, crypto)
     const result = sut.save(ticket)
@@ -39,7 +43,7 @@ describe('PgTicketRepository', () => {
   })
 
   it('should return undefined an update ticket', async () => {
-    prismaMock.ticket.update.mockResolvedValue({ id, event_id: eventId, email, status })
+    prismaMock.ticket.update.mockResolvedValue({ id, event_id: eventId, email, status, created_at: createdAt, updated_at: updatedAt })
 
     const result = sut.updateStatus({ id, status })
 
