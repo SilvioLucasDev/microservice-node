@@ -2,10 +2,11 @@ import { type FindDetailsByIdTicket, type UpdateStatusTicket } from '@/applicati
 import { Email, Ticket } from '@/domain/entities'
 import { TicketProcessed } from '@/domain/event'
 import { env } from '@/main/config/env'
-
+import { type Publish } from '@/application/contracts/adapters'
 export class ProcessTicketUseCase {
   constructor (
-    private readonly ticketRepository: UpdateStatusTicket & FindDetailsByIdTicket
+    private readonly ticketRepository: UpdateStatusTicket & FindDetailsByIdTicket,
+    private readonly queue: Publish
   ) {}
 
   async execute ({ ticketId, status }: Input): Promise<void> {
@@ -13,7 +14,8 @@ export class ProcessTicketUseCase {
     await this.ticketRepository.updateStatus({ id: ticketId, status: ticketStatus })
     const { email, eventName } = await this.ticketRepository.findDetailsById({ id: ticketId })
     const emailData = Email.create({ ticketId, email, eventName, ticketStatus })
-    new TicketProcessed(env.emailService, emailData.subject, emailData.email, emailData.body)
+    const ticketProcessed = new TicketProcessed(env.emailService, emailData.subject, emailData.email, emailData.body)
+    await this.queue.publish({ queueName: 'ticketProcessed', data: ticketProcessed })
   }
 }
 
