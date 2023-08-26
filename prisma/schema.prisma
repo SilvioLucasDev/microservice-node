@@ -9,6 +9,7 @@ datasource db {
 
 model Event {
   id          String       @id
+  name        String
   description String
   price       Float
   capacity    Int

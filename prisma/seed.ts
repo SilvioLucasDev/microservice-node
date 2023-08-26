@@ -5,7 +5,8 @@ async function main() {
   const event = await prisma.event.create({
     data: {
       id: 'c08c6ed4-757f-44da-b5df-cb856dfdf897',
-      description: 'Foo Fighters 10/10/2022 22:00',
+      name: 'JavaScript Global Summit',
+      description: 'JavaScript Global Summit: All about Javascript 19/10/2024 20:00',
       price: 300,
       capacity: 100000
     }
@@ -15,7 +16,7 @@ async function main() {
     data: {
       id: 'f2e08123-8696-4671-bcbd-a98f3e71622b',
       event_id: event.id,
-      email: 'user@hotmail.com',
+      email: 'any_user@hotmail.com',
       status: 'reserved'
     }
   })
