@@ -1,5 +1,5 @@
-import { type Consume } from '@/application/contracts/adapters'
 import { QueueController } from '@/infra/adapters/queue'
+import { type Consume } from '@/application/contracts/adapters'
 
 import { type MockProxy, mock } from 'jest-mock-extended'
 

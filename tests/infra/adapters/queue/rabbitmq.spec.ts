@@ -3,9 +3,10 @@ import { RabbitMQAdapter } from '@/infra/adapters/queue'
 import amqp from 'mock-amqplib'
 
 describe('RabbitMQAdapter', () => {
-  let sut: RabbitMQAdapter
   let queueName: string
   let data: string
+
+  let sut: RabbitMQAdapter
 
   beforeAll(() => {
     queueName = 'any_queue'

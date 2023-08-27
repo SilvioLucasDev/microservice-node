@@ -4,20 +4,21 @@ import { type Send } from '@/application/contracts/adapters'
 import { mock, type MockProxy } from 'jest-mock-extended'
 
 describe('SendEmailUseCase', () => {
-  let sut: SendEmailUseCase
-  let emailAdapter: MockProxy<Send>
-
   let from: string
   let to: string
   let subject: string
   let body: string
 
+  let sut: SendEmailUseCase
+  let emailAdapter: MockProxy<Send>
+
   beforeAll(() => {
-    emailAdapter = mock()
     from = 'any_from'
     to = 'any_to'
     subject = 'any_subject'
     body = 'any_body'
+
+    emailAdapter = mock()
   })
 
   beforeEach(() => {

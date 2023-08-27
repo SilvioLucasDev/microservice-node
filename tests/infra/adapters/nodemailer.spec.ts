@@ -10,6 +10,7 @@ describe('NodeMailerAdapter', () => {
   let to: string
   let subject: string
   let body: string
+
   let sendMailMock: jest.Mock
 
   beforeAll(() => {
@@ -28,7 +29,7 @@ describe('NodeMailerAdapter', () => {
     sut = new NodeMailerAdapter()
   })
 
-  it('should calls method sendMail with correct values', async () => {
+  it('should call method sendMail with correct values', async () => {
     await sut.send({ from, to, subject, body })
 
     expect(sendMailMock).toHaveBeenCalledWith({

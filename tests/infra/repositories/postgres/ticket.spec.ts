@@ -1,4 +1,4 @@
-import { prismaMock } from '@/tests/infra/repositories/postres/mocks'
+import { prismaMock } from './mocks'
 import { PgTicketRepository } from '@/infra/repositories/postgres'
 import { Ticket } from '@/domain/entities'
 import { type UUIDGenerator } from '@/application/contracts/adapters'
@@ -6,8 +6,6 @@ import { type UUIDGenerator } from '@/application/contracts/adapters'
 import { mock, type MockProxy } from 'jest-mock-extended'
 
 describe('PgTicketRepository', () => {
-  let sut: PgTicketRepository
-  let crypto: MockProxy<UUIDGenerator>
   let id: string
   let eventId: string
   let email: string
@@ -16,8 +14,10 @@ describe('PgTicketRepository', () => {
   let createdAt: Date
   let updatedAt: Date
 
+  let sut: PgTicketRepository
+  let crypto: MockProxy<UUIDGenerator>
+
   beforeAll(() => {
-    crypto = mock()
     id = 'any_id'
     eventId = 'any_event_id'
     email = 'any_email@hotmail.com'
@@ -25,6 +25,8 @@ describe('PgTicketRepository', () => {
     // eventName = 'any_event_name'
     createdAt = new Date()
     updatedAt = new Date()
+
+    crypto = mock()
   })
 
   beforeEach(() => {

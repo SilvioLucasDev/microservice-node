@@ -1,26 +1,32 @@
 import { PurchaseTicketController } from '@/presentation/controllers'
-import { type PurchaseTicketUseCase } from '@/application/use-cases'
-import { ServerError } from '@/presentation/errors'
-import { EventNotFoundError } from '@/application/errors'
 import { RequiredString, ValidationComposite } from '@/presentation/validation'
+import { ServerError } from '@/presentation/errors'
+import { type PurchaseTicketUseCase } from '@/application/use-cases'
+import { EventNotFoundError } from '@/application/errors'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 
 jest.mock('@/presentation/validation/composite')
 
 describe('PurchaseTicketController', () => {
-  let sut: PurchaseTicketController
-  let PurchaseTicketUseCase: MockProxy<PurchaseTicketUseCase>
   let eventId: string
   let email: string
   let creditCardToken: string
+  let ticketId: string
+  let status: string
+
+  let sut: PurchaseTicketController
+  let PurchaseTicketUseCase: MockProxy<PurchaseTicketUseCase>
 
   beforeAll(() => {
-    PurchaseTicketUseCase = mock()
-    PurchaseTicketUseCase.execute.mockResolvedValue({ ticketId: 'any_ticket_id', status: 'any_status' })
     eventId = 'any_event_id'
     email = 'any_email'
     creditCardToken = 'any_credit_card_token'
+    ticketId = 'any_ticket_id'
+    status = 'any_status'
+
+    PurchaseTicketUseCase = mock()
+    PurchaseTicketUseCase.execute.mockResolvedValue({ ticketId, status })
   })
 
   beforeEach(() => {
@@ -37,9 +43,9 @@ describe('PurchaseTicketController', () => {
     const httpResponse = await sut.handle({ eventId, email, creditCardToken })
 
     expect(ValidationComposite).toHaveBeenCalledWith([
-      new RequiredString('any_event_id', 'eventId'),
-      new RequiredString('any_email', 'email'),
-      new RequiredString('any_credit_card_token', 'creditCardToken')
+      new RequiredString(eventId, 'eventId'),
+      new RequiredString(email, 'email'),
+      new RequiredString(creditCardToken, 'creditCardToken')
     ])
     expect(httpResponse).toEqual({
       statusCode: 400,
@@ -51,6 +57,7 @@ describe('PurchaseTicketController', () => {
     await sut.handle({ eventId, email, creditCardToken })
 
     expect(PurchaseTicketUseCase.execute).toHaveBeenCalledWith({ eventId, email, creditCardToken })
+    expect(PurchaseTicketUseCase.execute).toHaveBeenCalledTimes(1)
   })
 
   it('should return 500 if purchase ticket throws', async () => {
@@ -65,7 +72,7 @@ describe('PurchaseTicketController', () => {
     })
   })
 
-  it('should return 400 if purchase ticket fails', async () => {
+  it('should return 400 if ticket purchase fails and error is EventNotFoundError', async () => {
     PurchaseTicketUseCase.execute.mockRejectedValueOnce(new EventNotFoundError())
 
     const httpResponse = await sut.handle({ eventId, email, creditCardToken })
@@ -82,8 +89,8 @@ describe('PurchaseTicketController', () => {
     expect(httpResponse).toEqual({
       statusCode: 200,
       data: {
-        ticketId: 'any_ticket_id',
-        status: 'any_status'
+        ticketId,
+        status
       }
     })
   })

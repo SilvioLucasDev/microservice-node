@@ -1,5 +1,6 @@
-import { env } from '@/main/config/env'
 import { ExpressAdapter } from '@/presentation/adapters'
+import { env } from '@/main/config/env'
+
 import request from 'supertest'
 
 describe('ExpressRouterAdapter', () => {
@@ -16,7 +17,7 @@ describe('ExpressRouterAdapter', () => {
     sut = new ExpressAdapter()
   })
 
-  it('should responde with 200 and valid data', async () => {
+  it('should return with statusCode 200 and valid data', async () => {
     sut.on({
       method,
       url,
@@ -32,7 +33,7 @@ describe('ExpressRouterAdapter', () => {
     expect(response.body).toEqual({ data: 'any_data' })
   })
 
-  it('should respond with 204 and empty data', async () => {
+  it('should return with statusCode 204 and empty data', async () => {
     sut.on({
       method,
       url,
@@ -48,7 +49,7 @@ describe('ExpressRouterAdapter', () => {
     expect(response.body).toEqual({ })
   })
 
-  it('should responde with 400 and valid error', async () => {
+  it('should return with statusCode 400 and valid error', async () => {
     sut.on({
       method,
       url,
@@ -64,7 +65,7 @@ describe('ExpressRouterAdapter', () => {
     expect(response.body).toEqual({ error: 'any_error' })
   })
 
-  it('should respond with 500 and valid error', async () => {
+  it('should return with statusCode 500 and valid error', async () => {
     sut.on({
       method,
       url,

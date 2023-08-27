@@ -1,13 +1,15 @@
-import { prismaMock } from '@/tests/infra/repositories/postres/mocks'
+import { prismaMock } from './mocks'
 import { PgEventRepository } from '@/infra/repositories/postgres'
 
 describe('PgEventRepository', () => {
-  let sut: PgEventRepository
   let id: string
 
+  let sut: PgEventRepository
+
   beforeEach(() => {
-    sut = new PgEventRepository()
     id = 'any_id'
+
+    sut = new PgEventRepository()
   })
 
   afterAll(async () => {
