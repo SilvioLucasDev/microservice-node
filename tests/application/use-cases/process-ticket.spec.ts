@@ -65,8 +65,8 @@ describe('ProcessTicketUseCase', () => {
 
     expect(TicketProcessed).toHaveBeenCalledWith(
       env.emailService,
-      'Ticket Purchase | any_event_name',
       'any_email',
+      'Ticket Purchase | any_event_name',
       'Hello! <br><br> Ticket payment: any_ticket_id for the any_event_name event was successfully completed!'
     )
     expect(TicketProcessed).toHaveBeenCalledTimes(1)
