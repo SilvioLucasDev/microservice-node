@@ -1,6 +1,5 @@
 import { type Consume } from '@/application/contracts/adapters'
-import { makeProcessPaymentUseCase } from '@/main/factories/application/use-cases'
-import { makeProcessTicketUseCase } from '@/main/factories/application/use-cases/process-ticket'
+import { makeProcessPaymentUseCase, makeProcessTicketUseCase, makeSendEmailUseCase } from '@/main/factories/application/use-cases'
 
 export class QueueController {
   constructor (private readonly queue: Consume) {
@@ -15,6 +14,13 @@ export class QueueController {
       queueName: 'paymentProcessed',
       callback: async (input: any) => {
         await makeProcessTicketUseCase().execute(input)
+      }
+    })
+
+    this.queue.consume({
+      queueName: 'ticketProcessed',
+      callback: async (input: any) => {
+        await makeSendEmailUseCase().execute(input)
       }
     })
   }

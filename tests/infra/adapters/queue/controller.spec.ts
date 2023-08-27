@@ -17,6 +17,7 @@ describe('QueueController', () => {
   it('should call method consume of QueueAdapter with correct values', async () => {
     expect(queue.consume).toHaveBeenCalledWith({ queueName: 'ticketReserved', callback: expect.any(Function) })
     expect(queue.consume).toHaveBeenCalledWith({ queueName: 'paymentProcessed', callback: expect.any(Function) })
-    expect(queue.consume).toHaveBeenCalledTimes(2)
+    expect(queue.consume).toHaveBeenCalledWith({ queueName: 'ticketProcessed', callback: expect.any(Function) })
+    expect(queue.consume).toHaveBeenCalledTimes(3)
   })
 })
