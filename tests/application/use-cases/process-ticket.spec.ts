@@ -64,7 +64,7 @@ describe('ProcessTicketUseCase', () => {
     await sut.execute({ ticketId, status })
 
     expect(TicketProcessed).toHaveBeenCalledWith(
-      env.emailService,
+      env.emailSender,
       'any_email',
       'Ticket Purchase | any_event_name',
       'Hello! <br><br> Ticket payment: any_ticket_id for the any_event_name event was successfully completed!'

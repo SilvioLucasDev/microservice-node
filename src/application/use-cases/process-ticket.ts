@@ -15,7 +15,7 @@ export class ProcessTicketUseCase {
     await this.ticketRepository.updateStatus({ id: ticketId, status: ticketStatus })
     const { email, eventName } = await this.ticketRepository.findDetailsById({ id: ticketId })
     const emailData = Email.create({ ticketId, email, eventName, ticketStatus })
-    const ticketProcessed = new TicketProcessed(env.emailService, emailData.email, emailData.subject, emailData.body)
+    const ticketProcessed = new TicketProcessed(env.emailSender, emailData.email, emailData.subject, emailData.body)
     await this.queue.publish({ queueName: 'ticketProcessed', data: ticketProcessed })
   }
 }

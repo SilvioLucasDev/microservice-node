@@ -1,15 +1,16 @@
 import { type Send } from '@/application/contracts/adapters'
+import { env } from '@/main/config/env'
 
 import nodemailer from 'nodemailer'
 
 export class NodeMailerAdapter implements Send {
   async send ({ from, to, subject, body }: Send.Input): Promise<void> {
     const transport = nodemailer.createTransport({
-      host: 'sandbox.smtp.mailtrap.io',
-      port: 2525,
+      host: env.email.host,
+      port: Number(env.email.port),
       auth: {
-        user: '93a7e76897c842',
-        pass: '1dde78557ced7b'
+        user: env.email.user,
+        pass: env.email.pass
       }
     })
 
