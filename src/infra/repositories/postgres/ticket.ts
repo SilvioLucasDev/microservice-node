@@ -8,7 +8,7 @@ export class PgTicketRepository implements SaveTicket, UpdateStatusTicket, FindD
     })
   }
 
-  async updateStatus ({ id, status }: UpdateStatusTicket.Input): Promise<any> {
+  async updateStatus ({ id, status }: UpdateStatusTicket.Input): Promise<void> {
     await prisma.ticket.update({
       where: { id }, data: { status }
     })

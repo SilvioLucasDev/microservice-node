@@ -3,7 +3,7 @@ import { type Validator } from '@/presentation/validation'
 
 export class Required implements Validator {
   constructor (
-    readonly value: any,
+    readonly value: string | number,
     readonly fieldName: string
   ) {}
 

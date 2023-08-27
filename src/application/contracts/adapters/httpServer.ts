@@ -6,7 +6,7 @@ export namespace On {
   export type Input = {
     method: string
     url: string
-    callback: (params: any, body: any) => Promise<any>
+    callback: (params: object, body: string) => Promise<{ statusCode: number, data: any }>
   }
 }
 
