@@ -7,6 +7,7 @@ export class SendEmailUseCase {
 
   async execute ({ from, to, subject, body }: Input): Promise<void> {
     await this.emailAdapter.send({ from, to, subject, body })
+    // Descobrir se esse e-mail foi enviado de alguma forma e salvar na tabela (LOG?)
   }
 }
 

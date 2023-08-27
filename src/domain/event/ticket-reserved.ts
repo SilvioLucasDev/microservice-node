@@ -5,6 +5,5 @@ export class TicketReserved {
     private readonly creditCardToken: string,
     private readonly price: string,
     private readonly email: string
-  ) {
-  }
+  ) {}
 }

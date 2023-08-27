@@ -1,8 +1,8 @@
-import express, { type Request, type Response } from 'express'
+import { type Listen, type On } from '@/application/contracts/adapters'
 import { env } from '@/main/config/env'
 
+import express, { type Request, type Response } from 'express'
 import cors from 'cors'
-import { type Listen, type On } from '@/application/contracts/adapters'
 
 export class ExpressAdapter implements On, Listen {
   app: any

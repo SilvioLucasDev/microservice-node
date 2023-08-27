@@ -3,8 +3,7 @@ export class Email {
     readonly subject: string,
     readonly email: string,
     readonly body: string
-  ) {
-  }
+  ) {}
 
   static create ({ ticketId, email, eventName, ticketStatus }: Input): Email {
     let body
