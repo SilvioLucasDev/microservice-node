@@ -40,8 +40,8 @@ describe('PgTicketRepository', () => {
 
   it('should return undefined an create new ticket', async () => {
     prismaMock.ticket.create.mockResolvedValue({ id, event_id: eventId, email, status, created_at: createdAt, updated_at: updatedAt })
-
     const ticket = Ticket.create({ eventId, email }, crypto)
+
     const result = sut.save(ticket)
 
     await expect(result).resolves.toBeUndefined()

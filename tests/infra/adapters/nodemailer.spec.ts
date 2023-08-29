@@ -32,8 +32,6 @@ describe('NodeMailerAdapter', () => {
   it('should call method sendMail with correct values', async () => {
     await sut.send({ from, to, subject, body })
 
-    expect(sendMailMock).toHaveBeenCalledWith({
-      from, to, subject, html: body
-    })
+    expect(sendMailMock).toHaveBeenCalledWith({ from, to, subject, html: body })
   })
 })
