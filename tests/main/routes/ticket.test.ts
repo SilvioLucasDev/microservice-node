@@ -15,13 +15,15 @@ describe('TicketRouter', () => {
   let eventId: string
   let email: string
   let creditCardToken: string
+  let price: number
 
   let httpServer: ExpressAdapter
 
   beforeAll(() => {
-    eventId = 'any_event_id'
-    email = 'any_email'
-    creditCardToken = 'any_credit_card_token'
+    eventId = 'c08c6ed4-757f-44da-b5df-cb856dfdf897'
+    price = 300
+    email = 'any_email@hotmail.com'
+    creditCardToken = '123456789'
 
     httpServer = new ExpressAdapter()
     new TicketRouter(httpServer)
@@ -34,7 +36,7 @@ describe('TicketRouter', () => {
 
   describe('POST /ticket/purchase', () => {
     it('should return 200 with ticketId and status', async () => {
-      prismaMock.event.findFirst.mockResolvedValueOnce({ id: eventId, price: 300 } as unknown as Prisma.Prisma__EventClient<EventPrisma>)
+      prismaMock.event.findFirst.mockResolvedValueOnce({ id: eventId, price } as unknown as Prisma.Prisma__EventClient<EventPrisma>)
 
       const { status, body } = await request(httpServer.app)
         .post('/v1/api/ticket/purchase')
