@@ -12,8 +12,7 @@ export class PgEventRepository implements GetEvent {
         price: true
       }
     })
-
-    if (event !== null) {
+    if (event !== null && event !== undefined) {
       return {
         id: event.id,
         price: event.price.toString()

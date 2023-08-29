@@ -1,4 +1,4 @@
-import { prismaMock } from './mocks'
+import { prismaMock } from '@/tests/infra/repositories/postgres/mocks'
 import { PgTransactionRepository } from '@/infra/repositories/postgres'
 import { Transaction } from '@/domain/entities'
 import { type UUIDGenerator } from '@/application/contracts/adapters'
@@ -38,9 +38,9 @@ describe('PgTransactionRepository', () => {
 
   it('should return undefined an create new transaction', async () => {
     prismaMock.transaction.create.mockResolvedValue({ id, ticket_id: ticketId, event_id: eventId, tid, price, status, created_at: createdAt, updated_at: updatedAt })
+    const transactionEntity = Transaction.create({ eventId, ticketId, tid, price: price.toString(), status }, crypto)
 
-    const transaction = Transaction.create({ eventId, ticketId, tid, price: price.toString(), status }, crypto)
-    const result = sut.save(transaction)
+    const result = sut.save(transactionEntity)
 
     await expect(result).resolves.toBeUndefined()
   })

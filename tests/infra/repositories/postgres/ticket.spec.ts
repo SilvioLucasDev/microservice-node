@@ -1,8 +1,9 @@
-import { prismaMock } from './mocks'
+import { prismaMock } from '@/tests/infra/repositories/postgres/mocks'
 import { PgTicketRepository } from '@/infra/repositories/postgres'
 import { Ticket } from '@/domain/entities'
 import { type UUIDGenerator } from '@/application/contracts/adapters'
 
+import { type Prisma, type Ticket as TicketPrisma } from '@prisma/client'
 import { mock, type MockProxy } from 'jest-mock-extended'
 
 describe('PgTicketRepository', () => {
@@ -10,7 +11,7 @@ describe('PgTicketRepository', () => {
   let eventId: string
   let email: string
   let status: string
-  // let eventName: string
+  let eventName: string
   let createdAt: Date
   let updatedAt: Date
 
@@ -22,7 +23,7 @@ describe('PgTicketRepository', () => {
     eventId = 'any_event_id'
     email = 'any_email@hotmail.com'
     status = 'any_status'
-    // eventName = 'any_event_name'
+    eventName = 'any_event_name'
     createdAt = new Date()
     updatedAt = new Date()
 
@@ -54,15 +55,11 @@ describe('PgTicketRepository', () => {
     await expect(result).resolves.toBeUndefined()
   })
 
-  // it('should return email and name of event an select ticket', async () => {
-  //   prismaMock.event.findFirst.mockResolvedValue({ id, name: 'any_name', description: 'any_desc', price: 300, capacity: 100, created_at: createdAt, updated_at: updatedAt })
-  //   prismaMock.ticket.findFirst.mockResolvedValue({ id, event_id: eventId, email, status, created_at: createdAt, updated_at: updatedAt })
+  it('should return email and name of event an select ticket', async () => {
+    prismaMock.ticket.findFirst.mockResolvedValue({ email, event: { name: eventName } } as unknown as Prisma.Prisma__TicketClient<TicketPrisma>)
 
-  //   const result = sut.findDetailsById({ id })
+    const result = sut.findDetailsById({ id })
 
-  //   await expect(result).resolves.toEqual({
-  //     email,
-  //     eventName
-  //   })
-  // })
+    await expect(result).resolves.toEqual({ email, eventName })
+  })
 })

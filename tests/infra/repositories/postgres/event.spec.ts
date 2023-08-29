@@ -1,5 +1,7 @@
-import { prismaMock } from './mocks'
+import { prismaMock } from '@/tests/infra/repositories/postgres/mocks'
 import { PgEventRepository } from '@/infra/repositories/postgres'
+
+import { type Prisma, type Event as EventPrisma } from '@prisma/client'
 
 describe('PgEventRepository', () => {
   let id: string
@@ -17,23 +19,11 @@ describe('PgEventRepository', () => {
   })
 
   it('should return event if exists', async () => {
-    const result = {
-      id,
-      name: 'any_name',
-      description: 'any_description',
-      price: 300,
-      capacity: 10000,
-      created_at: new Date(),
-      updated_at: new Date()
-    }
-    prismaMock.event.findFirst.mockResolvedValueOnce(result)
+    prismaMock.event.findFirst.mockResolvedValueOnce({ id, price: 300 } as unknown as Prisma.Prisma__EventClient<EventPrisma>)
 
     const event = await sut.get({ id })
 
-    expect(event).toEqual({
-      id,
-      price: '300'
-    })
+    expect(event).toEqual({ id, price: '300' })
   })
 
   it('should return undefined if event not exists', async () => {

@@ -1,17 +1,14 @@
-import { EventRepositoryMock, RabbitMQAdapterMock, TicketRepositoryMock } from '@/tests/main/routes/mocks'
+import { prismaMock } from '@/tests/infra/repositories/postgres/mocks'
+import { RabbitMQAdapterMock } from '@/tests/main/routes/mocks'
 import { TicketRouter } from '@/main/routes'
 import { EventNotFoundError } from '@/application/errors'
 import { ExpressAdapter } from '@/presentation/adapters'
 
 import request from 'supertest'
+import { type Prisma, type Event as EventPrisma } from '@prisma/client'
 
 jest.mock('@/infra/adapters/queue/rabbitmq', () => ({
   RabbitMQAdapter: RabbitMQAdapterMock
-}))
-
-jest.mock('@/infra/repositories/postgres', () => ({
-  PgEventRepository: EventRepositoryMock,
-  PgTicketRepository: TicketRepositoryMock
 }))
 
 describe('TicketRouter', () => {
@@ -31,8 +28,14 @@ describe('TicketRouter', () => {
     httpServer.listen()
   })
 
+  afterAll(async () => {
+    await prismaMock.$disconnect()
+  })
+
   describe('POST /ticket/purchase', () => {
     it('should return 200 with ticketId and status', async () => {
+      prismaMock.event.findFirst.mockResolvedValueOnce({ id: eventId, price: 300 } as unknown as Prisma.Prisma__EventClient<EventPrisma>)
+
       const { status, body } = await request(httpServer.app)
         .post('/v1/api/ticket/purchase')
         .send({ eventId, email, creditCardToken })
