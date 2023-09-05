@@ -10,7 +10,7 @@ describe('ExpressRouterAdapter', () => {
 
   beforeAll(() => {
     method = 'post'
-    url = '/ticket/purchase'
+    url = '/purchase-tickets'
   })
 
   beforeEach(() => {
@@ -27,7 +27,7 @@ describe('ExpressRouterAdapter', () => {
       })
     })
 
-    const response = await request(sut.app).post('/v1/api/ticket/purchase').send()
+    const response = await request(sut.app).post('/v1/api/purchase-tickets').send()
 
     expect(response.status).toBe(200)
     expect(response.body).toEqual({ data: 'any_data' })
@@ -43,7 +43,7 @@ describe('ExpressRouterAdapter', () => {
       })
     })
 
-    const response = await request(sut.app).post('/v1/api/ticket/purchase').send()
+    const response = await request(sut.app).post('/v1/api/purchase-tickets').send()
 
     expect(response.status).toBe(204)
     expect(response.body).toEqual({ })
@@ -59,7 +59,7 @@ describe('ExpressRouterAdapter', () => {
       })
     })
 
-    const response = await request(sut.app).post('/v1/api/ticket/purchase').send()
+    const response = await request(sut.app).post('/v1/api/purchase-tickets').send()
 
     expect(response.status).toBe(400)
     expect(response.body).toEqual({ error: 'any_error' })
@@ -75,7 +75,7 @@ describe('ExpressRouterAdapter', () => {
       })
     })
 
-    const response = await request(sut.app).post('/v1/api/ticket/purchase').send()
+    const response = await request(sut.app).post('/v1/api/purchase-tickets').send()
 
     expect(response.status).toBe(500)
     expect(response.body).toEqual({ error: 'any_error' })

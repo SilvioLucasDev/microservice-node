@@ -34,12 +34,12 @@ describe('TicketRouter', () => {
     await prismaMock.$disconnect()
   })
 
-  describe('POST /ticket/purchase', () => {
+  describe('POST /purchase-tickets', () => {
     it('should return 200 with ticketId and status', async () => {
       prismaMock.event.findFirst.mockResolvedValueOnce({ id: eventId, price } as unknown as Prisma.Prisma__EventClient<EventPrisma>)
 
       const { status, body } = await request(httpServer.app)
-        .post('/v1/api/ticket/purchase')
+        .post('/v1/api/purchase-tickets')
         .send({ eventId, email, creditCardToken })
 
       expect(status).toBe(200)
@@ -49,7 +49,7 @@ describe('TicketRouter', () => {
 
     it('should return 400 with EventNotFoundError', async () => {
       const { status, body } = await request(httpServer.app)
-        .post('/v1/api/ticket/purchase')
+        .post('/v1/api/purchase-tickets')
         .send({ eventId: 'invalid_event_id', email, creditCardToken })
 
       expect(status).toBe(400)

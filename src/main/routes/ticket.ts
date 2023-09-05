@@ -5,7 +5,7 @@ export class TicketRouter {
   constructor (httpServer: On) {
     httpServer.on({
       method: 'post',
-      url: '/ticket/purchase',
+      url: '/purchase-tickets',
       callback: async (params: any, body: any) => {
         return await makePurchaseTicketController().handle(body)
       }
