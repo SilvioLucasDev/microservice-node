@@ -16,7 +16,7 @@ export class ExpressAdapter implements On, Listen {
   on ({ method, url, callback }: On.Input): void {
     this.app[method](`/v1/api${url.replace(/\{|\}/g, '')}`, async function (req: Request, res: Response) {
       const { statusCode, data } = await callback(req.params, req.body)
-      const json = [200, 204].includes(statusCode) ? data : { error: data.message }
+      const json = [200, 202, 204].includes(statusCode) ? data : { error: data.message }
       res.status(statusCode).json(json)
     })
   }
