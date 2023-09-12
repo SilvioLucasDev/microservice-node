@@ -29,4 +29,12 @@ describe('PgCardRepository', () => {
 
     expect(card).toEqual({ id, alias, token })
   })
+
+  it('should return undefined if card not exists', async () => {
+    prismaMock.card.findFirst.mockResolvedValueOnce(null)
+
+    const card = await sut.get({ id })
+
+    expect(card).toBeUndefined()
+  })
 })
