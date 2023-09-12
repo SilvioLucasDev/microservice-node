@@ -9,6 +9,6 @@ export namespace GetEvent {
 
   export type Output = {
     id: string
-    price: string
+    price: number
   } | undefined
 }
