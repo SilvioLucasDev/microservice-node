@@ -9,7 +9,7 @@ import { mock, type MockProxy } from 'jest-mock-extended'
 describe('PgTicketRepository', () => {
   let id: string
   let eventId: string
-  let email: string
+  let userId: string
   let status: string
   let eventName: string
   let createdAt: Date
@@ -21,7 +21,7 @@ describe('PgTicketRepository', () => {
   beforeAll(() => {
     id = 'any_id'
     eventId = 'any_event_id'
-    email = 'any_email@hotmail.com'
+    userId = 'any_user_id'
     status = 'any_status'
     eventName = 'any_event_name'
     createdAt = new Date()
@@ -39,8 +39,8 @@ describe('PgTicketRepository', () => {
   })
 
   it('should return undefined an create new ticket', async () => {
-    prismaMock.ticket.create.mockResolvedValue({ id, event_id: eventId, email, status, created_at: createdAt, updated_at: updatedAt })
-    const ticket = Ticket.create({ eventId, email }, crypto)
+    prismaMock.ticket.create.mockResolvedValue({ id, event_id: eventId, user_id: userId, status, created_at: createdAt, updated_at: updatedAt })
+    const ticket = Ticket.create({ eventId, userId }, crypto)
 
     const result = sut.save(ticket)
 
@@ -48,18 +48,18 @@ describe('PgTicketRepository', () => {
   })
 
   it('should return undefined an update ticket', async () => {
-    prismaMock.ticket.update.mockResolvedValue({ id, event_id: eventId, email, status, created_at: createdAt, updated_at: updatedAt })
+    prismaMock.ticket.update.mockResolvedValue({ id, event_id: eventId, user_id: userId, status, created_at: createdAt, updated_at: updatedAt })
 
     const result = sut.updateStatus({ id, status })
 
     await expect(result).resolves.toBeUndefined()
   })
 
-  it('should return email and name of event an select ticket', async () => {
-    prismaMock.ticket.findFirst.mockResolvedValue({ email, event: { name: eventName } } as unknown as Prisma.Prisma__TicketClient<TicketPrisma>)
+  it('should return name of event an select ticket', async () => {
+    prismaMock.ticket.findFirst.mockResolvedValue({ user_id: userId, event: { name: eventName } } as unknown as Prisma.Prisma__TicketClient<TicketPrisma>)
 
     const result = sut.findDetailsById({ id })
 
-    await expect(result).resolves.toEqual({ email, eventName })
+    await expect(result).resolves.toEqual({ eventName })
   })
 })
