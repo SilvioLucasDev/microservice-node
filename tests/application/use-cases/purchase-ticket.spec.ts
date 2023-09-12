@@ -10,11 +10,13 @@ import { type MockProxy, mock } from 'jest-mock-extended'
 jest.mock('@/domain/event/ticket-reserved')
 
 describe('PurchaseTicketUseCase', () => {
+  let paymentType: string
   let eventId: string
+  let userId: string
+  let cardId: string
+  let installments: number
   let ticketId: string
-  let price: string
-  let email: string
-  let creditCardToken: string
+  let price: number
 
   let sut: PurchaseTicketUseCase
   let eventRepository: MockProxy<GetEvent>
@@ -24,11 +26,13 @@ describe('PurchaseTicketUseCase', () => {
   let queue: MockProxy<Publish>
 
   beforeAll(() => {
+    paymentType = 'any_payment_type'
     eventId = 'any_event_id'
+    userId = 'any_user_id'
+    cardId = 'any_card_id'
+    installments = 3
     ticketId = 'any_ticket_id'
-    price = 'any_price'
-    email = 'any_email'
-    creditCardToken = 'any_credit_card_token'
+    price = 300
 
     eventRepository = mock()
     eventRepository.get.mockResolvedValue({ id: eventId, price })
@@ -44,7 +48,7 @@ describe('PurchaseTicketUseCase', () => {
   })
 
   it('should call method get of EventRepository with correct value', async () => {
-    await sut.execute({ eventId, email, creditCardToken })
+    await sut.execute({ paymentType, eventId, userId, cardId, installments })
 
     expect(eventRepository.get).toHaveBeenCalledWith({ id: eventId })
     expect(eventRepository.get).toHaveBeenCalledTimes(1)
@@ -53,34 +57,34 @@ describe('PurchaseTicketUseCase', () => {
   it('should throw EventNotFoundError if EventRepository return undefined', async () => {
     eventRepository.get.mockResolvedValueOnce(undefined)
 
-    const promise = sut.execute({ eventId, email, creditCardToken })
+    const promise = sut.execute({ paymentType, eventId, userId, cardId, installments })
 
     await expect(promise).rejects.toThrow(new EventNotFoundError())
   })
 
   it('should call TicketEntity with correct values', async () => {
-    await sut.execute({ eventId, email, creditCardToken })
+    await sut.execute({ paymentType, eventId, userId, cardId, installments })
 
-    expect(ticket).toHaveBeenCalledWith({ eventId, email }, crypto)
+    expect(ticket).toHaveBeenCalledWith({ eventId, userId }, crypto)
     expect(ticket).toHaveBeenCalledTimes(1)
   })
 
   it('should call TicketRepository with instance of TicketEntity', async () => {
-    await sut.execute({ eventId, email, creditCardToken })
+    await sut.execute({ paymentType, eventId, userId, cardId, installments })
 
     expect(ticketRepository.save).toHaveBeenCalledWith(expect.any(Ticket))
     expect(ticketRepository.save).toHaveBeenCalledTimes(1)
   })
 
   it('should call TicketReserved with correct values', async () => {
-    await sut.execute({ eventId, email, creditCardToken })
+    await sut.execute({ paymentType, eventId, userId, cardId, installments })
 
-    expect(TicketReserved).toHaveBeenCalledWith(ticketId, eventId, creditCardToken, price, email)
+    expect(TicketReserved).toHaveBeenCalledWith(paymentType, price, ticketId, userId, cardId, installments)
     expect(TicketReserved).toHaveBeenCalledTimes(1)
   })
 
   it('should call QueueAdapter with correct values', async () => {
-    await sut.execute({ eventId, email, creditCardToken })
+    await sut.execute({ paymentType, eventId, userId, cardId, installments })
 
     expect(queue.publish).toHaveBeenCalledWith({ queueName: 'ticketReserved', data: expect.any(TicketReserved) })
     expect(queue.publish).toHaveBeenCalledTimes(1)
