@@ -41,4 +41,12 @@ describe('PgUserRepository', () => {
 
     expect(user).toEqual({ id, name, document, email, mobilePhone, zipcode, number, complements })
   })
+
+  it('should return undefined if user not exists', async () => {
+    prismaMock.user.findFirst.mockResolvedValueOnce(null)
+
+    const user = await sut.get({ id })
+
+    expect(user).toBeUndefined()
+  })
 })
