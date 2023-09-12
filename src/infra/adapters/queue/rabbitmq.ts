@@ -20,13 +20,10 @@ export class RabbitMQAdapter implements Publish, Consume {
     this.connection = undefined
   }
 
-  async publish ({ queueName, data }: Publish.Input): Promise<void> {
-    try {
-      await this.connectQueue(queueName)
-      this.channel!.sendToQueue(queueName, Buffer.from(JSON.stringify(data)))
-    } finally {
-      await this.close()
-    }
+  async publish ({ queueName, data, init = true }: Publish.Input): Promise<void> {
+    if (init) await this.connectQueue(queueName)
+    this.channel!.sendToQueue(queueName, Buffer.from(JSON.stringify(data)))
+    if (init) await this.close()
   }
 
   async consume ({ queueName, callback }: Consume.Input): Promise<void> {
