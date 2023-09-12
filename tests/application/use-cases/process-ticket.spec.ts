@@ -51,7 +51,7 @@ describe('ProcessTicketUseCase', () => {
     ticketRepository = mock()
     ticketRepository.findDetailsById.mockResolvedValue({ eventName })
     userRepository = mock()
-    userRepository.get.mockResolvedValue({ id, name, document, email, zipcode, number, complements, mobile_phone: mobilePhone })
+    userRepository.get.mockResolvedValue({ id, name, document, email, zipcode, number, complements, mobilePhone })
     emailEntity = jest.spyOn(Email, 'create')
     ticketEntity = jest.spyOn(Ticket, 'statusMap')
     queue = mock()

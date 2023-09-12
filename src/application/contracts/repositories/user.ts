@@ -15,6 +15,6 @@ export namespace GetUser {
     zipcode: string
     number: string
     complements: string | null
-    mobile_phone: string
+    mobilePhone: string
   } | undefined
 }

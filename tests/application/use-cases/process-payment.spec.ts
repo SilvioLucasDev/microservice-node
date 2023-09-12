@@ -77,12 +77,12 @@ describe('ProcessPaymentUseCase', () => {
     url = 'any_url'
     processorResponse = 'any_processor_response'
     status = 'approved'
-    user = { id, name, document, email, zipcode, number, complements, mobile_phone: mobilePhone }
+    user = { id, name, document, email, zipcode, number, complements, mobilePhone }
     card = { id, alias, token }
 
     transaction = jest.spyOn(Transaction, 'create')
     userRepository = mock()
-    userRepository.get.mockResolvedValue({ id, name, document, email, zipcode, number, complements, mobile_phone: mobilePhone })
+    userRepository.get.mockResolvedValue({ id, name, document, email, zipcode, number, complements, mobilePhone })
     cardRepository = mock()
     cardRepository.get.mockResolvedValue({ id, alias, token })
     transactionRepository = mock()
