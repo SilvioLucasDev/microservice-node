@@ -8,9 +8,13 @@ import { type MockProxy, mock } from 'jest-mock-extended'
 describe('PgTransactionRepository', () => {
   let id: string
   let ticketId: string
-  let eventId: string
-  let tid: string
-  let price: number
+  let paymentType: string
+  let cardId: string
+  let total: number
+  let installments: number
+  let dueDate: Date
+  let processorResponse: string
+  let transactionId: string
   let status: string
   let createdAt: Date
   let updatedAt: Date
@@ -21,9 +25,13 @@ describe('PgTransactionRepository', () => {
   beforeEach(() => {
     id = 'any_id'
     ticketId = 'any_ticket_id'
-    eventId = 'any_event_id'
-    tid = 'any_tid'
-    price = 300
+    paymentType = 'credit_card'
+    cardId = 'any_card_id'
+    total = 300
+    installments = 3
+    dueDate = new Date()
+    processorResponse = 'any_processor_response'
+    transactionId = 'any_transaction_id'
     status = 'any_status'
     createdAt = new Date()
     updatedAt = new Date()
@@ -37,8 +45,10 @@ describe('PgTransactionRepository', () => {
   })
 
   it('should return undefined an create new transaction', async () => {
-    prismaMock.transaction.create.mockResolvedValue({ id, ticket_id: ticketId, event_id: eventId, tid, price, status, created_at: createdAt, updated_at: updatedAt })
-    const transactionEntity = Transaction.create({ eventId, ticketId, tid, price: price.toString(), status }, crypto)
+    prismaMock.transaction.create.mockResolvedValue({
+      id, ticket_id: ticketId, payment_type: paymentType, card_id: cardId, total, installments, due_date: dueDate, processor_response: processorResponse, transaction_id: transactionId, status, created_at: createdAt, updated_at: updatedAt
+    })
+    const transactionEntity = Transaction.create({ ticketId, paymentType, cardId, total, installments }, crypto)
 
     const result = sut.save(transactionEntity)
 
