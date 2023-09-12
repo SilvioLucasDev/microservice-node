@@ -33,6 +33,22 @@ describe('ExpressRouterAdapter', () => {
     expect(response.body).toEqual({ data: 'any_data' })
   })
 
+  it('should return with statusCode 202 and empty data', async () => {
+    sut.on({
+      method,
+      url,
+      callback: async (params: any, body: any) => ({
+        statusCode: 202,
+        data: undefined
+      })
+    })
+
+    const response = await request(sut.app).post('/v1/api/purchase-tickets').send()
+
+    expect(response.status).toBe(202)
+    expect(response.body).toEqual('')
+  })
+
   it('should return with statusCode 204 and empty data', async () => {
     sut.on({
       method,
