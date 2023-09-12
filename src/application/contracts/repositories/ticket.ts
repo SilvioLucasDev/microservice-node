@@ -29,7 +29,6 @@ export namespace FindDetailsByIdTicket {
   }
 
   export type Output = {
-    email: string
     eventName: string
   }
 }
