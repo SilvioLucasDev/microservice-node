@@ -1,5 +1,5 @@
-import { Required, RequiredString } from '@/presentation/validation'
-import { RequiredFieldError } from '@/presentation/errors'
+import { Required, RequiredNumber, RequiredString } from '@/presentation/validation'
+import { FieldNotNumberError, FieldNotStringError, RequiredFieldError } from '@/presentation/errors'
 
 describe('RequiredFields', () => {
   let field: string
@@ -35,12 +35,22 @@ describe('RequiredFields', () => {
   })
 
   describe('RequiredString', () => {
-    it('should return RequiredFieldError if value is not string', () => {
+    it('should return FieldNotStringError if value is not string', () => {
       const sut = new RequiredString(1234, field)
 
       const error = sut.validate()
 
-      expect(error).toEqual(new RequiredFieldError(field))
+      expect(error).toEqual(new FieldNotStringError(field))
+    })
+  })
+
+  describe('RequiredNumber', () => {
+    it('should return FieldNotStringError if value is not string', () => {
+      const sut = new RequiredNumber('abcd', field)
+
+      const error = sut.validate()
+
+      expect(error).toEqual(new FieldNotNumberError(field))
     })
   })
 })
