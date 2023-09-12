@@ -6,6 +6,7 @@ export namespace Publish {
   export type Input = {
     queueName: string
     data: any
+    init?: boolean
   }
 }
 
