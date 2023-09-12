@@ -1,39 +1,44 @@
-import { badRequest, serverError, type HttpResponse, ok } from '@/presentation/helpers'
+import { badRequest, serverError, type HttpResponse, accepted } from '@/presentation/helpers'
 import { type PurchaseTicketUseCase } from '@/application/use-cases'
 import { EventNotFoundError } from '@/application/errors'
-import { RequiredString, ValidationComposite } from '@/presentation/validation'
+import { Required, RequiredNumber, RequiredString, ValidationComposite } from '@/presentation/validation'
 import { type Controller } from '@/presentation/controllers'
 
 export class PurchaseTicketController implements Controller {
-  constructor (private readonly purchaseTicketUseCase: PurchaseTicketUseCase) {}
+  constructor (private readonly purchaseTicketUseCase: PurchaseTicketUseCase) { }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse<Model>> {
     try {
       const error = this.validate(httpRequest)
       if (error !== undefined) return badRequest(error)
-      const result = await this.purchaseTicketUseCase.execute({ eventId: httpRequest.eventId, email: httpRequest.email, creditCardToken: httpRequest.creditCardToken })
-      return ok({ ticketId: result.ticketId, status: result.status })
+      const { paymentType, eventId, userId, cardId, installments } = httpRequest
+      await this.purchaseTicketUseCase.execute({ paymentType, eventId, userId, cardId, installments })
+      return accepted()
     } catch (error) {
       if (error instanceof EventNotFoundError) return badRequest(error)
       return serverError(error as Error)
     }
   }
 
-  private validate ({ creditCardToken, email, eventId }: HttpRequest): Error | undefined {
+  private validate ({ paymentType, installments, eventId, userId, cardId }: HttpRequest): Model {
     return new ValidationComposite([
+      new Required(paymentType, 'paymentType'),
+      new RequiredString(paymentType, 'paymentType'),
+      new Required(eventId, 'eventId'),
       new RequiredString(eventId, 'eventId'),
-      new RequiredString(email, 'email'),
-      new RequiredString(creditCardToken, 'creditCardToken')
+      new Required(userId, 'userId'),
+      new RequiredString(userId, 'userId'),
+      new RequiredString(cardId, 'cardId'),
+      new RequiredNumber(installments, 'installments')
     ]).validate()
   }
 }
 type HttpRequest = {
+  paymentType: string
   eventId: string
-  email: string
-  creditCardToken: string
+  userId: string
+  cardId: string | null
+  installments: number | null
 }
 
-type Model = Error | {
-  ticketId: string
-  status: string
-}
+type Model = Error | undefined
