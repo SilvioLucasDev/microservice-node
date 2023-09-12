@@ -43,23 +43,23 @@ async function main() {
       id: 'c08c6ed4-757f-44da-b5df-cb856dfdf897',
       name: 'JavaScript Global Summit',
       description: 'JavaScript Global Summit: All about Javascript 19/10/2024 20:00',
-      price: 300,
+      price: 600,
       capacity: 100000
     }
   })
 
-  const ticket = await prisma.ticket.createMany({
+  await prisma.ticket.createMany({
     data: [
       {
         id: 'f2e08123-8696-4671-bcbd-a98f3e71622b',
         event_id: event.id,
         user_id: user.id,
-        status: 'APPROVED'
+        status: 'approved'
       }, {
         id: '5ded906c-4c2b-11ee-be56-0242ac120002',
         event_id: event.id,
         user_id: user.id,
-        status: 'RESERVED'
+        status: 'reserved'
       }
     ]
   })
@@ -68,13 +68,14 @@ async function main() {
     data: {
       id: '8f63e4e0-ae83-46ad-a5c6-b7fe474d2928',
       ticket_id: 'f2e08123-8696-4671-bcbd-a98f3e71622b',
-      paymentType: 'CREDIT_CARD',
+      payment_type: 'credit_card',
       card_id: card.id,
       total: 600,
       installments: 3,
-      processorResponse: 'Return of gateway',
+      due_date: getDueDate(),
+      processor_response: 'Return of gateway',
       transaction_id: 'pay_1758811371749341',
-      status: 'APPROVED'
+      status: 'approved'
     }
   })
 
@@ -82,13 +83,20 @@ async function main() {
     data: {
       id: 'c18bdbec-4c2b-11ee-be56-0242ac120002',
       ticket_id: '5ded906c-4c2b-11ee-be56-0242ac120002',
-      paymentType: 'BILLET',
+      payment_type: 'billet',
       total: 600,
-      processorResponse: 'Return of gateway',
+      due_date: getDueDate(),
+      processor_response: 'Return of gateway',
       transaction_id: 'pay_6307782655751672',
-      status: 'PENDING'
+      status: 'pending'
     }
   })
+
+  function getDueDate (): Date {
+    const dueDate = new Date()
+    dueDate.setDate(dueDate.getDate() + 10)
+    return dueDate
+  }
 }
 
 main()
