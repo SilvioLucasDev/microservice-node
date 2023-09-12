@@ -1,42 +1,41 @@
 import { type UUIDGenerator } from '@/application/contracts/adapters'
 import { Ticket } from '@/domain/entities'
+import { TicketStatus } from '@/domain/enums'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 
 describe('TicketEntity', () => {
   let eventId: string
+  let userId: string
   let ticketId: string
-  let email: string
+  let initialStatus: string
 
-  let sut: Ticket
+  let sut: Ticket | any
   let crypto: MockProxy<UUIDGenerator>
 
   beforeAll(() => {
     eventId = 'any_event_id'
+    userId = 'any_user_id'
     ticketId = 'any_ticket_id'
-    email = 'any_email'
+    initialStatus = 'reserved'
 
     crypto = mock()
     crypto.uuid.mockReturnValue(ticketId)
   })
 
-  beforeEach(() => {
-    sut = Ticket.create({ eventId, email }, crypto)
+  describe('create', () => {
+    it('should return instance of TicketEntity with correct values', () => {
+      sut = Ticket.create({ eventId, userId }, crypto)
+
+      expect(sut).toStrictEqual(new Ticket(ticketId, eventId, userId, initialStatus))
+    })
   })
 
-  it('should return instance of TicketEntity with correct values', () => {
-    expect(sut).toStrictEqual(new Ticket(ticketId, eventId, email, 'reserved'))
-  })
+  describe('statusMap', () => {
+    it('should return statuses correctly', () => {
+      sut = Ticket.statusMap('approved')
 
-  it('should return instance of TicketEntity with status approved', () => {
-    const statusTicket = Ticket.approve()
-
-    expect(statusTicket).toBe('approved')
-  })
-
-  it('should return instance of TicketEntity with status approved', () => {
-    const statusTicket = Ticket.cancel()
-
-    expect(statusTicket).toBe('cancelled')
+      expect(sut).toBe(TicketStatus.APPROVED)
+    })
   })
 })
