@@ -10,13 +10,13 @@ export class Email {
     switch (ticketStatus) {
       case 'reserved':
         body = `
-            Hello! <br><br> The request to purchase ticket: ${ticketId} for the ${eventName} event was successfully received! <br><br>
-            ${
-              paymentType === 'billet'
-                ? `To finish making the payment <a href="${url}">Billet</a>`
-                : `To view purchase details <a href="${url}">click here</a>`
-            }
-          `
+          Hello! <br><br> The request to purchase ticket: ${ticketId} for the ${eventName} event was successfully received! <br><br>
+          ${
+            paymentType === 'billet'
+              ? `To finish making the payment <a href="${url}">Billet</a>`
+              : `To view purchase details <a href="${url}">click here</a>`
+          }
+        `
         break
       case 'approved':
         body = `
