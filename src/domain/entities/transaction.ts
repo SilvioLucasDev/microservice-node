@@ -1,25 +1,63 @@
 import { type UUIDGenerator } from '@/application/contracts/adapters'
+import { PaymentType, TransactionStatus } from '@/domain/enums'
+import { PaymentTypeInvalidError, TransactionStatusInvalidError } from '@/domain/errors'
 
 export class Transaction {
   constructor (
     readonly id: string,
-    readonly eventId: string,
     readonly ticketId: string,
-    readonly tid: string,
-    readonly price: string,
-    readonly status: string
-  ) {}
+    readonly paymentType: string,
+    readonly cardId: string | null,
+    readonly total: number,
+    readonly installments: number | null,
+    readonly dueDate: Date,
+    public processorResponse: string,
+    public transactionId: string,
+    public status: string
+  ) { }
 
-  static create ({ eventId, ticketId, tid, price, status }: Input, crypto: UUIDGenerator): Transaction {
+  static create ({ ticketId, paymentType, cardId, total, installments }: InputCreate, crypto: UUIDGenerator): Transaction {
+    Transaction.validatePaymentType(paymentType)
     const id = crypto.uuid()
-    return new Transaction(id, eventId, ticketId, tid, price, status)
+    const dueDate = this.getDueDate()
+    const initialStatus = TransactionStatus.STARTED
+    return new Transaction(id, ticketId, paymentType, cardId, total, installments, dueDate, '', '', initialStatus)
+  }
+
+  public update ({ processorResponse, transactionId, status }: InputUpdate): void {
+    Transaction.validateTransactionStatus(status)
+    this.processorResponse = processorResponse
+    this.transactionId = transactionId
+    this.status = status
+  }
+
+  private static getDueDate (): Date {
+    const dueDate = new Date()
+    dueDate.setDate(dueDate.getDate() + 10)
+    return dueDate
+  }
+
+  private static validatePaymentType (paymentType: string): void {
+    const typeIsValid = Object.values(PaymentType).includes(paymentType)
+    if (!typeIsValid) throw new PaymentTypeInvalidError()
+  }
+
+  private static validateTransactionStatus (transactionStatus: string): void {
+    const statusIsValid = Object.values(TransactionStatus).includes(transactionStatus)
+    if (!statusIsValid) throw new TransactionStatusInvalidError()
   }
 }
 
-type Input = {
-  eventId: string
+type InputCreate = {
   ticketId: string
-  tid: string
-  price: string
+  paymentType: string
+  cardId: string | null
+  total: number
+  installments: number | null
+}
+
+type InputUpdate = {
+  processorResponse: string
+  transactionId: string
   status: string
 }
