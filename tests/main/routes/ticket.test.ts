@@ -12,18 +12,22 @@ jest.mock('@/infra/adapters/queue/rabbitmq', () => ({
 }))
 
 describe('TicketRouter', () => {
+  let paymentType: string
   let eventId: string
-  let email: string
-  let creditCardToken: string
+  let userId: string
+  let cardId: string
+  let installments: number
   let price: number
 
   let httpServer: ExpressAdapter
 
   beforeAll(() => {
-    eventId = 'c08c6ed4-757f-44da-b5df-cb856dfdf897'
+    paymentType = 'any_payment_type'
+    eventId = 'any_event_id'
+    userId = 'any_user_id'
+    cardId = 'any_card_id'
+    installments = 3
     price = 300
-    email = 'any_email@hotmail.com'
-    creditCardToken = '123456789'
 
     httpServer = new ExpressAdapter()
     new TicketRouter(httpServer)
@@ -40,7 +44,7 @@ describe('TicketRouter', () => {
 
       const { status, body } = await request(httpServer.app)
         .post('/v1/api/purchase-tickets')
-        .send({ eventId, email, creditCardToken })
+        .send({ paymentType, eventId, userId, cardId, installments })
 
       expect(status).toBe(200)
       expect(body.ticketId).toBeDefined()
@@ -50,7 +54,7 @@ describe('TicketRouter', () => {
     it('should return 400 with EventNotFoundError', async () => {
       const { status, body } = await request(httpServer.app)
         .post('/v1/api/purchase-tickets')
-        .send({ eventId: 'invalid_event_id', email, creditCardToken })
+        .send({ paymentType, eventId: 'invalid_event_id', userId, cardId, installments })
 
       expect(status).toBe(400)
       expect(body.error).toBe(new EventNotFoundError().message)
