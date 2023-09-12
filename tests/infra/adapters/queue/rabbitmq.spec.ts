@@ -17,7 +17,7 @@ describe('RabbitMQAdapter', () => {
     sut = new RabbitMQAdapter()
   })
 
-  it('should publish a message to a queue', async () => {
+  it('should publish a message to a queue and create/close connection with init=true', async () => {
     sut['connection'] = await amqp.connect()
     await sut.publish({ queueName, data })
     sut['connection'] = await amqp.connect()
@@ -30,6 +30,18 @@ describe('RabbitMQAdapter', () => {
       expect(message.content).toBeDefined()
       expect(JSON.parse(message.content.toString())).toBe(data)
     }
+  })
+
+  it('should publish a message to a queue and not create/close connection with init=false', async () => {
+    const connectQueueSpy = jest.spyOn(sut as any, 'connectQueue')
+    const closeSpy = jest.spyOn(sut as any, 'close')
+
+    sut['connection'] = await amqp.connect()
+    sut['channel'] = await sut['connection']?.createChannel()
+    await sut.publish({ queueName, data, init: false })
+
+    expect(connectQueueSpy).not.toHaveBeenCalled()
+    expect(closeSpy).not.toHaveBeenCalled()
   })
 
   it('should consume a message from the queue', async () => {
