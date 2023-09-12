@@ -23,7 +23,7 @@ describe('PgEventRepository', () => {
 
     const event = await sut.get({ id })
 
-    expect(event).toEqual({ id, price: '300' })
+    expect(event).toEqual({ id, price: 300 })
   })
 
   it('should return undefined if event not exists', async () => {
