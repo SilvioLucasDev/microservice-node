@@ -19,7 +19,7 @@ describe('PurchaseTicketController', () => {
   let PurchaseTicketUseCase: MockProxy<PurchaseTicketUseCase>
 
   beforeAll(() => {
-    paymentType = 'any_payment_type'
+    paymentType = 'credit_card'
     eventId = 'any_event_id'
     userId = 'any_user_id'
     cardId = 'any_card_id'
@@ -49,8 +49,33 @@ describe('PurchaseTicketController', () => {
       new RequiredString(eventId, 'eventId'),
       new Required(userId, 'userId'),
       new RequiredString(userId, 'userId'),
+      new Required(cardId, 'cardId'),
       new RequiredString(cardId, 'cardId'),
+      new Required(installments, 'installments'),
       new RequiredNumber(installments, 'installments')
+    ])
+    expect(httpResponse).toEqual({
+      statusCode: 400,
+      data: error
+    })
+  })
+
+  it('should not validate the cardId and installments if the paymentType is billet', async () => {
+    const error = new Error('validation_error')
+    const ValidationCompositeSpy = jest.fn().mockImplementationOnce(() => ({
+      validate: jest.fn().mockReturnValueOnce(error)
+    }))
+    jest.mocked(ValidationComposite).mockImplementationOnce(ValidationCompositeSpy)
+
+    const httpResponse = await sut.handle({ paymentType: 'billet', eventId, userId, cardId, installments })
+
+    expect(ValidationComposite).toHaveBeenCalledWith([
+      new Required(paymentType = 'billet', 'paymentType'),
+      new RequiredString(paymentType = 'billet', 'paymentType'),
+      new Required(eventId, 'eventId'),
+      new RequiredString(eventId, 'eventId'),
+      new Required(userId, 'userId'),
+      new RequiredString(userId, 'userId')
     ])
     expect(httpResponse).toEqual({
       statusCode: 400,
