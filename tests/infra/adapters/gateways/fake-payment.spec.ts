@@ -1,5 +1,5 @@
 import { type UUIDGenerator } from '@/application/contracts/adapters'
-import { FakePaymentGateway } from '@/infra/gateways'
+import { FakePaymentGateway } from '@/infra/adapters/gateways'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 

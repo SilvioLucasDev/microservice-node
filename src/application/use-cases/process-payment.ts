@@ -1,5 +1,4 @@
-import { type MakePayment } from '@/application/contracts/gateways'
-import { type Publish, type UUIDGenerator } from '@/application/contracts/adapters'
+import { type MakePayment, type Publish, type UUIDGenerator } from '@/application/contracts/adapters'
 import { Transaction } from '@/domain/entities'
 import { type GetCard, type GetUser, type SaveTransaction } from '@/application/contracts/repositories'
 import { PaymentProcessed } from '@/domain/event'

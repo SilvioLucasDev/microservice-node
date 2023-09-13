@@ -1,5 +1,4 @@
-import { type MakePayment } from '@/application/contracts/gateways'
-import { type UUIDGenerator } from '@/application/contracts/adapters'
+import { type MakePayment, type UUIDGenerator } from '@/application/contracts/adapters'
 
 export class FakePaymentGateway implements MakePayment {
   constructor (private readonly crypto: UUIDGenerator) { }
