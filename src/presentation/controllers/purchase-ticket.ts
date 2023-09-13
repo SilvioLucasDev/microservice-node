@@ -21,16 +21,23 @@ export class PurchaseTicketController implements Controller {
   }
 
   private validate ({ paymentType, installments, eventId, userId, cardId }: HttpRequest): Model {
-    return new ValidationComposite([
+    const validators = [
       new Required(paymentType, 'paymentType'),
       new RequiredString(paymentType, 'paymentType'),
       new Required(eventId, 'eventId'),
       new RequiredString(eventId, 'eventId'),
       new Required(userId, 'userId'),
-      new RequiredString(userId, 'userId'),
-      new RequiredString(cardId, 'cardId'),
-      new RequiredNumber(installments, 'installments')
-    ]).validate()
+      new RequiredString(userId, 'userId')
+    ]
+    if (paymentType === 'credit_card') {
+      validators.push(
+        new Required(cardId, 'cardId'),
+        new RequiredString(cardId, 'cardId'),
+        new Required(installments, 'installments'),
+        new RequiredNumber(installments, 'installments')
+      )
+    }
+    return new ValidationComposite(validators).validate()
   }
 }
 type HttpRequest = {
