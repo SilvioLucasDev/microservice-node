@@ -1,5 +1,5 @@
-import { type GetUser } from '@/application/contracts/repositories'
 import prisma from '@/infra/repositories/postgres/helpers/connection'
+import { type GetUser } from '@/application/contracts/repositories'
 
 export class PgUserRepository implements GetUser {
   async get ({ id }: GetUser.Input): Promise<GetUser.Output> {

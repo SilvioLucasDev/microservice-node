@@ -1,5 +1,5 @@
-import { type GetCard } from '@/application/contracts/repositories'
 import prisma from '@/infra/repositories/postgres/helpers/connection'
+import { type GetCard } from '@/application/contracts/repositories'
 
 export class PgCardRepository implements GetCard {
   async get ({ id }: GetCard.Input): Promise<GetCard.Output> {

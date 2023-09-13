@@ -1,6 +1,6 @@
-import { type UUIDGenerator } from '@/application/contracts/adapters'
 import { PaymentType, TransactionStatus } from '@/domain/enums'
 import { PaymentTypeInvalidError, TransactionStatusInvalidError } from '@/domain/errors'
+import { type UUIDGenerator } from '@/application/contracts/adapters'
 
 export class Transaction {
   constructor (

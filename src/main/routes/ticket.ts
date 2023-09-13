@@ -1,5 +1,5 @@
-import { type On } from '@/application/contracts/adapters'
 import { makePurchaseTicketController } from '@/main/factories/presentation/controllers'
+import { type On } from '@/application/contracts/adapters'
 
 export class TicketRouter {
   constructor (httpServer: On) {

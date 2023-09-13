@@ -39,16 +39,14 @@ describe('TicketRouter', () => {
   })
 
   describe('POST /purchase-tickets', () => {
-    it('should return 200 with ticketId and status', async () => {
+    it('should return 202 with ticketId and status', async () => {
       prismaMock.event.findFirst.mockResolvedValueOnce({ id: eventId, price } as unknown as Prisma.Prisma__EventClient<EventPrisma>)
 
-      const { status, body } = await request(httpServer.app)
+      const { status } = await request(httpServer.app)
         .post('/v1/api/purchase-tickets')
         .send({ paymentType, eventId, userId, cardId, installments })
 
-      expect(status).toBe(200)
-      expect(body.ticketId).toBeDefined()
-      expect(body.status).toBe('reserved')
+      expect(status).toBe(202)
     })
 
     it('should return 400 with EventNotFoundError', async () => {

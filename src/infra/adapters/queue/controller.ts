@@ -21,7 +21,8 @@ export class QueueController {
     this.queue.consume({
       queueName: 'paymentError',
       callback: async (input: any) => {
-        console.log(input) // TODO Criar usecase para lidar com esse erro do payment
+        // TODO Criar usecase para lidar com esse erro do payment
+        console.log(input)
       }
     })
 

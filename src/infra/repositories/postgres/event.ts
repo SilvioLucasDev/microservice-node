@@ -1,5 +1,5 @@
-import { type GetEvent } from '@/application/contracts/repositories'
 import prisma from '@/infra/repositories/postgres/helpers/connection'
+import { type GetEvent } from '@/application/contracts/repositories'
 
 export class PgEventRepository implements GetEvent {
   async get ({ id }: GetEvent.Input): Promise<GetEvent.Output> {

@@ -1,5 +1,5 @@
-import { type UpdateStatusTicket, type SaveTicket, type FindDetailsByIdTicket } from '@/application/contracts/repositories'
 import prisma from '@/infra/repositories/postgres/helpers/connection'
+import { type UpdateStatusTicket, type SaveTicket, type FindDetailsByIdTicket } from '@/application/contracts/repositories'
 
 export class PgTicketRepository implements SaveTicket, UpdateStatusTicket, FindDetailsByIdTicket {
   async save ({ id, eventId, userId, status }: SaveTicket.Input): Promise<void> {

@@ -1,12 +1,12 @@
-import { type UUIDGenerator } from '@/application/contracts/adapters'
 import { TicketStatus } from '@/domain/enums'
+import { type UUIDGenerator } from '@/application/contracts/adapters'
 
 export class Ticket {
   constructor (
     readonly id: string,
     readonly eventId: string,
     readonly userId: string,
-    public status: string
+    readonly status: string
   ) { }
 
   static create ({ eventId, userId }: Input, crypto: UUIDGenerator): Ticket {

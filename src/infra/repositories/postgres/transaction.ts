@@ -1,5 +1,5 @@
-import { type SaveTransaction } from '@/application/contracts/repositories'
 import prisma from '@/infra/repositories/postgres/helpers/connection'
+import { type SaveTransaction } from '@/application/contracts/repositories'
 
 export class PgTransactionRepository implements SaveTransaction {
   async save ({ id, ticketId, paymentType, cardId, total, installments, dueDate, processorResponse, transactionId, status }: SaveTransaction.Input): Promise<void> {

@@ -1,8 +1,8 @@
 import { badRequest, serverError, type HttpResponse, accepted } from '@/presentation/helpers'
-import { type PurchaseTicketUseCase } from '@/application/use-cases'
-import { EventNotFoundError } from '@/application/errors'
 import { Required, RequiredNumber, RequiredString, ValidationComposite } from '@/presentation/validation'
 import { type Controller } from '@/presentation/controllers'
+import { type PurchaseTicketUseCase } from '@/application/use-cases'
+import { EventNotFoundError } from '@/application/errors'
 
 export class PurchaseTicketController implements Controller {
   constructor (private readonly purchaseTicketUseCase: PurchaseTicketUseCase) { }
