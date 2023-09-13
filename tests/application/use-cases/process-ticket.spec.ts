@@ -1,8 +1,8 @@
+import { type GetUser, type FindDetailsByIdTicket, type UpdateStatusTicket } from '@/application/contracts/repositories'
 import { ProcessTicketUseCase } from '@/application/use-cases'
 import { type Publish } from '@/application/contracts/adapters'
 import { Email, Ticket } from '@/domain/entities'
 import { TicketProcessed } from '@/domain/event'
-import { type GetUser, type FindDetailsByIdTicket, type UpdateStatusTicket } from '@/application/contracts/repositories'
 import { env } from '@/main/config/env'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
@@ -24,6 +24,7 @@ describe('ProcessTicketUseCase', () => {
   let number: string
   let complements: string
   let mobilePhone: string
+  let ticketStatus: string
 
   let sut: ProcessTicketUseCase
   let ticketRepository: MockProxy<UpdateStatusTicket & FindDetailsByIdTicket>
@@ -47,13 +48,14 @@ describe('ProcessTicketUseCase', () => {
     number = 'any_number'
     complements = 'any_complements'
     mobilePhone = 'any_mobile_phone'
+    ticketStatus = 'approved'
 
+    emailEntity = jest.spyOn(Email, 'create')
+    ticketEntity = jest.spyOn(Ticket, 'statusMap')
     ticketRepository = mock()
     ticketRepository.findDetailsById.mockResolvedValue({ eventName })
     userRepository = mock()
     userRepository.get.mockResolvedValue({ id, name, document, email, zipcode, number, complements, mobilePhone })
-    emailEntity = jest.spyOn(Email, 'create')
-    ticketEntity = jest.spyOn(Ticket, 'statusMap')
     queue = mock()
   })
 
@@ -92,7 +94,7 @@ describe('ProcessTicketUseCase', () => {
   it('should call EmailEntity with correct values', async () => {
     await sut.execute({ ticketId, paymentType, url, userId, status })
 
-    expect(emailEntity).toHaveBeenCalledWith({ ticketId, ticketStatus: 'approved', paymentType, url, email, eventName })
+    expect(emailEntity).toHaveBeenCalledWith({ ticketId, ticketStatus, paymentType, url, email, eventName })
     expect(emailEntity).toHaveBeenCalledTimes(1)
   })
 
@@ -101,7 +103,7 @@ describe('ProcessTicketUseCase', () => {
 
     expect(TicketProcessed).toHaveBeenCalledWith(
       env.emailSender,
-      'any_email',
+      email,
       'Ticket Purchase | any_event_name',
       expect.stringMatching(/Hello! <br><br> Ticket payment: any_ticket_id for event any_event_name was successful!.*/)
     )

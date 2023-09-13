@@ -1,6 +1,6 @@
-import { type UUIDGenerator } from '@/application/contracts/adapters'
 import { Ticket } from '@/domain/entities'
 import { TicketStatus } from '@/domain/enums'
+import { type UUIDGenerator } from '@/application/contracts/adapters'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 
@@ -10,7 +10,7 @@ describe('TicketEntity', () => {
   let ticketId: string
   let initialStatus: string
 
-  let sut: Ticket | any
+  let sut: Ticket | string
   let crypto: MockProxy<UUIDGenerator>
 
   beforeAll(() => {
@@ -32,7 +32,7 @@ describe('TicketEntity', () => {
   })
 
   describe('statusMap', () => {
-    it('should return statuses correctly', () => {
+    it('should return status correct', () => {
       sut = Ticket.statusMap('approved')
 
       expect(sut).toBe(TicketStatus.APPROVED)

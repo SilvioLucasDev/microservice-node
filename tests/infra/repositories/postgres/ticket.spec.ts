@@ -40,9 +40,9 @@ describe('PgTicketRepository', () => {
 
   it('should return undefined an create new ticket', async () => {
     prismaMock.ticket.create.mockResolvedValue({ id, event_id: eventId, user_id: userId, status, created_at: createdAt, updated_at: updatedAt })
-    const ticket = Ticket.create({ eventId, userId }, crypto)
+    const ticketEntity = Ticket.create({ eventId, userId }, crypto)
 
-    const result = sut.save(ticket)
+    const result = sut.save(ticketEntity)
 
     await expect(result).resolves.toBeUndefined()
   })
@@ -55,7 +55,7 @@ describe('PgTicketRepository', () => {
     await expect(result).resolves.toBeUndefined()
   })
 
-  it('should return name of event an select ticket', async () => {
+  it('should return the name of the ticket event entered', async () => {
     prismaMock.ticket.findFirst.mockResolvedValue({ user_id: userId, event: { name: eventName } } as unknown as Prisma.Prisma__TicketClient<TicketPrisma>)
 
     const result = sut.findDetailsById({ id })

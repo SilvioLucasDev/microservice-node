@@ -45,7 +45,7 @@ describe('RequiredFields', () => {
   })
 
   describe('RequiredNumber', () => {
-    it('should return FieldNotStringError if value is not string', () => {
+    it('should return FieldNotNumberError if value is not number', () => {
       const sut = new RequiredNumber('abcd', field)
 
       const error = sut.validate()

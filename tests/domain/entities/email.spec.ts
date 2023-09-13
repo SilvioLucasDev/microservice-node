@@ -19,7 +19,7 @@ describe('EmailEntity', () => {
     eventName = 'any_event_name'
   })
 
-  it('should return instance of Email with correct values when status of ticket is reserved and payment type credit_card', () => {
+  it('should return instance of EmailEntity with correct values when status of ticket is reserved and payment type credit_card', () => {
     sut = Email.create({ ticketId, ticketStatus, paymentType, url, email, eventName })
 
     expect(sut).toStrictEqual(new Email(
@@ -32,7 +32,7 @@ describe('EmailEntity', () => {
     ))
   })
 
-  it('should return instance of Email with correct values when status of ticket is reserved and payment type billet', () => {
+  it('should return instance of EmailEntity with correct values when status of ticket is reserved and payment type billet', () => {
     sut = Email.create({ ticketId, ticketStatus, paymentType: 'billet', url, email, eventName })
 
     expect(sut).toStrictEqual(new Email(
@@ -45,7 +45,7 @@ describe('EmailEntity', () => {
     ))
   })
 
-  it('should return instance of Email with correct values when status of ticket is approved', () => {
+  it('should return instance of EmailEntity with correct values when status of ticket is approved', () => {
     sut = Email.create({ ticketId, ticketStatus: 'approved', paymentType, url, email, eventName })
 
     expect(sut).toStrictEqual(new Email(
@@ -58,7 +58,7 @@ describe('EmailEntity', () => {
     ))
   })
 
-  it('should return instance of Email with correct values when status of ticket is cancelled', () => {
+  it('should return instance of EmailEntity with correct values when status of ticket is cancelled', () => {
     sut = Email.create({ ticketId, ticketStatus: 'cancelled', paymentType, url, email, eventName })
 
     expect(sut).toStrictEqual(new Email(

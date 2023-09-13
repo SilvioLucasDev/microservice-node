@@ -40,7 +40,7 @@ describe('ProcessPaymentUseCase', () => {
     sut = new FakePaymentGateway(crypto)
   })
 
-  it('should return tid and status when payment is processed', async () => {
+  it('should return tid, status, url and processorResponse when payment is processed', async () => {
     const result = await sut.makePayment({ transactionId, user, card, total, paymentType, installments, dueDate })
 
     expect(result.transactionId).toBe(tid)

@@ -17,7 +17,7 @@ describe('RabbitMQAdapter', () => {
     sut = new RabbitMQAdapter()
   })
 
-  it('should publish a message to a queue and create/close connection with init=true', async () => {
+  it('should publish a message to a queue and create and close connection if init is true', async () => {
     sut['connection'] = await amqp.connect()
     await sut.publish({ queueName, data })
     sut['connection'] = await amqp.connect()
@@ -32,7 +32,7 @@ describe('RabbitMQAdapter', () => {
     }
   })
 
-  it('should publish a message to a queue and not create/close connection with init=false', async () => {
+  it('should publish a message to a queue and not create and close connection if init is false', async () => {
     const connectQueueSpy = jest.spyOn(sut as any, 'connectQueue')
     const closeSpy = jest.spyOn(sut as any, 'close')
 

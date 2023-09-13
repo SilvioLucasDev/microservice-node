@@ -1,3 +1,4 @@
+import { getDueDate } from '@/tests/helpers'
 import { prismaMock } from '@/tests/infra/repositories/postgres/mocks'
 import { PgTransactionRepository } from '@/infra/repositories/postgres'
 import { Transaction } from '@/domain/entities'
@@ -29,7 +30,7 @@ describe('PgTransactionRepository', () => {
     cardId = 'any_card_id'
     total = 300
     installments = 3
-    dueDate = new Date()
+    dueDate = getDueDate()
     processorResponse = 'any_processor_response'
     transactionId = 'any_transaction_id'
     status = 'any_status'

@@ -1,10 +1,11 @@
+import { getDueDate } from '@/tests/helpers'
 import { ProcessPaymentUseCase } from '@/application/use-cases'
 import { type MakePayment } from '@/application/contracts/gateways'
 import { type GetCard, type GetUser, type SaveTransaction } from '@/application/contracts/repositories'
 import { type Publish, type UUIDGenerator } from '@/application/contracts/adapters'
+import { CardNotFoundError } from '@/application/errors'
 import { Transaction } from '@/domain/entities'
 import { PaymentProcessed } from '@/domain/event'
-import { CardNotFoundError } from '@/application/errors'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 import MockDate from 'mockdate'
@@ -38,19 +39,13 @@ describe('ProcessPaymentUseCase', () => {
   let card: object
 
   let sut: ProcessPaymentUseCase
-  let transaction: jest.SpyInstance
+  let transactionEntity: jest.SpyInstance
   let userRepository: MockProxy<GetUser>
   let cardRepository: MockProxy<GetCard>
   let transactionRepository: MockProxy<SaveTransaction>
   let paymentGateway: MockProxy<MakePayment>
   let crypto: MockProxy<UUIDGenerator>
   let queue: MockProxy<Publish>
-
-  function getDueDate (): Date {
-    const dueDate = new Date()
-    dueDate.setDate(dueDate.getDate() + 10)
-    return dueDate
-  }
 
   beforeAll(() => {
     MockDate.set(new Date())
@@ -80,7 +75,7 @@ describe('ProcessPaymentUseCase', () => {
     user = { id, name, document, email, zipcode, number, complements, mobilePhone }
     card = { id, alias, token }
 
-    transaction = jest.spyOn(Transaction, 'create')
+    transactionEntity = jest.spyOn(Transaction, 'create')
     userRepository = mock()
     userRepository.get.mockResolvedValue({ id, name, document, email, zipcode, number, complements, mobilePhone })
     cardRepository = mock()
@@ -101,34 +96,34 @@ describe('ProcessPaymentUseCase', () => {
     MockDate.reset()
   })
 
-  it('should call TransactionEntity with correct values', async () => {
+  it('should call method create of TransactionEntity with correct values', async () => {
     await sut.execute({ ticketId, price, paymentType, userId, cardId, installments })
 
-    expect(transaction).toHaveBeenCalledWith({ ticketId, paymentType, cardId, total: price, installments }, crypto)
-    expect(transaction).toHaveBeenCalledTimes(1)
+    expect(transactionEntity).toHaveBeenCalledWith({ ticketId, paymentType, cardId, total: price, installments }, crypto)
+    expect(transactionEntity).toHaveBeenCalledTimes(1)
   })
 
-  it('should call UserRepository with correct values', async () => {
+  it('should call method get of UserRepository with correct values', async () => {
     await sut.execute({ ticketId, price, paymentType, userId, cardId, installments })
 
     expect(userRepository.get).toHaveBeenCalledWith({ id: userId })
     expect(userRepository.get).toHaveBeenCalledTimes(1)
   })
 
-  it('should call CardRepository with correct values', async () => {
+  it('should call method get of CardRepository with correct values', async () => {
     await sut.execute({ ticketId, price, paymentType, userId, cardId, installments })
 
     expect(cardRepository.get).toHaveBeenCalledWith({ id: cardId })
     expect(cardRepository.get).toHaveBeenCalledTimes(1)
   })
 
-  it('should not call CardRepository if TypePayment is billet', async () => {
+  it('should not call method get of CardRepository if TypePayment is billet', async () => {
     await sut.execute({ ticketId, price, paymentType: 'billet', userId, cardId: null, installments })
 
     expect(cardRepository.get).not.toHaveBeenCalled()
   })
 
-  it('should throw CardNotFoundError if CardRepository return undefined', async () => {
+  it('should rethrow CardNotFoundError if CardRepository return undefined', async () => {
     cardRepository.get.mockResolvedValueOnce(undefined)
 
     const promise = sut.execute({ ticketId, price, paymentType, userId, cardId, installments })
@@ -143,14 +138,14 @@ describe('ProcessPaymentUseCase', () => {
     expect(paymentGateway.makePayment).toHaveBeenCalledTimes(1)
   })
 
-  it('should call TransactionRepository with instance of TransactionEntity', async () => {
+  it('should call method save of TransactionRepository with instance of TransactionEntity', async () => {
     await sut.execute({ ticketId, price, paymentType, userId, cardId, installments })
 
     expect(transactionRepository.save).toHaveBeenCalledWith(expect.any(Transaction))
     expect(transactionRepository.save).toHaveBeenCalledTimes(1)
   })
 
-  it('should call PaymentProcessed with correct values', async () => {
+  it('should call PaymentProcessedEvent with correct values', async () => {
     await sut.execute({ ticketId, price, paymentType, userId, cardId, installments })
 
     expect(PaymentProcessed).toHaveBeenCalledWith(paymentType, ticketId, url, status)

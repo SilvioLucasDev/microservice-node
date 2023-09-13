@@ -34,12 +34,12 @@ describe('PurchaseTicketUseCase', () => {
     ticketId = 'any_ticket_id'
     price = 300
 
+    ticket = jest.spyOn(Ticket, 'create')
     eventRepository = mock()
     eventRepository.get.mockResolvedValue({ id: eventId, price })
     ticketRepository = mock()
     crypto = mock()
     crypto.uuid.mockReturnValue(ticketId)
-    ticket = jest.spyOn(Ticket, 'create')
     queue = mock()
   })
 
@@ -54,7 +54,7 @@ describe('PurchaseTicketUseCase', () => {
     expect(eventRepository.get).toHaveBeenCalledTimes(1)
   })
 
-  it('should throw EventNotFoundError if EventRepository return undefined', async () => {
+  it('should rethrow EventNotFoundError if EventRepository return undefined', async () => {
     eventRepository.get.mockResolvedValueOnce(undefined)
 
     const promise = sut.execute({ paymentType, eventId, userId, cardId, installments })
@@ -62,21 +62,21 @@ describe('PurchaseTicketUseCase', () => {
     await expect(promise).rejects.toThrow(new EventNotFoundError())
   })
 
-  it('should call TicketEntity with correct values', async () => {
+  it('should call method create of TicketEntity with correct values', async () => {
     await sut.execute({ paymentType, eventId, userId, cardId, installments })
 
     expect(ticket).toHaveBeenCalledWith({ eventId, userId }, crypto)
     expect(ticket).toHaveBeenCalledTimes(1)
   })
 
-  it('should call TicketRepository with instance of TicketEntity', async () => {
+  it('should call method save of TicketRepository with instance of TicketEntity', async () => {
     await sut.execute({ paymentType, eventId, userId, cardId, installments })
 
     expect(ticketRepository.save).toHaveBeenCalledWith(expect.any(Ticket))
     expect(ticketRepository.save).toHaveBeenCalledTimes(1)
   })
 
-  it('should call TicketReserved with correct values', async () => {
+  it('should call TicketReservedEvent with correct values', async () => {
     await sut.execute({ paymentType, eventId, userId, cardId, installments })
 
     expect(TicketReserved).toHaveBeenCalledWith(paymentType, price, ticketId, userId, cardId, installments)

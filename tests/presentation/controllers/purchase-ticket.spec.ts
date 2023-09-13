@@ -58,7 +58,7 @@ describe('PurchaseTicketController', () => {
     })
   })
 
-  it('should call PurchaseTicketUseCase with correct params', async () => {
+  it('should call method execute of PurchaseTicketUseCase with correct params', async () => {
     await sut.handle({ paymentType, eventId, userId, cardId, installments })
 
     expect(PurchaseTicketUseCase.execute).toHaveBeenCalledWith({ paymentType, eventId, userId, cardId, installments })
