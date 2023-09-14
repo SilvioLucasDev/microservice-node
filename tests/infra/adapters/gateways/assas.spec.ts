@@ -1,9 +1,9 @@
-import { type MakePayment, type UUIDGenerator } from '@/application/contracts/adapters'
-import { FakePaymentGateway } from '@/infra/adapters/gateways'
+import { type GetClient, type PostClient, type MakePayment } from '@/application/contracts/adapters'
+import { AsaasGateway } from '@/infra/adapters/gateways'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 
-describe('FakePaymentGateway', () => {
+describe('ProcessPaymentUseCase', () => {
   let transactionId: string
   let total: number
   let paymentType: string
@@ -13,6 +13,7 @@ describe('FakePaymentGateway', () => {
   let status: string
   let url: string
   let processorResponse: string
+  let invoiceUrl: string
   let id: string
   let name: string
   let document: string
@@ -27,9 +28,10 @@ describe('FakePaymentGateway', () => {
   let token: string
   let user: MakePayment.User
   let card: MakePayment.Card
+  let apiKey: string
 
-  let sut: FakePaymentGateway
-  let crypto: MockProxy<UUIDGenerator>
+  let sut: AsaasGateway
+  let httpClient: MockProxy<GetClient & PostClient>
 
   beforeAll(() => {
     transactionId = 'any_transaction_id'
@@ -40,7 +42,8 @@ describe('FakePaymentGateway', () => {
     tid = 'any_tid'
     status = 'approved'
     url = 'any_url'
-    processorResponse = 'Retorno do gateway'
+    processorResponse = '{"id":"any_tid","status":"CONFIRMED","invoiceUrl":"any_url"}'
+    invoiceUrl = 'any_url'
     id = 'any_id'
     name = 'any_name'
     document = 'any_document'
@@ -55,13 +58,15 @@ describe('FakePaymentGateway', () => {
     token = 'any_token'
     user = { id, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood }
     card = { id, alias, token }
+    apiKey = 'any_api_key'
 
-    crypto = mock()
-    crypto.uuid.mockReturnValue(tid)
+    httpClient = mock()
+    httpClient.get.mockResolvedValue({ data: [{ id }] })
+    httpClient.post.mockResolvedValue({ id: tid, status: 'CONFIRMED', invoiceUrl })
   })
 
   beforeEach(() => {
-    sut = new FakePaymentGateway(crypto)
+    sut = new AsaasGateway(httpClient, apiKey)
   })
 
   it('should return tid, status, url and processorResponse when payment is processed', async () => {
@@ -71,5 +76,30 @@ describe('FakePaymentGateway', () => {
     expect(result.status).toBe(status)
     expect(result.url).toBe(url)
     expect(result.processorResponse).toBe(processorResponse)
+  })
+
+  it('should create new user if user not exists', async () => {
+    httpClient.get.mockResolvedValueOnce({ data: [] })
+    httpClient.post
+      .mockResolvedValueOnce({ id })
+      .mockResolvedValueOnce({ id: tid, status: 'CONFIRMED', invoiceUrl })
+
+    const result = await sut.makePayment({ transactionId, user, card, total, paymentType, installments, dueDate })
+
+    expect(result.transactionId).toBe(tid)
+    expect(result.status).toBe(status)
+    expect(result.url).toBe(url)
+    expect(result.processorResponse).toBe(processorResponse)
+  })
+
+  it('should return tid, status, url and processorResponse when payment is throw', async () => {
+    httpClient.get.mockImplementationOnce(() => { throw new Error('http_error') })
+
+    const result = await sut.makePayment({ transactionId, user, card, total, paymentType, installments, dueDate })
+
+    expect(result.transactionId).toBe('')
+    expect(result.status).toBe('error')
+    expect(result.url).toBe('')
+    expect(result.processorResponse).toBe('{}')
   })
 })
