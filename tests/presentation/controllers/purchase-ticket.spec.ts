@@ -16,7 +16,7 @@ describe('PurchaseTicketController', () => {
   let installments: number
 
   let sut: PurchaseTicketController
-  let PurchaseTicketUseCase: MockProxy<PurchaseTicketUseCase>
+  let purchaseTicketUseCase: MockProxy<PurchaseTicketUseCase>
 
   beforeAll(() => {
     paymentType = 'credit_card'
@@ -25,12 +25,12 @@ describe('PurchaseTicketController', () => {
     cardId = 'any_card_id'
     installments = 3
 
-    PurchaseTicketUseCase = mock()
-    PurchaseTicketUseCase.execute.mockResolvedValue()
+    purchaseTicketUseCase = mock()
+    purchaseTicketUseCase.execute.mockResolvedValue()
   })
 
   beforeEach(() => {
-    sut = new PurchaseTicketController(PurchaseTicketUseCase)
+    sut = new PurchaseTicketController(purchaseTicketUseCase)
   })
 
   it('should return 400 if validation fails', async () => {
@@ -86,13 +86,13 @@ describe('PurchaseTicketController', () => {
   it('should call method execute of PurchaseTicketUseCase with correct params', async () => {
     await sut.handle({ paymentType, eventId, userId, cardId, installments })
 
-    expect(PurchaseTicketUseCase.execute).toHaveBeenCalledWith({ paymentType, eventId, userId, cardId, installments })
-    expect(PurchaseTicketUseCase.execute).toHaveBeenCalledTimes(1)
+    expect(purchaseTicketUseCase.execute).toHaveBeenCalledWith({ paymentType, eventId, userId, cardId, installments })
+    expect(purchaseTicketUseCase.execute).toHaveBeenCalledTimes(1)
   })
 
   it('should return 500 if purchase ticket throws', async () => {
     const error = new Error('infra_error')
-    PurchaseTicketUseCase.execute.mockRejectedValueOnce(error)
+    purchaseTicketUseCase.execute.mockRejectedValueOnce(error)
 
     const httpResponse = await sut.handle({ paymentType, eventId, userId, cardId, installments })
 
@@ -103,7 +103,7 @@ describe('PurchaseTicketController', () => {
   })
 
   it('should return 400 if ticket purchase fails and error is EventNotFoundError', async () => {
-    PurchaseTicketUseCase.execute.mockRejectedValueOnce(new EventNotFoundError())
+    purchaseTicketUseCase.execute.mockRejectedValueOnce(new EventNotFoundError())
 
     const httpResponse = await sut.handle({ paymentType, eventId, userId, cardId, installments })
 
