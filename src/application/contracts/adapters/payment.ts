@@ -50,7 +50,8 @@ export namespace TokenizeCard {
     user: User
     holderName: string
     number: string
-    expiryDate: string
+    expiryMonth: string
+    expiryYear: string
     cvv: string
   }
 

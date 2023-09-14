@@ -10,7 +10,8 @@ describe('TokenizeCardUseCase', () => {
   let alias: string
   let holderName: string
   let number: string
-  let expiryDate: string
+  let expiryMonth: string
+  let expiryYear: string
   let cvv: string
   let userId: string
   let name: string
@@ -37,7 +38,8 @@ describe('TokenizeCardUseCase', () => {
     cardId = 'any_card_id'
     alias = 'any_alias'
     holderName = 'any_holder_name'
-    expiryDate = 'any_expiry_date'
+    expiryMonth = 'any_expiry_month'
+    expiryYear = 'any_expiry_year'
     cvv = 'any_cvv'
     userId = 'any_user_id'
     name = 'any_name'
@@ -66,35 +68,35 @@ describe('TokenizeCardUseCase', () => {
     sut = new TokenizeCardUseCase(userRepository, cardRepository, paymentGateway, crypto)
   })
   it('should call method get of UserRepository with correct values', async () => {
-    await sut.execute({ alias, holderName, number, expiryDate, cvv, userId })
+    await sut.execute({ alias, holderName, number, expiryMonth, expiryYear, cvv, userId })
 
     expect(userRepository.get).toHaveBeenCalledWith({ id: userId })
     expect(userRepository.get).toHaveBeenCalledTimes(1)
   })
 
   it('should call method tokenizeCard of PaymentGateway with correct values', async () => {
-    await sut.execute({ alias, holderName, number, expiryDate, cvv, userId })
+    await sut.execute({ alias, holderName, number, expiryMonth, expiryYear, cvv, userId })
 
-    expect(paymentGateway.tokenizeCard).toHaveBeenCalledWith({ user, holderName, number, expiryDate, cvv })
+    expect(paymentGateway.tokenizeCard).toHaveBeenCalledWith({ user, holderName, number, expiryMonth, expiryYear, cvv })
     expect(paymentGateway.tokenizeCard).toHaveBeenCalledTimes(1)
   })
 
   it('should call method create of cardEntity with correct values', async () => {
-    await sut.execute({ alias, holderName, number, expiryDate, cvv, userId })
+    await sut.execute({ alias, holderName, number, expiryMonth, expiryYear, cvv, userId })
 
     expect(cardEntity).toHaveBeenCalledWith({ alias, number, brand, token, userId }, crypto)
     expect(cardEntity).toHaveBeenCalledTimes(1)
   })
 
   it('should call method save of CardRepository with instance of cardEntity', async () => {
-    await sut.execute({ alias, holderName, number, expiryDate, cvv, userId })
+    await sut.execute({ alias, holderName, number, expiryMonth, expiryYear, cvv, userId })
 
     expect(cardRepository.save).toHaveBeenCalledWith(expect.any(Card))
     expect(cardRepository.save).toHaveBeenCalledTimes(1)
   })
 
   it('should return an cardId on success', async () => {
-    const result = await sut.execute({ alias, holderName, number, expiryDate, cvv, userId })
+    const result = await sut.execute({ alias, holderName, number, expiryMonth, expiryYear, cvv, userId })
 
     expect(result).toEqual({ cardId })
   })

@@ -10,9 +10,9 @@ export class TokenizeCardUseCase {
     private readonly crypto: UUIDGenerator
   ) {}
 
-  async execute ({ alias, holderName, number, expiryDate, cvv, userId }: Input): Promise<Output> {
+  async execute ({ alias, holderName, number, expiryMonth, expiryYear, cvv, userId }: Input): Promise<Output> {
     const user = await this.userRepository.get({ id: userId }) // TODO Isso deve ser uma requisição HTTP para o service de usuários.
-    const tokenCard = await this.paymentGateway.tokenizeCard({ user, holderName, number, expiryDate, cvv })
+    const tokenCard = await this.paymentGateway.tokenizeCard({ user, holderName, number, expiryMonth, expiryYear, cvv })
     const card = Card.create({ alias, number: tokenCard.number, brand: tokenCard.brand, token: tokenCard.token, userId }, this.crypto)
     await this.cardRepository.save(card)
     return { cardId: card.id }
@@ -23,7 +23,8 @@ type Input = {
   alias: string
   holderName: string
   number: string
-  expiryDate: string
+  expiryMonth: string
+  expiryYear: string
   cvv: string
   userId: string
 }
