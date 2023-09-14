@@ -55,4 +55,14 @@ describe('PgTransactionRepository', () => {
 
     await expect(result).resolves.toBeUndefined()
   })
+
+  it('should return undefined an update transaction', async () => {
+    prismaMock.transaction.update.mockResolvedValue({
+      id, ticket_id: ticketId, payment_type: paymentType, card_id: cardId, total, installments, due_date: dueDate, processor_response: processorResponse, transaction_id: transactionId, status, created_at: createdAt, updated_at: updatedAt
+    })
+
+    const result = sut.updateStatus({ id, status })
+
+    await expect(result).resolves.toBeUndefined()
+  })
 })
