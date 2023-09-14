@@ -39,7 +39,7 @@ describe('TicketRouter', () => {
   })
 
   describe('POST /purchase-tickets', () => {
-    it('should return 202 with ticketId and status', async () => {
+    it('should return 202', async () => {
       prismaMock.event.findFirst.mockResolvedValueOnce({ id: eventId, price } as unknown as Prisma.Prisma__EventClient<EventPrisma>)
 
       const { status } = await request(httpServer.app)

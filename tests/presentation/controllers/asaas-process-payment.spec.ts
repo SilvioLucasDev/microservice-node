@@ -16,7 +16,7 @@ describe('AsaasProcessPaymentController', () => {
   let asaasProcessPaymentUseCase: MockProxy<AsaasProcessPaymentUseCase>
 
   beforeAll(() => {
-    payment = { status: 'credit_card', externalReference: 'any_event_id', billingType: 'any_user_id', invoiceUrl: 'any_card_id' }
+    payment = { status: 'CONFIRMED', externalReference: 'any_external_reference', billingType: 'BOLETO', invoiceUrl: 'any_url' }
 
     asaasProcessPaymentUseCase = mock()
     asaasProcessPaymentUseCase.execute.mockResolvedValue()
