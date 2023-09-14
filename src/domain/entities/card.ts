@@ -10,7 +10,7 @@ export class Card {
     readonly token: string
   ) { }
 
-  static create ({ userId, alias, number, brand, token }: Input, crypto: UUIDGenerator): Card {
+  static create ({ alias, number, brand, token, userId }: Input, crypto: UUIDGenerator): Card {
     const id = crypto.uuid()
 
     return new Card(id, userId, alias, number, brand, token)
@@ -18,9 +18,9 @@ export class Card {
 }
 
 type Input = {
-  readonly userId: string
   readonly alias: string
   readonly number: string
   readonly brand: string
   readonly token: string
+  readonly userId: string
 }
