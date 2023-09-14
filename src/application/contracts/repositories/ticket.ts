@@ -1,7 +1,7 @@
 import { type Ticket } from '@/domain/entities'
 
 export interface SaveTicket {
-  save: (ticket: SaveTicket.Input) => Promise<void>
+  save: (input: SaveTicket.Input) => Promise<void>
 }
 
 export namespace SaveTicket {
@@ -9,7 +9,7 @@ export namespace SaveTicket {
 }
 
 export interface UpdateStatusTicket {
-  updateStatus: (id: UpdateStatusTicket.Input) => Promise<void>
+  updateStatus: (input: UpdateStatusTicket.Input) => Promise<void>
 }
 
 export namespace UpdateStatusTicket {
@@ -20,7 +20,7 @@ export namespace UpdateStatusTicket {
 }
 
 export interface FindDetailsByIdTicket {
-  findDetailsById: (id: FindDetailsByIdTicket.Input) => Promise<FindDetailsByIdTicket.Output>
+  findDetailsById: (input: FindDetailsByIdTicket.Input) => Promise<FindDetailsByIdTicket.Output>
 }
 
 export namespace FindDetailsByIdTicket {
