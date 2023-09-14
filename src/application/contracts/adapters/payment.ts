@@ -5,13 +5,32 @@ export interface MakePayment {
 export namespace MakePayment {
   export type Input = {
     transactionId: string
-    user: object | undefined
-    card: object | null
+    user: User
+    card: Card
     total: number
     paymentType: string
     installments: number | null
     dueDate: Date
   }
+
+  export type User = {
+    id: string
+    name: string
+    document: string
+    email: string
+    mobilePhone: string
+    zipcode: string
+    address: string
+    number: string
+    complement: string | null
+    neighborhood: string
+  } | undefined
+
+  export type Card = {
+    id: string
+    alias: string
+    token: string
+  } | null
 
   export type Output = {
     transactionId: string

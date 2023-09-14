@@ -1,12 +1,10 @@
-import { type UUIDGenerator } from '@/application/contracts/adapters'
+import { type MakePayment, type UUIDGenerator } from '@/application/contracts/adapters'
 import { FakePaymentGateway } from '@/infra/adapters/gateways'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 
 describe('ProcessPaymentUseCase', () => {
   let transactionId: string
-  let user: object
-  let card: object
   let total: number
   let paymentType: string
   let installments: number
@@ -15,14 +13,26 @@ describe('ProcessPaymentUseCase', () => {
   let status: string
   let url: string
   let processorResponse: string
+  let id: string
+  let name: string
+  let document: string
+  let email: string
+  let mobilePhone: string
+  let zipcode: string
+  let address: string
+  let number: string
+  let complement: string
+  let neighborhood: string
+  let alias: string
+  let token: string
+  let user: MakePayment.User
+  let card: MakePayment.Card
 
   let sut: FakePaymentGateway
   let crypto: MockProxy<UUIDGenerator>
 
   beforeAll(() => {
     transactionId = 'any_transaction_id'
-    user = { any: 'any' }
-    card = { any: 'any' }
     total = 300
     paymentType = 'credit_card'
     installments = 3
@@ -31,6 +41,20 @@ describe('ProcessPaymentUseCase', () => {
     status = 'approved'
     url = 'any_url'
     processorResponse = 'Retorno do gateway'
+    id = 'any_id'
+    name = 'any_name'
+    document = 'any_document'
+    email = 'any_email'
+    mobilePhone = 'any_mobile_phone'
+    zipcode = 'any_zipcode'
+    address = 'any_address'
+    number = 'any_number'
+    complement = 'any_complement'
+    neighborhood = 'any_neighborhood'
+    alias = 'any_alias'
+    token = 'any_token'
+    user = { id, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood }
+    card = { id, alias, token }
 
     crypto = mock()
     crypto.uuid.mockReturnValue(tid)
