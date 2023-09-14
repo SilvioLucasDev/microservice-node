@@ -27,6 +27,11 @@ describe('AsaasGateway', () => {
   let neighborhood: string
   let alias: string
   let token: string
+  let brand: string
+  let holderName: string
+  let expiryMonth: string
+  let expiryYear: string
+  let cvv: string
   let apiKey: string
   let user: MakePayment.User
   let card: MakePayment.Card
@@ -58,6 +63,11 @@ describe('AsaasGateway', () => {
     neighborhood = 'any_neighborhood'
     alias = 'any_alias'
     token = 'any_token'
+    brand = 'any_brand'
+    holderName = 'any_holder_name'
+    expiryMonth = 'any_expiry_month'
+    expiryYear = 'any_expiry_year'
+    cvv = 'any_cvv'
     apiKey = 'any_api_key'
     user = { id, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood }
     card = { id, alias, token }
@@ -71,34 +81,62 @@ describe('AsaasGateway', () => {
     sut = new AsaasGateway(httpClient, apiKey)
   })
 
-  it('should return tid, status, url and processorResponse when payment is processed', async () => {
-    const result = await sut.makePayment({ transactionId, user, card, eventName, total, paymentType, installments, dueDate })
+  describe('MakePayment', () => {
+    it('should return tid, status, url and processorResponse when payment is processed', async () => {
+      const result = await sut.makePayment({ transactionId, user, card, eventName, total, paymentType, installments, dueDate })
 
-    expect(result.transactionId).toBe(tid)
-    expect(result.status).toBe(status)
-    expect(result.url).toBe(url)
-    expect(result.processorResponse).toBe(processorResponse)
+      expect(result.transactionId).toBe(tid)
+      expect(result.status).toBe(status)
+      expect(result.url).toBe(url)
+      expect(result.processorResponse).toBe(processorResponse)
+    })
+
+    it('should create new user if user not exists', async () => {
+      httpClient.get.mockResolvedValueOnce({ data: [] })
+      httpClient.post
+        .mockResolvedValueOnce({ id })
+        .mockResolvedValueOnce({ id: tid, status: 'CONFIRMED', invoiceUrl })
+
+      const result = await sut.makePayment({ transactionId, user, card, eventName, total, paymentType, installments, dueDate })
+
+      expect(result.transactionId).toBe(tid)
+      expect(result.status).toBe(status)
+      expect(result.url).toBe(url)
+      expect(result.processorResponse).toBe(processorResponse)
+    })
+
+    it('should return status as error when the request fails', async () => {
+      httpClient.get.mockImplementationOnce(() => { throw new Error('http_error') })
+
+      const result = await sut.makePayment({ transactionId, user, card, eventName, total, paymentType, installments, dueDate })
+
+      expect(result.status).toBe('error')
+    })
   })
 
-  it('should create new user if user not exists', async () => {
-    httpClient.get.mockResolvedValueOnce({ data: [] })
-    httpClient.post
-      .mockResolvedValueOnce({ id })
-      .mockResolvedValueOnce({ id: tid, status: 'CONFIRMED', invoiceUrl })
+  describe('TokenizeCard', () => {
+    it('should return number, brand and token when tokenize is succeeds', async () => {
+      httpClient.get.mockResolvedValueOnce({ data: [{ id }] })
+      httpClient.post.mockResolvedValueOnce({ creditCardNumber: number, creditCardBrand: brand, creditCardToken: token })
 
-    const result = await sut.makePayment({ transactionId, user, card, eventName, total, paymentType, installments, dueDate })
+      const result = await sut.tokenizeCard({ user, holderName, number, expiryMonth, expiryYear, cvv })
 
-    expect(result.transactionId).toBe(tid)
-    expect(result.status).toBe(status)
-    expect(result.url).toBe(url)
-    expect(result.processorResponse).toBe(processorResponse)
-  })
+      expect(result.number).toBe(number)
+      expect(result.brand).toBe(brand)
+      expect(result.token).toBe(token)
+    })
 
-  it('should return status as error when the request fails', async () => {
-    httpClient.get.mockImplementationOnce(() => { throw new Error('http_error') })
+    it('should create new user if user not exists', async () => {
+      httpClient.get.mockResolvedValueOnce({ data: [] })
+      httpClient.post
+        .mockResolvedValueOnce({ id })
+        .mockResolvedValueOnce({ creditCardNumber: number, creditCardBrand: brand, creditCardToken: token })
 
-    const result = await sut.makePayment({ transactionId, user, card, eventName, total, paymentType, installments, dueDate })
+      const result = await sut.tokenizeCard({ user, holderName, number, expiryMonth, expiryYear, cvv })
 
-    expect(result.status).toBe('error')
+      expect(result.number).toBe(number)
+      expect(result.brand).toBe(brand)
+      expect(result.token).toBe(token)
+    })
   })
 })
