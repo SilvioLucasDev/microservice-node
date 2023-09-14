@@ -16,7 +16,7 @@ export class Transaction {
     public status: string
   ) { }
 
-  static create ({ ticketId, paymentType, cardId, total, installments }: InputCreate, crypto: UUIDGenerator): Transaction {
+  public static create ({ ticketId, paymentType, cardId, total, installments }: InputCreate, crypto: UUIDGenerator): Transaction {
     Transaction.validatePaymentType(paymentType)
     const id = crypto.uuid()
     const dueDate = this.getDueDate()
