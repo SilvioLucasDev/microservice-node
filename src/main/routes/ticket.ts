@@ -1,8 +1,8 @@
 import { makePurchaseTicketController } from '@/main/factories/presentation/controllers'
-import { type On } from '@/application/contracts/adapters'
+import { type OnServer } from '@/application/contracts/adapters'
 
 export class TicketRouter {
-  constructor (httpServer: On) {
+  constructor (httpServer: OnServer) {
     httpServer.on({
       method: 'post',
       url: '/purchase-tickets',

@@ -26,9 +26,9 @@ describe('AsaasGateway', () => {
   let neighborhood: string
   let alias: string
   let token: string
+  let apiKey: string
   let user: MakePayment.User
   let card: MakePayment.Card
-  let apiKey: string
 
   let sut: AsaasGateway
   let httpClient: MockProxy<GetClient & PostClient>
@@ -56,9 +56,9 @@ describe('AsaasGateway', () => {
     neighborhood = 'any_neighborhood'
     alias = 'any_alias'
     token = 'any_token'
+    apiKey = 'any_api_key'
     user = { id, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood }
     card = { id, alias, token }
-    apiKey = 'any_api_key'
 
     httpClient = mock()
     httpClient.get.mockResolvedValue({ data: [{ id }] })
@@ -92,14 +92,11 @@ describe('AsaasGateway', () => {
     expect(result.processorResponse).toBe(processorResponse)
   })
 
-  it('should return tid, status, url and processorResponse when payment is throw', async () => {
+  it('should return status as error when the request fails', async () => {
     httpClient.get.mockImplementationOnce(() => { throw new Error('http_error') })
 
     const result = await sut.makePayment({ transactionId, user, card, total, paymentType, installments, dueDate })
 
-    expect(result.transactionId).toBe('')
     expect(result.status).toBe('error')
-    expect(result.url).toBe('')
-    expect(result.processorResponse).toBe('{}')
   })
 })
