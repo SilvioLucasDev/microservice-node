@@ -23,7 +23,6 @@ describe('CardRouter', () => {
   let cvv: number
   let userId: string
   let cardId: string
-
   let id: string
   let name: string
   let document: string
@@ -45,7 +44,6 @@ describe('CardRouter', () => {
     cvv = 300
     userId = 'any_user_Id'
     cardId = 'any_uuid'
-
     id = 'any_id'
     name = 'any_name'
     document = 'any_document'
@@ -76,9 +74,7 @@ describe('CardRouter', () => {
         .send({ alias, holderName, number, expiryMonth, expiryYear, cvv, userId })
 
       expect(status).toBe(200)
-      expect(body).toEqual({
-        cardId
-      })
+      expect(body).toEqual({ cardId })
     })
   })
 })
