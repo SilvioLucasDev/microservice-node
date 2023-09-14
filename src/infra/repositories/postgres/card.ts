@@ -1,7 +1,13 @@
 import prisma from '@/infra/repositories/postgres/helpers/connection'
-import { type GetCard } from '@/application/contracts/repositories'
+import { type SaveCard, type GetCard } from '@/application/contracts/repositories'
 
-export class PgCardRepository implements GetCard {
+export class PgCardRepository implements GetCard, SaveCard {
+  async save ({ id, userId, alias, number, brand, token }: SaveCard.Input): Promise<void> {
+    await prisma.card.create({
+      data: { id, user_id: userId, alias, number, brand, token }
+    })
+  }
+
   async get ({ id }: GetCard.Input): Promise<GetCard.Output> {
     const card = await prisma.card.findFirst({
       where: {
