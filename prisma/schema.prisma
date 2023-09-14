@@ -30,7 +30,7 @@ model Address {
   zipcode      String   @db.VarChar(80)
   address      String   @db.VarChar(80)
   number       String   @db.VarChar(80)
-  complements  String?  @db.VarChar(80)
+  complement  String?  @db.VarChar(80)
   neighborhood String   @db.VarChar(80)
   city         String   @db.VarChar(80)
   state        String   @db.VarChar(80)

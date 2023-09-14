@@ -20,7 +20,7 @@ async function main() {
       zipcode: '77006516',
       address: 'Quadra 408 Norte Avenida',
       number: '8',
-      complements: 'A',
+      complement: 'A',
       neighborhood: 'Plano Diretor Norte',
       city: 'Palmas',
       state: 'TO',
