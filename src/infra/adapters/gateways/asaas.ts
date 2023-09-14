@@ -1,6 +1,6 @@
-import { type PostClient, type GetClient, type MakePayment } from '@/application/contracts/adapters'
+import { type PostClient, type GetClient, type MakePayment, type TokenizeCard } from '@/application/contracts/adapters'
 
-export class AsaasGateway implements MakePayment {
+export class AsaasGateway implements MakePayment, TokenizeCard {
   private readonly baseUrl = 'https://sandbox.asaas.com/api/v3'
 
   constructor (
@@ -11,7 +11,7 @@ export class AsaasGateway implements MakePayment {
   async makePayment ({ transactionId, user, card, eventName, total, paymentType, installments, dueDate }: MakePayment.Input): Promise<MakePayment.Output> {
     try {
       const client = await this.getClient(user)
-      const transactionData = {
+      const paymentData = {
         customer: client,
         billingType: this.paymentTypeMap(paymentType),
         value: total,
@@ -22,7 +22,7 @@ export class AsaasGateway implements MakePayment {
         authorizeOnly: false
       }
       if (paymentType === 'credit_card') {
-        Object.assign(transactionData, {
+        Object.assign(paymentData, {
           installmentCount: installments,
           installmentValue: installments !== null ? total / installments : total,
           creditCardToken: card?.token
@@ -30,7 +30,7 @@ export class AsaasGateway implements MakePayment {
       }
       const response = await this.httpClient.post({
         url: `${this.baseUrl}/payments`,
-        data: transactionData,
+        data: paymentData,
         headers: { access_token: this.apiKey }
       })
       const status = this.statusMap(response.status)
@@ -48,19 +48,19 @@ export class AsaasGateway implements MakePayment {
     return response.data.length > 0 ? response.data[0].id : await this.registerClient(user)
   }
 
-  // TODO: Quando for receber os dados do usuário via get consigo tirar os " ! "
+  // TODO: Quando for receber os dados do usuário via get consigo tirar os " ? "
   private async registerClient (user: MakePayment.User): Promise<string> {
     const registerData = {
-      name: user!.name,
-      email: user!.email,
-      mobilePhone: user!.mobilePhone,
-      cpfCnpj: user!.document,
-      postalCode: user!.zipcode,
-      address: user!.address,
-      addressNumber: user!.number,
-      complement: user!.complement,
-      province: user!.neighborhood,
-      externalReference: user!.id,
+      name: user?.name,
+      email: user?.email,
+      mobilePhone: user?.mobilePhone,
+      cpfCnpj: user?.document,
+      postalCode: user?.zipcode,
+      address: user?.address,
+      addressNumber: user?.number,
+      complement: user?.complement,
+      province: user?.neighborhood,
+      externalReference: user?.id,
       notificationDisabled: false
     }
     const response = await this.httpClient.post({
@@ -87,5 +87,35 @@ export class AsaasGateway implements MakePayment {
       billet: 'BOLETO'
     }
     return paymentTypeMap[paymentType]
+  }
+
+  // TODO: Quando for receber os dados do usuário via get consigo tirar os " ? "
+  async tokenizeCard ({ user, holderName, number, expiryMonth, expiryYear, cvv }: TokenizeCard.Input): Promise<TokenizeCard.Output> {
+    const client = await this.getClient(user)
+    const tokenizationData = {
+      customer: client,
+      creditCard: {
+        holderName,
+        number,
+        expiryMonth,
+        expiryYear,
+        ccv: cvv
+      },
+      creditCardHolderInfo: {
+        name: user?.name,
+        email: user?.email,
+        cpfCnpj: user?.document,
+        postalCode: user?.zipcode,
+        addressNumber: user?.number,
+        addressComplement: user?.complement,
+        mobilePhone: user?.mobilePhone
+      }
+    }
+    const response = await this.httpClient.post({
+      url: `${this.baseUrl}/creditCard/tokenize`,
+      data: tokenizationData,
+      headers: { access_token: this.apiKey }
+    })
+    return { number: response.creditCardNumber, brand: response.creditCardBrand, token: response.creditCardToken }
   }
 }
