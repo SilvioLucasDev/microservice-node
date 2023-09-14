@@ -3,7 +3,7 @@ import { AsaasGateway } from '@/infra/adapters/gateways'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 
-describe('ProcessPaymentUseCase', () => {
+describe('AsaasGateway', () => {
   let transactionId: string
   let total: number
   let paymentType: string
