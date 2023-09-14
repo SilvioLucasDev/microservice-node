@@ -7,5 +7,8 @@ export const env = {
     port: process.env.EMAIL_PORT ?? 2525,
     user: process.env.EMAIL_USER ?? '',
     pass: process.env.EMAIL_PASS ?? ''
+  },
+  asaas: {
+    apiKey: process.env.ASAAS_KEY_API ?? ''
   }
 }
