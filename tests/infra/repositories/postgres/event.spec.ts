@@ -5,11 +5,15 @@ import { type Prisma, type Event as EventPrisma } from '@prisma/client'
 
 describe('PgEventRepository', () => {
   let id: string
+  let name: string
+  let price: number
 
   let sut: PgEventRepository
 
   beforeEach(() => {
     id = 'any_id'
+    name = 'any_name'
+    price = 300
 
     sut = new PgEventRepository()
   })
@@ -19,11 +23,11 @@ describe('PgEventRepository', () => {
   })
 
   it('should return event if exists', async () => {
-    prismaMock.event.findFirst.mockResolvedValueOnce({ id, price: 300 } as unknown as Prisma.Prisma__EventClient<EventPrisma>)
+    prismaMock.event.findFirst.mockResolvedValueOnce({ id, name, price } as unknown as Prisma.Prisma__EventClient<EventPrisma>)
 
     const event = await sut.get({ id })
 
-    expect(event).toEqual({ id, price: 300 })
+    expect(event).toEqual({ id, name, price })
   })
 
   it('should return undefined if event not exists', async () => {

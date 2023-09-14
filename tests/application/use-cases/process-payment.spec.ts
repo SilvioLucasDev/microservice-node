@@ -14,6 +14,7 @@ jest.mock('@/domain/event/payment-processed')
 describe('ProcessPaymentUseCase', () => {
   let ticketId: string
   let transactionId: string
+  let eventName: string
   let price: number
   let paymentType: string
   let userId: string
@@ -53,6 +54,7 @@ describe('ProcessPaymentUseCase', () => {
 
     ticketId = 'any_ticket_id'
     transactionId = 'any_transaction_id'
+    eventName = 'any_event_name'
     price = 300
     paymentType = 'credit_card'
     userId = 'any_user_id'
@@ -100,28 +102,28 @@ describe('ProcessPaymentUseCase', () => {
   })
 
   it('should call method create of TransactionEntity with correct values', async () => {
-    await sut.execute({ ticketId, price, paymentType, userId, cardId, installments })
+    await sut.execute({ ticketId, eventName, price, paymentType, userId, cardId, installments })
 
     expect(transactionEntity).toHaveBeenCalledWith({ ticketId, paymentType, cardId, total: price, installments }, crypto)
     expect(transactionEntity).toHaveBeenCalledTimes(1)
   })
 
   it('should call method get of UserRepository with correct values', async () => {
-    await sut.execute({ ticketId, price, paymentType, userId, cardId, installments })
+    await sut.execute({ ticketId, eventName, price, paymentType, userId, cardId, installments })
 
     expect(userRepository.get).toHaveBeenCalledWith({ id: userId })
     expect(userRepository.get).toHaveBeenCalledTimes(1)
   })
 
   it('should call method get of CardRepository with correct values', async () => {
-    await sut.execute({ ticketId, price, paymentType, userId, cardId, installments })
+    await sut.execute({ ticketId, eventName, price, paymentType, userId, cardId, installments })
 
     expect(cardRepository.get).toHaveBeenCalledWith({ id: cardId })
     expect(cardRepository.get).toHaveBeenCalledTimes(1)
   })
 
   it('should not call method get of CardRepository if TypePayment is billet', async () => {
-    await sut.execute({ ticketId, price, paymentType: 'billet', userId, cardId: null, installments })
+    await sut.execute({ ticketId, eventName, price, paymentType: 'billet', userId, cardId: null, installments })
 
     expect(cardRepository.get).not.toHaveBeenCalled()
   })
@@ -129,34 +131,34 @@ describe('ProcessPaymentUseCase', () => {
   it('should rethrow CardNotFoundError if CardRepository return undefined', async () => {
     cardRepository.get.mockResolvedValueOnce(undefined)
 
-    const promise = sut.execute({ ticketId, price, paymentType, userId, cardId, installments })
+    const promise = sut.execute({ ticketId, eventName, price, paymentType, userId, cardId, installments })
 
     await expect(promise).rejects.toThrow(new CardNotFoundError())
   })
 
   it('should call method makePayment of PaymentGateway with correct values', async () => {
-    await sut.execute({ ticketId, price, paymentType, userId, cardId, installments })
+    await sut.execute({ ticketId, eventName, price, paymentType, userId, cardId, installments })
 
-    expect(paymentGateway.makePayment).toHaveBeenCalledWith({ transactionId, user, card, total: price, paymentType, installments, dueDate })
+    expect(paymentGateway.makePayment).toHaveBeenCalledWith({ transactionId, user, card, eventName, total: price, paymentType, installments, dueDate })
     expect(paymentGateway.makePayment).toHaveBeenCalledTimes(1)
   })
 
   it('should call method save of TransactionRepository with instance of TransactionEntity', async () => {
-    await sut.execute({ ticketId, price, paymentType, userId, cardId, installments })
+    await sut.execute({ ticketId, eventName, price, paymentType, userId, cardId, installments })
 
     expect(transactionRepository.save).toHaveBeenCalledWith(expect.any(Transaction))
     expect(transactionRepository.save).toHaveBeenCalledTimes(1)
   })
 
   it('should call PaymentProcessedEvent with correct values', async () => {
-    await sut.execute({ ticketId, price, paymentType, userId, cardId, installments })
+    await sut.execute({ ticketId, eventName, price, paymentType, userId, cardId, installments })
 
     expect(PaymentProcessed).toHaveBeenCalledWith(paymentType, ticketId, url, status)
     expect(PaymentProcessed).toHaveBeenCalledTimes(1)
   })
 
   it('should call QueueAdapter with correct values', async () => {
-    await sut.execute({ ticketId, price, paymentType, userId, cardId, installments })
+    await sut.execute({ ticketId, eventName, price, paymentType, userId, cardId, installments })
 
     expect(queue.publish).toHaveBeenCalledWith({ queueName: 'paymentProcessed', data: expect.any(PaymentProcessed) })
     expect(queue.publish).toHaveBeenCalledTimes(1)

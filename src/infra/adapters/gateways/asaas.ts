@@ -8,7 +8,7 @@ export class AsaasGateway implements MakePayment {
     private readonly apiKey: string
   ) { }
 
-  async makePayment ({ transactionId, user, card, total, paymentType, installments, dueDate }: MakePayment.Input): Promise<MakePayment.Output> {
+  async makePayment ({ transactionId, user, card, eventName, total, paymentType, installments, dueDate }: MakePayment.Input): Promise<MakePayment.Output> {
     try {
       const client = await this.getClient(user)
       const transactionData = {
@@ -16,7 +16,7 @@ export class AsaasGateway implements MakePayment {
         billingType: this.paymentTypeMap(paymentType),
         value: total,
         dueDate,
-        description: 'SLDSTickets - JavaScript Global Summit', // TODO: pegar o name do evento e colocar aqui
+        description: `SLDSTickets - ${eventName}`,
         externalReference: transactionId,
         postalService: false,
         authorizeOnly: false

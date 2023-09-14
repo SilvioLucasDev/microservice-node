@@ -9,12 +9,14 @@ export class PgEventRepository implements GetEvent {
       },
       select: {
         id: true,
+        name: true,
         price: true
       }
     })
     if (event !== null && event !== undefined) {
       return {
         id: event.id,
+        name: event.name,
         price: event.price
       }
     }

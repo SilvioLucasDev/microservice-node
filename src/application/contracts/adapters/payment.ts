@@ -7,6 +7,7 @@ export namespace MakePayment {
     transactionId: string
     user: User
     card: Card
+    eventName: string
     total: number
     paymentType: string
     installments: number | null

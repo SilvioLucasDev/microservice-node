@@ -1,6 +1,7 @@
 export class TicketReserved {
   constructor (
     private readonly paymentType: string,
+    private readonly eventName: string,
     private readonly price: number,
     private readonly ticketId: string,
     private readonly userId: string,

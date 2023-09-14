@@ -9,6 +9,7 @@ export namespace GetEvent {
 
   export type Output = {
     id: string
+    name: string
     price: number
   } | undefined
 }

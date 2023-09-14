@@ -16,6 +16,7 @@ describe('PurchaseTicketUseCase', () => {
   let cardId: string
   let installments: number
   let ticketId: string
+  let eventName: string
   let price: number
 
   let sut: PurchaseTicketUseCase
@@ -32,11 +33,12 @@ describe('PurchaseTicketUseCase', () => {
     cardId = 'any_card_id'
     installments = 3
     ticketId = 'any_ticket_id'
+    eventName = 'any_event_name'
     price = 300
 
     ticket = jest.spyOn(Ticket, 'create')
     eventRepository = mock()
-    eventRepository.get.mockResolvedValue({ id: eventId, price })
+    eventRepository.get.mockResolvedValue({ id: eventId, name: eventName, price })
     ticketRepository = mock()
     crypto = mock()
     crypto.uuid.mockReturnValue(ticketId)
@@ -79,7 +81,7 @@ describe('PurchaseTicketUseCase', () => {
   it('should call TicketReservedEvent with correct values', async () => {
     await sut.execute({ paymentType, eventId, userId, cardId, installments })
 
-    expect(TicketReserved).toHaveBeenCalledWith(paymentType, price, ticketId, userId, cardId, installments)
+    expect(TicketReserved).toHaveBeenCalledWith(paymentType, eventName, price, ticketId, userId, cardId, installments)
     expect(TicketReserved).toHaveBeenCalledTimes(1)
   })
 
