@@ -20,10 +20,12 @@ describe('ProcessTicketUseCase', () => {
   let name: string
   let document: string
   let email: string
-  let zipcode: string
-  let number: string
-  let complements: string
   let mobilePhone: string
+  let zipcode: string
+  let address: string
+  let number: string
+  let complement: string
+  let neighborhood: string
   let ticketStatus: string
 
   let sut: ProcessTicketUseCase
@@ -44,10 +46,12 @@ describe('ProcessTicketUseCase', () => {
     name = 'any_name'
     document = 'any_document'
     email = 'any_email'
-    zipcode = 'any_zipcode'
-    number = 'any_number'
-    complements = 'any_complements'
     mobilePhone = 'any_mobile_phone'
+    zipcode = 'any_zipcode'
+    address = 'any_address'
+    number = 'any_number'
+    complement = 'any_complement'
+    neighborhood = 'any_neighborhood'
     ticketStatus = 'approved'
 
     emailEntity = jest.spyOn(Email, 'create')
@@ -55,7 +59,7 @@ describe('ProcessTicketUseCase', () => {
     ticketRepository = mock()
     ticketRepository.findDetailsById.mockResolvedValue({ eventName })
     userRepository = mock()
-    userRepository.get.mockResolvedValue({ id, name, document, email, zipcode, number, complements, mobilePhone })
+    userRepository.get.mockResolvedValue({ id, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood })
     queue = mock()
   })
 

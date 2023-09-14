@@ -24,10 +24,12 @@ describe('ProcessPaymentUseCase', () => {
   let name: string
   let document: string
   let email: string
-  let zipcode: string
-  let number: string
-  let complements: string
   let mobilePhone: string
+  let zipcode: string
+  let address: string
+  let number: string
+  let complement: string
+  let neighborhood: string
   let alias: string
   let token: string
   let tid: string
@@ -61,22 +63,24 @@ describe('ProcessPaymentUseCase', () => {
     name = 'any_name'
     document = 'any_document'
     email = 'any_email'
-    zipcode = 'any_zipcode'
-    number = 'any_number'
-    complements = 'any_complements'
     mobilePhone = 'any_mobile_phone'
+    zipcode = 'any_zipcode'
+    address = 'any_address'
+    number = 'any_number'
+    complement = 'any_complement'
+    neighborhood = 'any_neighborhood'
     alias = 'any_alias'
     token = 'any_token'
     tid = 'any_tid'
     url = 'any_url'
     processorResponse = 'any_processor_response'
     status = 'approved'
-    user = { id, name, document, email, zipcode, number, complements, mobilePhone }
+    user = { id, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood }
     card = { id, alias, token }
 
     transactionEntity = jest.spyOn(Transaction, 'create')
     userRepository = mock()
-    userRepository.get.mockResolvedValue({ id, name, document, email, zipcode, number, complements, mobilePhone })
+    userRepository.get.mockResolvedValue({ id, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood })
     cardRepository = mock()
     cardRepository.get.mockResolvedValue({ id, alias, token })
     transactionRepository = mock()

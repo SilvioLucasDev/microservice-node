@@ -12,9 +12,11 @@ export namespace GetUser {
     name: string
     document: string
     email: string
-    zipcode: string
-    number: string
-    complements: string | null
     mobilePhone: string
+    zipcode: string
+    address: string
+    number: string
+    complement: string | null
+    neighborhood: string
   } | undefined
 }

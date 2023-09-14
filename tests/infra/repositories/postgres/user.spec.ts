@@ -10,8 +10,10 @@ describe('PgUserRepository', () => {
   let email: string
   let mobilePhone: string
   let zipcode: string
+  let address: string
   let number: string
-  let complements: string
+  let complement: string
+  let neighborhood: string
 
   let sut: PgUserRepository
 
@@ -22,8 +24,10 @@ describe('PgUserRepository', () => {
     email = 'any_email'
     mobilePhone = 'any_mobile_phone'
     zipcode = 'any_zipcode'
+    address = 'any_address'
     number = 'any_number'
-    complements = 'any_complements'
+    complement = 'any_complement'
+    neighborhood = 'any_neighborhood'
 
     sut = new PgUserRepository()
   })
@@ -34,12 +38,12 @@ describe('PgUserRepository', () => {
 
   it('should return user if exists', async () => {
     prismaMock.user.findFirst.mockResolvedValueOnce({
-      id, name, document, email, mobile_phone: mobilePhone, addresses: [{ zipcode, number, complements }]
+      id, name, document, email, mobile_phone: mobilePhone, addresses: [{ zipcode, address, number, complement, neighborhood }]
     } as unknown as Prisma.Prisma__UserClient<UserPrisma>)
 
     const user = await sut.get({ id })
 
-    expect(user).toEqual({ id, name, document, email, mobilePhone, zipcode, number, complements })
+    expect(user).toEqual({ id, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood })
   })
 
   it('should return undefined if user not exists', async () => {

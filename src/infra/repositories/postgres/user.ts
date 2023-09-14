@@ -16,8 +16,10 @@ export class PgUserRepository implements GetUser {
         addresses: {
           select: {
             zipcode: true,
+            address: true,
             number: true,
-            complements: true
+            complement: true,
+            neighborhood: true
           }
         }
       }
@@ -28,10 +30,12 @@ export class PgUserRepository implements GetUser {
         name: user.name,
         document: user.document,
         email: user.email,
+        mobilePhone: user.mobile_phone,
         zipcode: user.addresses[0].zipcode,
+        address: user.addresses[0].address,
         number: user.addresses[0].number,
-        complements: user.addresses[0].complements,
-        mobilePhone: user.mobile_phone
+        complement: user.addresses[0].complement,
+        neighborhood: user.addresses[0].neighborhood
       }
     }
   }
