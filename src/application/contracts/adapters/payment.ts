@@ -40,3 +40,36 @@ export namespace MakePayment {
     processorResponse: string
   }
 }
+
+export interface TokenizeCard {
+  tokenizeCard: (input: TokenizeCard.Input) => Promise<TokenizeCard.Output>
+}
+
+export namespace TokenizeCard {
+  export type Input = {
+    user: User
+    holderName: string
+    number: string
+    expiryDate: string
+    cvv: string
+  }
+
+  export type User = {
+    id: string
+    name: string
+    document: string
+    email: string
+    mobilePhone: string
+    zipcode: string
+    address: string
+    number: string
+    complement: string | null
+    neighborhood: string
+  } | undefined
+
+  export type Output = {
+    number: string
+    brand: string
+    token: string
+  }
+}
