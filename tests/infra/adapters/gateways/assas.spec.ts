@@ -5,6 +5,7 @@ import { mock, type MockProxy } from 'jest-mock-extended'
 
 describe('AsaasGateway', () => {
   let transactionId: string
+  let ticketId: string
   let eventName: string
   let total: number
   let paymentType: string
@@ -41,6 +42,7 @@ describe('AsaasGateway', () => {
 
   beforeAll(() => {
     transactionId = 'any_transaction_id'
+    ticketId = 'any_ticket_id'
     eventName = 'any_event_name'
     total = 300
     paymentType = 'credit_card'
@@ -83,7 +85,7 @@ describe('AsaasGateway', () => {
 
   describe('MakePayment', () => {
     it('should return tid, status, url and processorResponse when payment is processed', async () => {
-      const result = await sut.makePayment({ transactionId, user, card, eventName, total, paymentType, installments, dueDate })
+      const result = await sut.makePayment({ user, card, eventName, total, paymentType, installments, dueDate, externalReference: `${transactionId}&${ticketId}` })
 
       expect(result.transactionId).toBe(tid)
       expect(result.status).toBe(status)
@@ -97,7 +99,7 @@ describe('AsaasGateway', () => {
         .mockResolvedValueOnce({ id })
         .mockResolvedValueOnce({ id: tid, status: 'CONFIRMED', invoiceUrl })
 
-      const result = await sut.makePayment({ transactionId, user, card, eventName, total, paymentType, installments, dueDate })
+      const result = await sut.makePayment({ user, card, eventName, total, paymentType, installments, dueDate, externalReference: `${transactionId}&${ticketId}` })
 
       expect(result.transactionId).toBe(tid)
       expect(result.status).toBe(status)
@@ -108,7 +110,7 @@ describe('AsaasGateway', () => {
     it('should return status as error when the request fails', async () => {
       httpClient.get.mockImplementationOnce(() => { throw new Error('http_error') })
 
-      const result = await sut.makePayment({ transactionId, user, card, eventName, total, paymentType, installments, dueDate })
+      const result = await sut.makePayment({ user, card, eventName, total, paymentType, installments, dueDate, externalReference: `${transactionId}&${ticketId}` })
 
       expect(result.status).toBe('error')
     })

@@ -139,7 +139,7 @@ describe('ProcessPaymentUseCase', () => {
   it('should call method makePayment of PaymentGateway with correct values', async () => {
     await sut.execute({ ticketId, eventName, price, paymentType, userId, cardId, installments })
 
-    expect(paymentGateway.makePayment).toHaveBeenCalledWith({ transactionId, user, card, eventName, total: price, paymentType, installments, dueDate })
+    expect(paymentGateway.makePayment).toHaveBeenCalledWith({ user, card, eventName, total: price, paymentType, installments, dueDate, externalReference: `${transactionId}&${ticketId}` })
     expect(paymentGateway.makePayment).toHaveBeenCalledTimes(1)
   })
 

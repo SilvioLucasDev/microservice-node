@@ -4,7 +4,6 @@ export interface MakePayment {
 
 export namespace MakePayment {
   export type Input = {
-    transactionId: string
     user: User
     card: Card
     eventName: string
@@ -12,6 +11,7 @@ export namespace MakePayment {
     paymentType: string
     installments: number | null
     dueDate: Date
+    externalReference: string
   }
 
   export type User = {

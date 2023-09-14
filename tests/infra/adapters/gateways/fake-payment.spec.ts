@@ -5,6 +5,7 @@ import { mock, type MockProxy } from 'jest-mock-extended'
 
 describe('FakePaymentGateway', () => {
   let transactionId: string
+  let ticketId: string
   let eventName: string
   let total: number
   let paymentType: string
@@ -34,6 +35,7 @@ describe('FakePaymentGateway', () => {
 
   beforeAll(() => {
     transactionId = 'any_transaction_id'
+    ticketId = 'any_ticket_id'
     eventName = 'any_event_name'
     total = 300
     paymentType = 'credit_card'
@@ -67,7 +69,7 @@ describe('FakePaymentGateway', () => {
   })
 
   it('should return tid, status, url and processorResponse when payment is processed', async () => {
-    const result = await sut.makePayment({ transactionId, user, card, eventName, total, paymentType, installments, dueDate })
+    const result = await sut.makePayment({ user, card, eventName, total, paymentType, installments, dueDate, externalReference: `${transactionId}&${ticketId}` })
 
     expect(result.transactionId).toBe(tid)
     expect(result.status).toBe(status)

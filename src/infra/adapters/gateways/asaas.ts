@@ -8,7 +8,7 @@ export class AsaasGateway implements MakePayment, TokenizeCard {
     private readonly apiKey: string
   ) { }
 
-  async makePayment ({ transactionId, user, card, eventName, total, paymentType, installments, dueDate }: MakePayment.Input): Promise<MakePayment.Output> {
+  async makePayment ({ user, card, eventName, total, paymentType, installments, dueDate, externalReference }: MakePayment.Input): Promise<MakePayment.Output> {
     try {
       const client = await this.getClient(user)
       const paymentData = {
@@ -17,7 +17,7 @@ export class AsaasGateway implements MakePayment, TokenizeCard {
         value: total,
         dueDate,
         description: `SLDSTickets - ${eventName}`,
-        externalReference: transactionId,
+        externalReference,
         postalService: false,
         authorizeOnly: false
       }

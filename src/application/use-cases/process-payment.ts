@@ -23,7 +23,7 @@ export class ProcessPaymentUseCase {
       card = await this.cardRepository.get({ id: cardId })
       if (card === undefined) throw new CardNotFoundError()
     }
-    const payment = await this.paymentGateway.makePayment({ transactionId: transaction.id, user, card, eventName, total: price, paymentType, installments, dueDate: transaction.dueDate })
+    const payment = await this.paymentGateway.makePayment({ user, card, eventName, total: price, paymentType, installments, dueDate: transaction.dueDate, externalReference: `${transaction.id}&${ticketId}` })
     transaction.update({ processorResponse: payment.processorResponse, transactionId: payment.transactionId, status: payment.status })
     await this.transactionRepository.save(transaction)
     const paymentProcessed = new PaymentProcessed(transaction.paymentType, ticketId, payment.url, payment.status)
