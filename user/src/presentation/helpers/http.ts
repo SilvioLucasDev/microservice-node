@@ -19,8 +19,3 @@ export const serverError = (error: Error): HttpResponse<Error> => ({
   statusCode: 500,
   data: new ServerError(error)
 })
-
-export const accepted = (): HttpResponse<undefined> => ({
-  statusCode: 202,
-  data: undefined
-})

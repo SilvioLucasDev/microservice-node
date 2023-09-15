@@ -22,6 +22,23 @@ describe('ExpressRouterAdapter', () => {
     sut = new ExpressAdapter(port, app)
   })
 
+  it('should use json and cors middleware', async () => {
+    sut.on({
+      method: 'get',
+      url,
+      callback: async (params: any, body: any) => ({
+        statusCode: 200,
+        data: { data: 'any_data' }
+      })
+    })
+
+    const response = await request(app).get('/v1/api/any_url')
+
+    expect(response.status).toBe(200)
+    expect(response.header['content-type']).toContain('application/json')
+    expect(response.header['access-control-allow-origin']).toBe('*')
+  })
+
   it('should return with statusCode 200 and valid data', async () => {
     sut.on({
       method,
