@@ -49,6 +49,6 @@ describe('GetUserUseCase', () => {
   it('should return an user data on success', async () => {
     const result = await sut.execute({ userId })
 
-    expect(result).toEqual({ user })
+    expect(result).toEqual(user)
   })
 })

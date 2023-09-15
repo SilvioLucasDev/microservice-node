@@ -14,7 +14,6 @@ export class TokenizeCardController implements Controller {
       const { cardId } = await this.tokenizeCardUseCase.execute({ alias, holderName, number, expiryMonth, expiryYear, cvv, userId })
       return ok({ cardId })
     } catch (error) {
-      console.log('TokenizeCardController', error)
       return serverError(error as Error)
     }
   }
