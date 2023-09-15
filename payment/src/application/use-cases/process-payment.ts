@@ -1,7 +1,6 @@
-import { type GetClient, type MakePayment, type Publish, type UUIDGenerator } from '@/application/contracts/adapters'
+import { type GetClient, type MakePayment, type UUIDGenerator } from '@/application/contracts/adapters'
 import { Transaction } from '@/domain/entities'
 import { type GetCard, type SaveTransaction } from '@/application/contracts/repositories'
-import { PaymentProcessed } from '@/domain/event'
 import { CardNotFoundError } from '@/application/errors'
 import { PaymentType } from '@/domain/enums'
 
@@ -12,8 +11,7 @@ export class ProcessPaymentUseCase {
     private readonly transactionRepository: SaveTransaction,
     private readonly httpClient: GetClient,
     private readonly paymentGateway: MakePayment,
-    private readonly crypto: UUIDGenerator,
-    private readonly queue: Publish
+    private readonly crypto: UUIDGenerator
   ) {}
 
   async execute ({ ticketId, eventName, price, paymentType, userId, cardId, installments }: Input): Promise<void> {
@@ -27,8 +25,6 @@ export class ProcessPaymentUseCase {
     const payment = await this.paymentGateway.makePayment({ user, card, eventName, total: price, paymentType, installments, dueDate: transaction.dueDate, externalReference: `${transaction.id}&${ticketId}` })
     transaction.update({ processorResponse: payment.processorResponse, transactionId: payment.transactionId, status: payment.status })
     await this.transactionRepository.save(transaction)
-    const paymentProcessed = new PaymentProcessed(transaction.paymentType, ticketId, payment.url, payment.status)
-    await this.queue.publish({ queueName: 'paymentProcessed', data: paymentProcessed })
   }
 }
 

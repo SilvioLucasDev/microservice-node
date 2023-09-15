@@ -1,10 +1,9 @@
 import { getDueDate } from '@/tests/helpers'
 import { ProcessPaymentUseCase } from '@/application/use-cases'
-import { type GetClient, type MakePayment, type Publish, type UUIDGenerator } from '@/application/contracts/adapters'
+import { type GetClient, type MakePayment, type UUIDGenerator } from '@/application/contracts/adapters'
 import { type GetCard, type SaveTransaction } from '@/application/contracts/repositories'
 import { CardNotFoundError } from '@/application/errors'
 import { Transaction } from '@/domain/entities'
-import { PaymentProcessed } from '@/domain/event'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 import MockDate from 'mockdate'
@@ -48,7 +47,6 @@ describe('ProcessPaymentUseCase', () => {
   let httpClient: MockProxy<GetClient>
   let paymentGateway: MockProxy<MakePayment>
   let crypto: MockProxy<UUIDGenerator>
-  let queue: MockProxy<Publish>
 
   beforeAll(() => {
     MockDate.set(new Date())
@@ -92,11 +90,10 @@ describe('ProcessPaymentUseCase', () => {
     paymentGateway.makePayment.mockResolvedValue({ transactionId: tid, status, url, processorResponse })
     crypto = mock()
     crypto.uuid.mockReturnValue(transactionId)
-    queue = mock()
   })
 
   beforeEach(() => {
-    sut = new ProcessPaymentUseCase(userMsUrl, cardRepository, transactionRepository, httpClient, paymentGateway, crypto, queue)
+    sut = new ProcessPaymentUseCase(userMsUrl, cardRepository, transactionRepository, httpClient, paymentGateway, crypto)
   })
 
   afterAll(() => {
@@ -150,19 +147,5 @@ describe('ProcessPaymentUseCase', () => {
 
     expect(transactionRepository.save).toHaveBeenCalledWith(expect.any(Transaction))
     expect(transactionRepository.save).toHaveBeenCalledTimes(1)
-  })
-
-  it('should call PaymentProcessedEvent with correct values', async () => {
-    await sut.execute({ ticketId, eventName, price, paymentType, userId, cardId, installments })
-
-    expect(PaymentProcessed).toHaveBeenCalledWith(paymentType, ticketId, url, status)
-    expect(PaymentProcessed).toHaveBeenCalledTimes(1)
-  })
-
-  it('should call QueueAdapter with correct values', async () => {
-    await sut.execute({ ticketId, eventName, price, paymentType, userId, cardId, installments })
-
-    expect(queue.publish).toHaveBeenCalledWith({ queueName: 'paymentProcessed', data: expect.any(PaymentProcessed) })
-    expect(queue.publish).toHaveBeenCalledTimes(1)
   })
 })
