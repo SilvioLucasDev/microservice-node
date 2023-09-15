@@ -9,7 +9,7 @@ export class PgCardRepository implements GetCard, SaveCard {
   }
 
   async get ({ id }: GetCard.Input): Promise<GetCard.Output> {
-    const card = await prisma.card.findFirst({
+    const card = await prisma.card.findUnique({
       where: {
         id
       },

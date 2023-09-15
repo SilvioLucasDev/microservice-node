@@ -56,7 +56,7 @@ describe('PgTicketRepository', () => {
   })
 
   it('should return the name and userId of the ticket event entered', async () => {
-    prismaMock.ticket.findFirst.mockResolvedValue({ user_id: userId, event: { name: eventName } } as unknown as Prisma.Prisma__TicketClient<TicketPrisma>)
+    prismaMock.ticket.findUnique.mockResolvedValue({ user_id: userId, event: { name: eventName } } as unknown as Prisma.Prisma__TicketClient<TicketPrisma>)
 
     const result = sut.findDetailsById({ id })
 

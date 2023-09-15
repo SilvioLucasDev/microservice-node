@@ -23,7 +23,7 @@ describe('PgEventRepository', () => {
   })
 
   it('should return event if exists', async () => {
-    prismaMock.event.findFirst.mockResolvedValueOnce({ id, name, price } as unknown as Prisma.Prisma__EventClient<EventPrisma>)
+    prismaMock.event.findUnique.mockResolvedValueOnce({ id, name, price } as unknown as Prisma.Prisma__EventClient<EventPrisma>)
 
     const event = await sut.get({ id })
 
@@ -31,7 +31,7 @@ describe('PgEventRepository', () => {
   })
 
   it('should return undefined if event not exists', async () => {
-    prismaMock.event.findFirst.mockResolvedValueOnce(null)
+    prismaMock.event.findUnique.mockResolvedValueOnce(null)
 
     const event = await sut.get({ id })
 

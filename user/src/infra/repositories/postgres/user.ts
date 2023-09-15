@@ -3,7 +3,7 @@ import { type GetUser } from '@/application/contracts/repositories'
 
 export class PgUserRepository implements GetUser {
   async get ({ id }: GetUser.Input): Promise<GetUser.Output> {
-    const user = await prisma.user.findFirst({
+    const user = await prisma.user.findUnique({
       where: {
         id
       },

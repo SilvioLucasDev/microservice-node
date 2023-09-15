@@ -37,7 +37,7 @@ describe('PgUserRepository', () => {
   })
 
   it('should return user if exists', async () => {
-    prismaMock.user.findFirst.mockResolvedValueOnce({
+    prismaMock.user.findUnique.mockResolvedValueOnce({
       id, name, document, email, mobile_phone: mobilePhone, addresses: [{ zipcode, address, number, complement, neighborhood }]
     } as unknown as Prisma.Prisma__UserClient<UserPrisma>)
 
@@ -47,7 +47,7 @@ describe('PgUserRepository', () => {
   })
 
   it('should return undefined if user not exists', async () => {
-    prismaMock.user.findFirst.mockResolvedValueOnce(null)
+    prismaMock.user.findUnique.mockResolvedValueOnce(null)
 
     const user = await sut.get({ id })
 

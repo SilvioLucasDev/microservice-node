@@ -15,7 +15,7 @@ export class PgTicketRepository implements SaveTicket, UpdateStatusTicket, FindD
   }
 
   async findDetailsById ({ id }: FindDetailsByIdTicket.Input): Promise<FindDetailsByIdTicket.Output> {
-    const ticket = await prisma.ticket.findFirst({
+    const ticket = await prisma.ticket.findUnique({
       where: { id },
       select: {
         user_id: true,

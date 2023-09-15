@@ -37,7 +37,7 @@ describe('UserRouter', () => {
 
   describe('GET /users', () => {
     it('should return 200 with user data', async () => {
-      prismaMock.user.findFirst.mockResolvedValueOnce({
+      prismaMock.user.findUnique.mockResolvedValueOnce({
         id: userId, name, document, email, mobile_phone: mobilePhone, addresses: [{ zipcode, address, number, complement, neighborhood }]
       } as unknown as Prisma.Prisma__UserClient<UserPrisma>)
 

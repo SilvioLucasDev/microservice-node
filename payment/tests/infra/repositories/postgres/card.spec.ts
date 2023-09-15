@@ -47,7 +47,7 @@ describe('PgCardRepository', () => {
   })
 
   it('should return card if exists', async () => {
-    prismaMock.card.findFirst.mockResolvedValueOnce({ id, alias, token } as unknown as Prisma.Prisma__CardClient<CardPrisma>)
+    prismaMock.card.findUnique.mockResolvedValueOnce({ id, alias, token } as unknown as Prisma.Prisma__CardClient<CardPrisma>)
 
     const card = await sut.get({ id })
 
@@ -55,7 +55,7 @@ describe('PgCardRepository', () => {
   })
 
   it('should return undefined if card not exists', async () => {
-    prismaMock.card.findFirst.mockResolvedValueOnce(null)
+    prismaMock.card.findUnique.mockResolvedValueOnce(null)
 
     const card = await sut.get({ id })
 
