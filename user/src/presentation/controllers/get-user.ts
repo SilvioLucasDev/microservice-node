@@ -1,5 +1,5 @@
 import { badRequest, serverError, type HttpResponse, ok } from '@/presentation/helpers'
-import { Required, RequiredString, ValidationComposite } from '@/presentation/validation'
+import { ValidationComposite, ValidationBuilder as Builder } from '@/presentation/validation'
 import { type Controller } from '@/presentation/controllers'
 import { type GetUserUseCase } from '@/application/use-cases'
 
@@ -19,8 +19,7 @@ export class GetUserController implements Controller {
 
   private validate ({ userId }: HttpRequest): Error | undefined {
     return new ValidationComposite([
-      new Required(userId, 'userId'),
-      new RequiredString(userId, 'userId')
+      ...Builder.of({ value: userId, fieldName: 'userId' }).required().requiredString().build()
     ]).validate()
   }
 }

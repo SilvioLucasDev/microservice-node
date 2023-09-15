@@ -1,5 +1,5 @@
 import { badRequest, serverError, type HttpResponse, accepted } from '@/presentation/helpers'
-import { Required, RequiredNumber, RequiredString, ValidationComposite } from '@/presentation/validation'
+import { ValidationComposite, ValidationBuilder as Builder } from '@/presentation/validation'
 import { type Controller } from '@/presentation/controllers'
 import { type PurchaseTicketUseCase } from '@/application/use-cases'
 import { EventNotFoundError } from '@/application/errors'
@@ -20,21 +20,16 @@ export class PurchaseTicketController implements Controller {
     }
   }
 
-  private validate ({ paymentType, installments, eventId, userId, cardId }: HttpRequest): Model {
+  private validate ({ paymentType, installments, eventId, userId, cardId }: HttpRequest): Error | undefined {
     const validators = [
-      new Required(paymentType, 'paymentType'),
-      new RequiredString(paymentType, 'paymentType'),
-      new Required(eventId, 'eventId'),
-      new RequiredString(eventId, 'eventId'),
-      new Required(userId, 'userId'),
-      new RequiredString(userId, 'userId')
+      ...Builder.of({ value: paymentType, fieldName: 'paymentType' }).required().requiredString().build(),
+      ...Builder.of({ value: eventId, fieldName: 'eventId' }).required().requiredString().build(),
+      ...Builder.of({ value: userId, fieldName: 'userId' }).required().requiredString().build()
     ]
     if (paymentType === 'credit_card') {
       validators.push(
-        new Required(cardId, 'cardId'),
-        new RequiredString(cardId, 'cardId'),
-        new Required(installments, 'installments'),
-        new RequiredNumber(installments, 'installments')
+        ...Builder.of({ value: cardId, fieldName: 'cardId' }).required().requiredString().build(),
+        ...Builder.of({ value: installments, fieldName: 'installments' }).required().requiredNumber().build()
       )
     }
     return new ValidationComposite(validators).validate()
