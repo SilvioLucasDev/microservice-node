@@ -1,15 +1,16 @@
-import { type MakePayment, type Publish, type UUIDGenerator } from '@/application/contracts/adapters'
+import { type GetClient, type MakePayment, type Publish, type UUIDGenerator } from '@/application/contracts/adapters'
 import { Transaction } from '@/domain/entities'
-import { type GetCard, type GetUser, type SaveTransaction } from '@/application/contracts/repositories'
+import { type GetCard, type SaveTransaction } from '@/application/contracts/repositories'
 import { PaymentProcessed } from '@/domain/event'
 import { CardNotFoundError } from '@/application/errors'
 import { PaymentType } from '@/domain/enums'
+import { env } from '@/main/config/env'
 
 export class ProcessPaymentUseCase {
   constructor (
-    private readonly userRepository: GetUser,
     private readonly cardRepository: GetCard,
     private readonly transactionRepository: SaveTransaction,
+    private readonly httpClient: GetClient,
     private readonly paymentGateway: MakePayment,
     private readonly crypto: UUIDGenerator,
     private readonly queue: Publish
@@ -17,7 +18,7 @@ export class ProcessPaymentUseCase {
 
   async execute ({ ticketId, eventName, price, paymentType, userId, cardId, installments }: Input): Promise<void> {
     const transaction = Transaction.create({ ticketId, paymentType, cardId, total: price, installments }, this.crypto)
-    const user = await this.userRepository.get({ id: userId }) // TODO Isso deve ser uma requisição HTTP para o service de usuários.
+    const user = await this.httpClient.get({ url: `${env.userMsUrl}/users/${userId}` })
     let card = null
     if (paymentType === PaymentType.CREDIT_CARD && cardId !== null) {
       card = await this.cardRepository.get({ id: cardId })

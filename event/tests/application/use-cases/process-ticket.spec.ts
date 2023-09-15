@@ -1,6 +1,6 @@
-import { type GetUser, type FindDetailsByIdTicket, type UpdateStatusTicket } from '@/application/contracts/repositories'
+import { type FindDetailsByIdTicket, type UpdateStatusTicket } from '@/application/contracts/repositories'
 import { ProcessTicketUseCase } from '@/application/use-cases'
-import { type Publish } from '@/application/contracts/adapters'
+import { type GetClient, type Publish } from '@/application/contracts/adapters'
 import { Email, Ticket } from '@/domain/entities'
 import { TicketProcessed } from '@/domain/event'
 import { env } from '@/main/config/env'
@@ -30,7 +30,7 @@ describe('ProcessTicketUseCase', () => {
 
   let sut: ProcessTicketUseCase
   let ticketRepository: MockProxy<UpdateStatusTicket & FindDetailsByIdTicket>
-  let userRepository: MockProxy<GetUser>
+  let httpClient: MockProxy<GetClient>
   let emailEntity: jest.SpyInstance
   let ticketEntity: jest.SpyInstance
   let queue: MockProxy<Publish>
@@ -58,13 +58,13 @@ describe('ProcessTicketUseCase', () => {
     ticketEntity = jest.spyOn(Ticket, 'statusMap')
     ticketRepository = mock()
     ticketRepository.findDetailsById.mockResolvedValue({ eventName })
-    userRepository = mock()
-    userRepository.get.mockResolvedValue({ id, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood })
+    httpClient = mock()
+    httpClient.get.mockResolvedValue({ id, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood })
     queue = mock()
   })
 
   beforeEach(() => {
-    sut = new ProcessTicketUseCase(ticketRepository, userRepository, queue)
+    sut = new ProcessTicketUseCase(ticketRepository, httpClient, queue)
   })
 
   it('should call method statusMap of TicketEntity with correct value', async () => {
@@ -88,11 +88,12 @@ describe('ProcessTicketUseCase', () => {
     expect(ticketRepository.findDetailsById).toHaveBeenCalledTimes(1)
   })
 
-  it('should call method get of UserRepository with correct value', async () => {
+  it('should call method get of HttpClient with correct value', async () => {
+    env.userMsUrl = 'any_url'
     await sut.execute({ ticketId, paymentType, url, userId, status })
 
-    expect(userRepository.get).toHaveBeenCalledWith({ id: userId })
-    expect(userRepository.get).toHaveBeenCalledTimes(1)
+    expect(httpClient.get).toHaveBeenCalledWith({ url: `${env.userMsUrl}/users/${userId}` })
+    expect(httpClient.get).toHaveBeenCalledTimes(1)
   })
 
   it('should call EmailEntity with correct values', async () => {

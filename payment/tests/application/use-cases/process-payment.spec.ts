@@ -1,10 +1,11 @@
 import { getDueDate } from '@/tests/helpers'
 import { ProcessPaymentUseCase } from '@/application/use-cases'
-import { type MakePayment, type Publish, type UUIDGenerator } from '@/application/contracts/adapters'
-import { type GetCard, type GetUser, type SaveTransaction } from '@/application/contracts/repositories'
+import { type GetClient, type MakePayment, type Publish, type UUIDGenerator } from '@/application/contracts/adapters'
+import { type GetCard, type SaveTransaction } from '@/application/contracts/repositories'
 import { CardNotFoundError } from '@/application/errors'
 import { Transaction } from '@/domain/entities'
 import { PaymentProcessed } from '@/domain/event'
+import { env } from '@/main/config/env'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 import MockDate from 'mockdate'
@@ -42,9 +43,9 @@ describe('ProcessPaymentUseCase', () => {
 
   let sut: ProcessPaymentUseCase
   let transactionEntity: jest.SpyInstance
-  let userRepository: MockProxy<GetUser>
   let cardRepository: MockProxy<GetCard>
   let transactionRepository: MockProxy<SaveTransaction>
+  let httpClient: MockProxy<GetClient>
   let paymentGateway: MockProxy<MakePayment>
   let crypto: MockProxy<UUIDGenerator>
   let queue: MockProxy<Publish>
@@ -81,11 +82,11 @@ describe('ProcessPaymentUseCase', () => {
     card = { id, alias, token }
 
     transactionEntity = jest.spyOn(Transaction, 'create')
-    userRepository = mock()
-    userRepository.get.mockResolvedValue({ id, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood })
     cardRepository = mock()
     cardRepository.get.mockResolvedValue({ id, alias, token })
     transactionRepository = mock()
+    httpClient = mock()
+    httpClient.get.mockResolvedValue({ id, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood })
     paymentGateway = mock()
     paymentGateway.makePayment.mockResolvedValue({ transactionId: tid, status, url, processorResponse })
     crypto = mock()
@@ -94,7 +95,7 @@ describe('ProcessPaymentUseCase', () => {
   })
 
   beforeEach(() => {
-    sut = new ProcessPaymentUseCase(userRepository, cardRepository, transactionRepository, paymentGateway, crypto, queue)
+    sut = new ProcessPaymentUseCase(cardRepository, transactionRepository, httpClient, paymentGateway, crypto, queue)
   })
 
   afterAll(() => {
@@ -108,11 +109,11 @@ describe('ProcessPaymentUseCase', () => {
     expect(transactionEntity).toHaveBeenCalledTimes(1)
   })
 
-  it('should call method get of UserRepository with correct values', async () => {
+  it('should call method get of HttpClient with correct values', async () => {
     await sut.execute({ ticketId, eventName, price, paymentType, userId, cardId, installments })
 
-    expect(userRepository.get).toHaveBeenCalledWith({ id: userId })
-    expect(userRepository.get).toHaveBeenCalledTimes(1)
+    expect(httpClient.get).toHaveBeenCalledWith({ url: `${env.userMsUrl}/users/${userId}` })
+    expect(httpClient.get).toHaveBeenCalledTimes(1)
   })
 
   it('should call method get of CardRepository with correct values', async () => {

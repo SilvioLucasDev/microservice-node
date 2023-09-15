@@ -1,6 +1,7 @@
 import { TokenizeCardUseCase } from '@/application/use-cases'
-import { type TokenizeCard, type UUIDGenerator } from '@/application/contracts/adapters'
-import { type SaveCard, type GetUser } from '@/application/contracts/repositories'
+import { type GetClient, type TokenizeCard, type UUIDGenerator } from '@/application/contracts/adapters'
+import { type SaveCard } from '@/application/contracts/repositories'
+import { env } from '@/main/config/env'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 import { Card } from '@/domain/entities'
@@ -29,8 +30,8 @@ describe('TokenizeCardUseCase', () => {
 
   let sut: TokenizeCardUseCase
   let cardEntity: jest.SpyInstance
-  let userRepository: MockProxy<GetUser>
   let cardRepository: MockProxy<SaveCard>
+  let httpClient: MockProxy<GetClient>
   let paymentGateway: MockProxy<TokenizeCard>
   let crypto: MockProxy<UUIDGenerator>
 
@@ -55,9 +56,9 @@ describe('TokenizeCardUseCase', () => {
     token = 'any_token'
 
     cardEntity = jest.spyOn(Card, 'create')
-    userRepository = mock()
-    userRepository.get.mockResolvedValue({ id: userId, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood })
     cardRepository = mock()
+    httpClient = mock()
+    httpClient.get.mockResolvedValue({ id: userId, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood })
     paymentGateway = mock()
     paymentGateway.tokenizeCard.mockResolvedValue({ number, brand, token })
     crypto = mock()
@@ -65,13 +66,13 @@ describe('TokenizeCardUseCase', () => {
   })
 
   beforeEach(() => {
-    sut = new TokenizeCardUseCase(userRepository, cardRepository, paymentGateway, crypto)
+    sut = new TokenizeCardUseCase(cardRepository, httpClient, paymentGateway, crypto)
   })
-  it('should call method get of UserRepository with correct values', async () => {
+  it('should call method get of HttpClient with correct values', async () => {
     await sut.execute({ alias, holderName, number, expiryMonth, expiryYear, cvv, userId })
 
-    expect(userRepository.get).toHaveBeenCalledWith({ id: userId })
-    expect(userRepository.get).toHaveBeenCalledTimes(1)
+    expect(httpClient.get).toHaveBeenCalledWith({ url: `${env.userMsUrl}/users/${userId}` })
+    expect(httpClient.get).toHaveBeenCalledTimes(1)
   })
 
   it('should call method tokenizeCard of PaymentGateway with correct values', async () => {

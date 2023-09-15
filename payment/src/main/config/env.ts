@@ -5,5 +5,6 @@ export const env = {
   asaas: {
     baseUrl: process.env.ASAAS_URL_API ?? '',
     apiKey: process.env.ASAAS_KEY_API ?? ''
-  }
+  },
+  userMsUrl: process.env.USER_MICROSERVICE_URL ?? ''
 }
