@@ -1,6 +1,3 @@
-export * from './purchase-ticket'
 export * from './process-payment'
-export * from './process-ticket'
-export * from './send-email'
 export * from './tokenize-card'
 export * from './asaas-process-payment'
