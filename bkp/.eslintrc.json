@@ -1,0 +1,24 @@
+{
+  "overrides": [
+    {
+      "files": ["*.js", "*.jsx", "*.ts", "*.tsx"],
+      "extends": "standard-with-typescript",
+      "parserOptions": {
+        "project": "./bkp/tsconfig.json"
+      },
+      "rules": {
+        "@typescript-eslint/consistent-type-definitions": "off",
+        "@typescript-eslint/no-namespace": "off",
+        "@typescript-eslint/no-extraneous-class": "off",
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "@typescript-eslint/dot-notation": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-confusing-void-expression": "off",
+        "@typescript-eslint/no-misused-promises": "off",
+        "@typescript-eslint/await-thenable": "off",
+        "@typescript-eslint/no-floating-promises": "off",
+        "no-new": "off"
+      }
+    }
+  ]
+}
