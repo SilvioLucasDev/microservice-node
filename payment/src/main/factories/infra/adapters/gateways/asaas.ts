@@ -5,6 +5,7 @@ import { env } from '@/main/config/env'
 export const makeAsaasGateway = (): AsaasGateway => {
   return new AsaasGateway(
     makeAxiosAdapter(),
+    env.asaas.baseUrl,
     env.asaas.apiKey
   )
 }

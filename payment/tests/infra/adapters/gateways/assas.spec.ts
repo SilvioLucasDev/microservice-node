@@ -33,6 +33,7 @@ describe('AsaasGateway', () => {
   let expiryMonth: string
   let expiryYear: string
   let cvv: string
+  let baseUrl: string
   let apiKey: string
   let user: MakePayment.User
   let card: MakePayment.Card
@@ -70,6 +71,7 @@ describe('AsaasGateway', () => {
     expiryMonth = 'any_expiry_month'
     expiryYear = 'any_expiry_year'
     cvv = 'any_cvv'
+    baseUrl = 'any_api_key'
     apiKey = 'any_api_key'
     user = { id, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood }
     card = { id, alias, token }
@@ -80,7 +82,7 @@ describe('AsaasGateway', () => {
   })
 
   beforeEach(() => {
-    sut = new AsaasGateway(httpClient, apiKey)
+    sut = new AsaasGateway(httpClient, baseUrl, apiKey)
   })
 
   describe('MakePayment', () => {

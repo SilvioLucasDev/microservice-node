@@ -1,10 +1,9 @@
 import { type PostClient, type GetClient, type MakePayment, type TokenizeCard } from '@/application/contracts/adapters'
 
 export class AsaasGateway implements MakePayment, TokenizeCard {
-  private readonly baseUrl = 'https://sandbox.asaas.com/api/v3'
-
   constructor (
     private readonly httpClient: GetClient & PostClient,
+    private readonly baseUrl: string,
     private readonly apiKey: string
   ) { }
 
