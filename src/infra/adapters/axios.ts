@@ -8,7 +8,7 @@ export class AxiosAdapter implements GetClient, PostClient {
     return result.data
   }
 
-  async post <T = any>({ url, data, headers }: PostClient.Input): Promise<T> {
+  async post <T = AxiosResponse>({ url, data, headers }: PostClient.Input): Promise<T> {
     const result = await axios.post(url, data, { headers })
     return result.data
   }

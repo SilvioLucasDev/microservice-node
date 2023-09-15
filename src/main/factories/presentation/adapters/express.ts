@@ -1,5 +1,5 @@
 import { ExpressAdapter } from '@/presentation/adapters'
 
-export const makeExpressAdapter = (): ExpressAdapter => {
-  return new ExpressAdapter()
+export const makeExpressAdapter = (app: any): ExpressAdapter => {
+  return new ExpressAdapter(app)
 }

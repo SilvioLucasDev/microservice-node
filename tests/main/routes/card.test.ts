@@ -1,7 +1,6 @@
 import { prismaMock } from '@/tests/infra/repositories/postgres/mocks'
 import { AsaasGatewayMock, UUIDAdapterMock } from '@/tests/main/routes/mocks'
-import { CardRouter } from '@/main/routes'
-import { ExpressAdapter } from '@/presentation/adapters'
+import { app } from '@/main'
 
 import request from 'supertest'
 import { type Prisma, type User as UserPrisma } from '@prisma/client'
@@ -33,30 +32,24 @@ describe('CardRouter', () => {
   let complement: string
   let neighborhood: string
 
-  let httpServer: ExpressAdapter
-
   beforeAll(() => {
     alias = 'any_alias'
-    holderName = 'any_holder_Name'
-    number = 'any_number'
-    expiryMonth = 'any_expiry_Month'
-    expiryYear = 'any_expiry_Year'
-    cvv = 300
-    userId = 'any_user_Id'
+    holderName = 'Any U. Teste'
+    number = '5162306219378829'
+    expiryMonth = '05'
+    expiryYear = '2024'
+    cvv = 318
+    userId = '443315ee-4c25-11ee-be56-0242ac120002'
     cardId = 'any_uuid'
-    id = 'any_id'
-    name = 'any_name'
-    document = 'any_document'
-    email = 'any_email'
+    id = '443315ee-4c25-11ee-be56-0242ac120002'
+    name = 'Any User Test'
+    document = '60062039016'
+    email = 'any_user@hotmail.com'
     mobilePhone = 'any_mobile_phone'
-    zipcode = 'any_zipcode'
-    address = 'any_address'
-    complement = 'any_complement'
-    neighborhood = 'any_neighborhood'
-
-    httpServer = new ExpressAdapter()
-    new CardRouter(httpServer)
-    httpServer.listen()
+    zipcode = '77006516'
+    address = 'Quadra 408 Norte Avenida'
+    complement = 'a'
+    neighborhood = 'Plano Diretor Norte'
   })
 
   afterAll(async () => {
@@ -69,7 +62,7 @@ describe('CardRouter', () => {
         id, name, document, email, mobile_phone: mobilePhone, addresses: [{ zipcode, address, number, complement, neighborhood }]
       } as unknown as Prisma.Prisma__UserClient<UserPrisma>)
 
-      const { status, body } = await request(httpServer.app)
+      const { status, body } = await request(app)
         .post('/v1/api/tokenize-cards')
         .send({ alias, holderName, number, expiryMonth, expiryYear, cvv, userId })
 

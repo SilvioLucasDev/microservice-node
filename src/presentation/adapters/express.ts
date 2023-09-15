@@ -7,8 +7,8 @@ import cors from 'cors'
 export class ExpressAdapter implements OnServer, ListenServer {
   app: any
 
-  constructor () {
-    this.app = express()
+  constructor (app: any) {
+    this.app = app
     this.app.use(express.json())
     this.app.use(cors())
   }
@@ -22,6 +22,6 @@ export class ExpressAdapter implements OnServer, ListenServer {
   }
 
   listen (): void {
-    this.app.listen(env.port, () => console.log(`Server running at http://localhost:${env.port}`))
+    if (env.nodeEnv !== 'test') this.app.listen(env.port, () => console.log(`Server running at http://localhost:${env.port}`))
   }
 }

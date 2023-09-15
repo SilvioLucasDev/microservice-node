@@ -1,8 +1,7 @@
 import { prismaMock } from '@/tests/infra/repositories/postgres/mocks'
 import { RabbitMQAdapterMock } from '@/tests/main/routes/mocks'
-import { TicketRouter } from '@/main/routes'
 import { EventNotFoundError } from '@/application/errors'
-import { ExpressAdapter } from '@/presentation/adapters'
+import { app } from '@/main'
 
 import request from 'supertest'
 import { type Prisma, type Event as EventPrisma } from '@prisma/client'
@@ -17,21 +16,17 @@ describe('TicketRouter', () => {
   let userId: string
   let cardId: string
   let installments: number
+  let name: string
   let price: number
 
-  let httpServer: ExpressAdapter
-
   beforeAll(() => {
-    paymentType = 'any_payment_type'
-    eventId = 'any_event_id'
-    userId = 'any_user_id'
-    cardId = 'any_card_id'
+    paymentType = 'credit_card'
+    eventId = 'c08c6ed4-757f-44da-b5df-cb856dfdf897'
+    userId = '443315ee-4c25-11ee-be56-0242ac120002'
+    cardId = 'ebfa9e28-4c25-11ee-be56-0242ac120002'
     installments = 3
+    name = 'JavaScript Global Summit'
     price = 300
-
-    httpServer = new ExpressAdapter()
-    new TicketRouter(httpServer)
-    httpServer.listen()
   })
 
   afterAll(async () => {
@@ -40,9 +35,9 @@ describe('TicketRouter', () => {
 
   describe('POST /purchase-tickets', () => {
     it('should return 202', async () => {
-      prismaMock.event.findFirst.mockResolvedValueOnce({ id: eventId, price } as unknown as Prisma.Prisma__EventClient<EventPrisma>)
+      prismaMock.event.findFirst.mockResolvedValueOnce({ id: eventId, name, price } as unknown as Prisma.Prisma__EventClient<EventPrisma>)
 
-      const { status } = await request(httpServer.app)
+      const { status } = await request(app)
         .post('/v1/api/purchase-tickets')
         .send({ paymentType, eventId, userId, cardId, installments })
 
@@ -50,7 +45,7 @@ describe('TicketRouter', () => {
     })
 
     it('should return 400 with EventNotFoundError', async () => {
-      const { status, body } = await request(httpServer.app)
+      const { status, body } = await request(app)
         .post('/v1/api/purchase-tickets')
         .send({ paymentType, eventId: 'invalid_event_id', userId, cardId, installments })
 
