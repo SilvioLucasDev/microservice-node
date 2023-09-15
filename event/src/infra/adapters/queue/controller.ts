@@ -10,5 +10,13 @@ export class QueueController {
         await makeProcessTicketUseCase().execute(input)
       }
     })
+
+    this.queue.consume({
+      queueName: 'paymentError',
+      callback: async (input: any) => {
+        // TODO Criar usecase para lidar com esse erro do payment
+        console.log(input)
+      }
+    })
   }
 }

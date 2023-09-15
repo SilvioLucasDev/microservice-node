@@ -1,4 +1,4 @@
-import { type GetClient, type PostClient, type MakePayment } from '@/application/contracts/adapters'
+import { type GetClient, type PostClient, type MakePayment, type User } from '@/application/contracts/adapters'
 import { AsaasGateway } from '@/infra/adapters/gateways'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
@@ -35,7 +35,7 @@ describe('AsaasGateway', () => {
   let cvv: string
   let baseUrl: string
   let apiKey: string
-  let user: MakePayment.User
+  let user: User
   let card: MakePayment.Card
 
   let sut: AsaasGateway

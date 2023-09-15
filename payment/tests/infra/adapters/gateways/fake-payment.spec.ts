@@ -1,4 +1,4 @@
-import { type MakePayment, type UUIDGenerator } from '@/application/contracts/adapters'
+import { type MakePayment, type User, type UUIDGenerator } from '@/application/contracts/adapters'
 import { FakePaymentGateway } from '@/infra/adapters/gateways'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
@@ -27,7 +27,7 @@ describe('FakePaymentGateway', () => {
   let neighborhood: string
   let alias: string
   let token: string
-  let user: MakePayment.User
+  let user: User
   let card: MakePayment.Card
 
   let sut: FakePaymentGateway

@@ -18,13 +18,15 @@ export class PgTicketRepository implements SaveTicket, UpdateStatusTicket, FindD
     const ticket = await prisma.ticket.findFirst({
       where: { id },
       select: {
+        user_id: true,
         event: {
           select: { name: true }
         }
       }
     })
     return {
-      eventName: ticket!.event.name
+      eventName: ticket!.event.name,
+      userId: ticket!.user_id
     }
   }
 }

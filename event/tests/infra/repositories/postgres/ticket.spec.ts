@@ -55,11 +55,11 @@ describe('PgTicketRepository', () => {
     await expect(result).resolves.toBeUndefined()
   })
 
-  it('should return the name of the ticket event entered', async () => {
+  it('should return the name and userId of the ticket event entered', async () => {
     prismaMock.ticket.findFirst.mockResolvedValue({ user_id: userId, event: { name: eventName } } as unknown as Prisma.Prisma__TicketClient<TicketPrisma>)
 
     const result = sut.findDetailsById({ id })
 
-    await expect(result).resolves.toEqual({ eventName })
+    await expect(result).resolves.toEqual({ eventName, userId })
   })
 })

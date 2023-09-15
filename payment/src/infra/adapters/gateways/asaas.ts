@@ -1,4 +1,4 @@
-import { type PostClient, type GetClient, type MakePayment, type TokenizeCard } from '@/application/contracts/adapters'
+import { type PostClient, type GetClient, type MakePayment, type User, type TokenizeCard } from '@/application/contracts/adapters'
 
 export class AsaasGateway implements MakePayment, TokenizeCard {
   constructor (
@@ -39,27 +39,26 @@ export class AsaasGateway implements MakePayment, TokenizeCard {
     }
   }
 
-  private async getClient (user: MakePayment.User): Promise<string> {
+  private async getClient (user: User): Promise<string> {
     const response = await this.httpClient.get({
-      url: `${this.baseUrl}/customers?cpfCnpj=${user!.document}`,
+      url: `${this.baseUrl}/customers?cpfCnpj=${user.document}`,
       headers: { access_token: this.apiKey }
     })
     return response.data.length > 0 ? response.data[0].id : await this.registerClient(user)
   }
 
-  // TODO: Quando for receber os dados do usuário via get consigo tirar os " ? "
-  private async registerClient (user: MakePayment.User): Promise<string> {
+  private async registerClient (user: User): Promise<string> {
     const registerData = {
-      name: user?.name,
-      email: user?.email,
-      mobilePhone: user?.mobilePhone,
-      cpfCnpj: user?.document,
-      postalCode: user?.zipcode,
-      address: user?.address,
-      addressNumber: user?.number,
-      complement: user?.complement,
-      province: user?.neighborhood,
-      externalReference: user?.id,
+      name: user.name,
+      email: user.email,
+      mobilePhone: user.mobilePhone,
+      cpfCnpj: user.document,
+      postalCode: user.zipcode,
+      address: user.address,
+      addressNumber: user.number,
+      complement: user.complement,
+      province: user.neighborhood,
+      externalReference: user.id,
       notificationDisabled: false
     }
     const response = await this.httpClient.post({
@@ -88,7 +87,6 @@ export class AsaasGateway implements MakePayment, TokenizeCard {
     return paymentTypeMap[paymentType]
   }
 
-  // TODO: Quando for receber os dados do usuário via get consigo tirar os " ? "
   async tokenizeCard ({ user, holderName, number, expiryMonth, expiryYear, cvv }: TokenizeCard.Input): Promise<TokenizeCard.Output> {
     const client = await this.getClient(user)
     const tokenizationData = {
@@ -101,13 +99,13 @@ export class AsaasGateway implements MakePayment, TokenizeCard {
         ccv: cvv
       },
       creditCardHolderInfo: {
-        name: user?.name,
-        email: user?.email,
-        cpfCnpj: user?.document,
-        postalCode: user?.zipcode,
-        addressNumber: user?.number,
-        addressComplement: user?.complement,
-        mobilePhone: user?.mobilePhone
+        name: user.name,
+        email: user.email,
+        cpfCnpj: user.document,
+        postalCode: user.zipcode,
+        addressNumber: user.number,
+        addressComplement: user.complement,
+        mobilePhone: user.mobilePhone
       }
     }
     const response = await this.httpClient.post({

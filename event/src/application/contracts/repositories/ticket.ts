@@ -30,5 +30,6 @@ export namespace FindDetailsByIdTicket {
 
   export type Output = {
     eventName: string
+    userId: string
   }
 }

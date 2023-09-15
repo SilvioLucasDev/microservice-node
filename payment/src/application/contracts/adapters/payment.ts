@@ -14,19 +14,6 @@ export namespace MakePayment {
     externalReference: string
   }
 
-  export type User = {
-    id: string
-    name: string
-    document: string
-    email: string
-    mobilePhone: string
-    zipcode: string
-    address: string
-    number: string
-    complement: string | null
-    neighborhood: string
-  } | undefined
-
   export type Card = {
     id: string
     alias: string
@@ -55,22 +42,22 @@ export namespace TokenizeCard {
     cvv: string
   }
 
-  export type User = {
-    id: string
-    name: string
-    document: string
-    email: string
-    mobilePhone: string
-    zipcode: string
-    address: string
-    number: string
-    complement: string | null
-    neighborhood: string
-  } | undefined
-
   export type Output = {
     number: string
     brand: string
     token: string
   }
+}
+
+export type User = {
+  id: string
+  name: string
+  document: string
+  email: string
+  mobilePhone: string
+  zipcode: string
+  address: string
+  number: string
+  complement: string | null
+  neighborhood: string
 }
