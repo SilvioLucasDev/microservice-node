@@ -1,24 +1,25 @@
 import { ExpressAdapter } from '@/presentation/adapters'
-import { env } from '@/main/config/env'
 
 import request from 'supertest'
-import express from 'express'
+import express, { type Application } from 'express'
 
 describe('ExpressRouterAdapter', () => {
   let method: string
   let url: string
+  let port: string
 
   let sut: ExpressAdapter
-  let app: any
+  let app: Application
 
   beforeAll(() => {
     method = 'post'
-    url = '/purchase-tickets'
+    url = '/any_url'
+    port = 'any_port'
   })
 
   beforeEach(() => {
     app = express()
-    sut = new ExpressAdapter(app)
+    sut = new ExpressAdapter(port, app)
   })
 
   it('should return with statusCode 200 and valid data', async () => {
@@ -31,7 +32,7 @@ describe('ExpressRouterAdapter', () => {
       })
     })
 
-    const response = await request(sut.app).post('/v1/api/purchase-tickets').send()
+    const response = await request(app).post('/v1/api/any_url').send()
 
     expect(response.status).toBe(200)
     expect(response.body).toEqual({ data: 'any_data' })
@@ -47,7 +48,7 @@ describe('ExpressRouterAdapter', () => {
       })
     })
 
-    const response = await request(sut.app).post('/v1/api/purchase-tickets').send()
+    const response = await request(app).post('/v1/api/any_url').send()
 
     expect(response.status).toBe(202)
     expect(response.body).toEqual('')
@@ -63,7 +64,7 @@ describe('ExpressRouterAdapter', () => {
       })
     })
 
-    const response = await request(sut.app).post('/v1/api/purchase-tickets').send()
+    const response = await request(app).post('/v1/api/any_url').send()
 
     expect(response.status).toBe(204)
     expect(response.body).toEqual({ })
@@ -79,7 +80,7 @@ describe('ExpressRouterAdapter', () => {
       })
     })
 
-    const response = await request(sut.app).post('/v1/api/purchase-tickets').send()
+    const response = await request(app).post('/v1/api/any_url').send()
 
     expect(response.status).toBe(400)
     expect(response.body).toEqual({ error: 'any_error' })
@@ -95,18 +96,17 @@ describe('ExpressRouterAdapter', () => {
       })
     })
 
-    const response = await request(sut.app).post('/v1/api/purchase-tickets').send()
+    const response = await request(app).post('/v1/api/any_url').send()
 
     expect(response.status).toBe(500)
     expect(response.body).toEqual({ error: 'any_error' })
   })
 
   it('should call method listen with port correct', () => {
-    env.nodeEnv = ''
-    sut.app.listen = jest.fn()
+    app.listen = jest.fn()
 
     sut.listen()
 
-    expect(sut.app.listen).toHaveBeenCalledWith(env.port, expect.any(Function))
+    expect(app.listen).toHaveBeenCalledWith(port, expect.any(Function))
   })
 })

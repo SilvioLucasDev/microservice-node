@@ -5,16 +5,18 @@ import amqp from 'mock-amqplib'
 describe('RabbitMQAdapter', () => {
   let queueName: string
   let data: string
+  let rabbitMQUrl: string
 
   let sut: RabbitMQAdapter
 
   beforeAll(() => {
     queueName = 'any_queue'
     data = 'any_data'
+    rabbitMQUrl = 'any_url'
   })
 
   beforeEach(() => {
-    sut = new RabbitMQAdapter()
+    sut = new RabbitMQAdapter(rabbitMQUrl)
   })
 
   it('should publish a message to a queue and create and close connection if init is true', async () => {

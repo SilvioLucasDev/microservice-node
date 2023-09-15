@@ -3,7 +3,6 @@ import { ProcessTicketUseCase } from '@/application/use-cases'
 import { type GetClient, type Publish } from '@/application/contracts/adapters'
 import { Email, Ticket } from '@/domain/entities'
 import { TicketProcessed } from '@/domain/event'
-import { env } from '@/main/config/env'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 
@@ -27,6 +26,8 @@ describe('ProcessTicketUseCase', () => {
   let complement: string
   let neighborhood: string
   let ticketStatus: string
+  let userMsUrl: string
+  let emailSender: string
 
   let sut: ProcessTicketUseCase
   let ticketRepository: MockProxy<UpdateStatusTicket & FindDetailsByIdTicket>
@@ -53,6 +54,8 @@ describe('ProcessTicketUseCase', () => {
     complement = 'any_complement'
     neighborhood = 'any_neighborhood'
     ticketStatus = 'approved'
+    userMsUrl = 'any_url'
+    emailSender = 'any_sender'
 
     emailEntity = jest.spyOn(Email, 'create')
     ticketEntity = jest.spyOn(Ticket, 'statusMap')
@@ -64,7 +67,7 @@ describe('ProcessTicketUseCase', () => {
   })
 
   beforeEach(() => {
-    sut = new ProcessTicketUseCase(ticketRepository, httpClient, queue)
+    sut = new ProcessTicketUseCase(userMsUrl, emailSender, ticketRepository, httpClient, queue)
   })
 
   it('should call method statusMap of TicketEntity with correct value', async () => {
@@ -89,10 +92,9 @@ describe('ProcessTicketUseCase', () => {
   })
 
   it('should call method get of HttpClient with correct value', async () => {
-    env.userMsUrl = 'any_url'
     await sut.execute({ ticketId, paymentType, url, status })
 
-    expect(httpClient.get).toHaveBeenCalledWith({ url: `${env.userMsUrl}/users/${userId}` })
+    expect(httpClient.get).toHaveBeenCalledWith({ url: `${userMsUrl}/users/${userId}` })
     expect(httpClient.get).toHaveBeenCalledTimes(1)
   })
 
@@ -107,7 +109,7 @@ describe('ProcessTicketUseCase', () => {
     await sut.execute({ ticketId, paymentType, url, status })
 
     expect(TicketProcessed).toHaveBeenCalledWith(
-      env.emailSender,
+      emailSender,
       email,
       'Ticket Purchase | any_event_name',
       expect.stringMatching(/Hello! <br><br> Ticket payment: any_ticket_id for event any_event_name was successful!.*/)

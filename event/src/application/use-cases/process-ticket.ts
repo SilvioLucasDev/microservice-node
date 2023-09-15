@@ -2,10 +2,11 @@ import { type FindDetailsByIdTicket, type UpdateStatusTicket } from '@/applicati
 import { type GetClient, type Publish } from '@/application/contracts/adapters'
 import { Email, Ticket } from '@/domain/entities'
 import { TicketProcessed } from '@/domain/event'
-import { env } from '@/main/config/env'
 
 export class ProcessTicketUseCase {
   constructor (
+    private readonly userMsUrl: string,
+    private readonly emailSender: string,
     private readonly ticketRepository: UpdateStatusTicket & FindDetailsByIdTicket,
     private readonly httpClient: GetClient,
     private readonly queue: Publish
@@ -15,9 +16,9 @@ export class ProcessTicketUseCase {
     const ticketStatus = Ticket.statusMap(status)
     await this.ticketRepository.updateStatus({ id: ticketId, status: ticketStatus })
     const { eventName, userId } = await this.ticketRepository.findDetailsById({ id: ticketId }) // pegar o id do usuário desse ticket
-    const user = await this.httpClient.get({ url: `${env.userMsUrl}/users/${userId}` })
+    const user = await this.httpClient.get({ url: `${this.userMsUrl}/users/${userId}` })
     const emailData = Email.create({ ticketId, ticketStatus, paymentType, url, email: user.email, eventName })
-    const ticketProcessed = new TicketProcessed(env.emailSender, emailData.email, emailData.subject, emailData.body)
+    const ticketProcessed = new TicketProcessed(this.emailSender, emailData.email, emailData.subject, emailData.body)
     await this.queue.publish({ queueName: 'ticketProcessed', data: ticketProcessed })
   }
 }

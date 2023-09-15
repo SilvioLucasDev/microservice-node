@@ -1,15 +1,18 @@
 import { type ListenServer, type OnServer } from '@/application/contracts/adapters'
-import { env } from '@/main/config/env'
 
-import express, { type Request, type Response } from 'express'
+import { json, type Request, type Response } from 'express'
 import cors from 'cors'
 
 export class ExpressAdapter implements OnServer, ListenServer {
-  app: any
+  constructor (
+    public readonly port: number | string,
+    private readonly app: any
+  ) {
+    this.initializeMiddlewares()
+  }
 
-  constructor (app: any) {
-    this.app = app
-    this.app.use(express.json())
+  private initializeMiddlewares (): void {
+    this.app.use(json())
     this.app.use(cors())
   }
 
@@ -22,6 +25,6 @@ export class ExpressAdapter implements OnServer, ListenServer {
   }
 
   listen (): void {
-    if (env.nodeEnv !== 'test') this.app.listen(env.port, () => console.log(`Server running at http://localhost:${env.port}`))
+    this.app.listen(this.port, () => console.log(`Server running at http://localhost:${this.port}`))
   }
 }

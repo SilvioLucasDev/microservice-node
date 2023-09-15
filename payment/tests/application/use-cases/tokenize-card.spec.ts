@@ -1,7 +1,6 @@
 import { TokenizeCardUseCase } from '@/application/use-cases'
 import { type GetClient, type TokenizeCard, type UUIDGenerator } from '@/application/contracts/adapters'
 import { type SaveCard } from '@/application/contracts/repositories'
-import { env } from '@/main/config/env'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 import { Card } from '@/domain/entities'
@@ -24,9 +23,9 @@ describe('TokenizeCardUseCase', () => {
   let complement: string
   let neighborhood: string
   let user: object
-
   let brand: string
   let token: string
+  let userMsUrl: string
 
   let sut: TokenizeCardUseCase
   let cardEntity: jest.SpyInstance
@@ -54,6 +53,7 @@ describe('TokenizeCardUseCase', () => {
     user = { id: userId, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood }
     brand = 'any_brand'
     token = 'any_token'
+    userMsUrl = 'any_url'
 
     cardEntity = jest.spyOn(Card, 'create')
     cardRepository = mock()
@@ -66,12 +66,12 @@ describe('TokenizeCardUseCase', () => {
   })
 
   beforeEach(() => {
-    sut = new TokenizeCardUseCase(cardRepository, httpClient, paymentGateway, crypto)
+    sut = new TokenizeCardUseCase(userMsUrl, cardRepository, httpClient, paymentGateway, crypto)
   })
   it('should call method get of HttpClient with correct values', async () => {
     await sut.execute({ alias, holderName, number, expiryMonth, expiryYear, cvv, userId })
 
-    expect(httpClient.get).toHaveBeenCalledWith({ url: `${env.userMsUrl}/users/${userId}` })
+    expect(httpClient.get).toHaveBeenCalledWith({ url: `${userMsUrl}/users/${userId}` })
     expect(httpClient.get).toHaveBeenCalledTimes(1)
   })
 

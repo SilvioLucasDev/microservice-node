@@ -5,7 +5,6 @@ import { type GetCard, type SaveTransaction } from '@/application/contracts/repo
 import { CardNotFoundError } from '@/application/errors'
 import { Transaction } from '@/domain/entities'
 import { PaymentProcessed } from '@/domain/event'
-import { env } from '@/main/config/env'
 
 import { mock, type MockProxy } from 'jest-mock-extended'
 import MockDate from 'mockdate'
@@ -38,6 +37,7 @@ describe('ProcessPaymentUseCase', () => {
   let url: string
   let processorResponse: string
   let status: string
+  let userMsUrl: string
   let user: object
   let card: object
 
@@ -78,6 +78,7 @@ describe('ProcessPaymentUseCase', () => {
     url = 'any_url'
     processorResponse = 'any_processor_response'
     status = 'approved'
+    userMsUrl = 'any_url'
     user = { id, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood }
     card = { id, alias, token }
 
@@ -95,7 +96,7 @@ describe('ProcessPaymentUseCase', () => {
   })
 
   beforeEach(() => {
-    sut = new ProcessPaymentUseCase(cardRepository, transactionRepository, httpClient, paymentGateway, crypto, queue)
+    sut = new ProcessPaymentUseCase(userMsUrl, cardRepository, transactionRepository, httpClient, paymentGateway, crypto, queue)
   })
 
   afterAll(() => {
@@ -112,7 +113,7 @@ describe('ProcessPaymentUseCase', () => {
   it('should call method get of HttpClient with correct values', async () => {
     await sut.execute({ ticketId, eventName, price, paymentType, userId, cardId, installments })
 
-    expect(httpClient.get).toHaveBeenCalledWith({ url: `${env.userMsUrl}/users/${userId}` })
+    expect(httpClient.get).toHaveBeenCalledWith({ url: `${userMsUrl}/users/${userId}` })
     expect(httpClient.get).toHaveBeenCalledTimes(1)
   })
 

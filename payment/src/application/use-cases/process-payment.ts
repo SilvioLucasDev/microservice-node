@@ -4,10 +4,10 @@ import { type GetCard, type SaveTransaction } from '@/application/contracts/repo
 import { PaymentProcessed } from '@/domain/event'
 import { CardNotFoundError } from '@/application/errors'
 import { PaymentType } from '@/domain/enums'
-import { env } from '@/main/config/env'
 
 export class ProcessPaymentUseCase {
   constructor (
+    private readonly userMsUrl: string,
     private readonly cardRepository: GetCard,
     private readonly transactionRepository: SaveTransaction,
     private readonly httpClient: GetClient,
@@ -18,7 +18,7 @@ export class ProcessPaymentUseCase {
 
   async execute ({ ticketId, eventName, price, paymentType, userId, cardId, installments }: Input): Promise<void> {
     const transaction = Transaction.create({ ticketId, paymentType, cardId, total: price, installments }, this.crypto)
-    const user = await this.httpClient.get({ url: `${env.userMsUrl}/users/${userId}` })
+    const user = await this.httpClient.get({ url: `${this.userMsUrl}/users/${userId}` })
     let card = null
     if (paymentType === PaymentType.CREDIT_CARD && cardId !== null) {
       card = await this.cardRepository.get({ id: cardId })

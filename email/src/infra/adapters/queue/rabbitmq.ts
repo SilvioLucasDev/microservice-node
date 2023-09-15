@@ -1,5 +1,4 @@
 import { type Consume, type Publish } from '@/application/contracts/adapters'
-import { env } from '@/main/config/env'
 
 import amqp, { type Channel, type Connection } from 'amqplib'
 
@@ -7,8 +6,10 @@ export class RabbitMQAdapter implements Publish, Consume {
   private connection?: Connection
   private channel?: Channel
 
+  constructor (private readonly rabbitMQUrl: string) { }
+
   private async connectQueue (queueName: string): Promise<void> {
-    if (!this.connection) this.connection = await amqp.connect(env.RabbitMQUrl)
+    if (!this.connection) this.connection = await amqp.connect(this.rabbitMQUrl)
     this.channel = await this.connection.createChannel()
     await this.channel.assertQueue(queueName, { durable: true })
   }

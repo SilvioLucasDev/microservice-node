@@ -1,5 +1,8 @@
+import { env } from '@/main/config/env'
 import { ExpressAdapter } from '@/presentation/adapters'
 
-export const makeExpressAdapter = (app: any): ExpressAdapter => {
-  return new ExpressAdapter(app)
+import { type Application } from 'express'
+
+export const makeExpressAdapter = (app: Application): ExpressAdapter => {
+  return new ExpressAdapter(env.port, app)
 }

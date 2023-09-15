@@ -10,6 +10,10 @@ describe('NodeMailerAdapter', () => {
   let to: string
   let subject: string
   let body: string
+  let envHost: string
+  let envPort: string
+  let envUser: string
+  let envPass: string
 
   let sendMailMock: jest.Mock
 
@@ -18,6 +22,10 @@ describe('NodeMailerAdapter', () => {
     to = 'any_to'
     subject = 'any_subject'
     body = 'any_body'
+    envHost = 'any_host'
+    envPort = 'any_port'
+    envUser = 'any_user'
+    envPass = 'any_pass'
 
     sendMailMock = jest.fn()
     jest.mocked(nodemailer.createTransport).mockReturnValue({
@@ -26,7 +34,7 @@ describe('NodeMailerAdapter', () => {
   })
 
   beforeEach(() => {
-    sut = new NodeMailerAdapter()
+    sut = new NodeMailerAdapter(envHost, envPort, envUser, envPass)
   })
 
   it('should call method sendMail with correct values', async () => {

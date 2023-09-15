@@ -1,16 +1,22 @@
 import { type Send } from '@/application/contracts/adapters'
-import { env } from '@/main/config/env'
 
 import nodemailer from 'nodemailer'
 
 export class NodeMailerAdapter implements Send {
+  constructor (
+    private readonly host: string,
+    private readonly port: number | string,
+    private readonly user: string,
+    private readonly pass: string
+  ) { }
+
   async send ({ from, to, subject, body }: Send.Input): Promise<void> {
     const transport = nodemailer.createTransport({
-      host: env.email.host,
-      port: Number(env.email.port),
+      host: this.host,
+      port: Number(this.port),
       auth: {
-        user: env.email.user,
-        pass: env.email.pass
+        user: this.user,
+        pass: this.pass
       }
     })
 
