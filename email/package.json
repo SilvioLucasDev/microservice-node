@@ -22,6 +22,7 @@
     "start": "node -r dotenv/config dist/main",
     "dev": "ts-node-dev --respawn --transpile-only -r dotenv/config src/main",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
+    "check": "npm-check -s -u",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm test -- --watch",
     "test:coverage": "npm test -- --coverage",
