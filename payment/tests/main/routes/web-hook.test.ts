@@ -25,7 +25,7 @@ describe('WebHookRouter', () => {
         .post('/v1/api/asaas/process-payment')
         .send({ payment })
 
-      expect(status).toBe(202)
+      expect(status).toBe(200)
     })
   })
 })

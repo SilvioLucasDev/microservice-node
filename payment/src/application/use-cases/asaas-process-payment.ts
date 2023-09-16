@@ -9,13 +9,14 @@ export class AsaasProcessPaymentUseCase {
     private readonly queue: Publish
   ) {}
 
-  async execute ({ status, externalReference, paymentType, url }: Input): Promise<void> {
+  async execute ({ status, externalReference, paymentType, url }: Input): Promise<Output> {
     const [transactionId, ticketId] = externalReference.split('&')
     const mappedStatus = this.statusMap(status)
     const mappedPaymentType = this.paymentTypeMap(paymentType)
     await this.transactionRepository.updateStatus({ id: transactionId, status: mappedStatus })
     const paymentProcessed = new PaymentProcessed(mappedPaymentType, ticketId, url, mappedStatus)
     await this.queue.publish({ queueName: 'paymentProcessed', data: paymentProcessed })
+    return { statusTransaction: mappedStatus }
   }
 
   private statusMap (status: string): string {
@@ -50,4 +51,8 @@ type Input = {
   externalReference: string
   paymentType: string
   url: string
+}
+
+type Output = {
+  statusTransaction: string
 }
