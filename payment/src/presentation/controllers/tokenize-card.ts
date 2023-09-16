@@ -25,7 +25,7 @@ export class TokenizeCardController implements Controller {
       ...Builder.of({ value: number, fieldName: 'number' }).required().requiredString().build(),
       ...Builder.of({ value: expiryMonth, fieldName: 'expiryMonth' }).required().requiredString().build(),
       ...Builder.of({ value: expiryYear, fieldName: 'expiryYear' }).required().requiredString().build(),
-      ...Builder.of({ value: cvv, fieldName: 'cvv' }).required().requiredNumber().build(),
+      ...Builder.of({ value: cvv, fieldName: 'cvv' }).required().requiredString().build(),
       ...Builder.of({ value: userId, fieldName: 'userId' }).required().requiredString().build()
     ]).validate()
   }

@@ -18,7 +18,7 @@ describe('CardRouter', () => {
   let number: string
   let expiryMonth: string
   let expiryYear: string
-  let cvv: number
+  let cvv: string
   let userId: string
   let cardId: string
 
@@ -28,7 +28,7 @@ describe('CardRouter', () => {
     number = '5162306219378829'
     expiryMonth = '05'
     expiryYear = '2024'
-    cvv = 318
+    cvv = '318'
     userId = '443315ee-4c25-11ee-be56-0242ac120002'
     cardId = 'any_uuid'
   })

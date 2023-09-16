@@ -26,8 +26,8 @@ export const tokenizeCardParams = {
       example: '2024'
     },
     cvv: {
-      type: 'number',
-      example: 318
+      type: 'string',
+      example: '318'
     }
   },
   required: ['alias', 'holderName', 'number', 'expiryMonth', 'expiryYear', 'cvv', 'userId']

@@ -1,5 +1,5 @@
 import { TokenizeCardController } from '@/presentation/controllers'
-import { Required, RequiredNumber, RequiredString, ValidationComposite } from '@/presentation/validation'
+import { Required, RequiredString, ValidationComposite } from '@/presentation/validation'
 import { ServerError } from '@/presentation/errors'
 import { type TokenizeCardUseCase } from '@/application/use-cases'
 
@@ -59,7 +59,7 @@ describe('TokenizeCardController', () => {
       new Required(expiryYear, 'expiryYear'),
       new RequiredString(expiryYear, 'expiryYear'),
       new Required(cvv, 'cvv'),
-      new RequiredNumber(cvv, 'cvv'),
+      new RequiredString(cvv, 'cvv'),
       new Required(userId, 'userId'),
       new RequiredString(userId, 'userId')
     ])
