@@ -1,11 +1,11 @@
 -- CreateTable
 CREATE TABLE "cards" (
     "id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
+    "user_id" VARCHAR(255) NOT NULL,
     "alias" VARCHAR(80) NOT NULL,
     "number" VARCHAR(80) NOT NULL,
     "brand" VARCHAR(80) NOT NULL,
-    "token" TEXT NOT NULL,
+    "token" VARCHAR(255) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -16,14 +16,14 @@ CREATE TABLE "cards" (
 CREATE TABLE "transactions" (
     "id" TEXT NOT NULL,
     "ticket_id" TEXT NOT NULL,
-    "payment_type" TEXT NOT NULL,
-    "card_id" TEXT,
+    "payment_type" VARCHAR(60) NOT NULL,
+    "card_id" VARCHAR(255),
     "total" DOUBLE PRECISION NOT NULL,
     "installments" INTEGER,
     "due_date" TIMESTAMP(3) NOT NULL,
     "processor_response" TEXT NOT NULL,
-    "transaction_id" TEXT NOT NULL,
-    "status" TEXT NOT NULL,
+    "transaction_id" VARCHAR(255) NOT NULL,
+    "status" VARCHAR(60) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 

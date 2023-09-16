@@ -14,9 +14,9 @@ CREATE TABLE "events" (
 -- CreateTable
 CREATE TABLE "tickets" (
     "id" TEXT NOT NULL,
-    "event_id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
-    "status" TEXT NOT NULL,
+    "event_id" VARCHAR(255) NOT NULL,
+    "user_id" VARCHAR(255) NOT NULL,
+    "status" VARCHAR(60) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 

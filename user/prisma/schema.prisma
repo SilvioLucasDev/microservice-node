@@ -9,11 +9,11 @@ datasource db {
 
 model User {
   id           String   @id
-  name         String   @unique
-  document     String   @db.VarChar(80)
-  email        String   @db.VarChar(80)
+  name         String   @db.VarChar(80)
+  document     String   @unique @db.VarChar(14)
+  email        String   @unique @db.VarChar(80)
   password     String   @db.VarChar(255)
-  mobile_phone String   @db.VarChar(80)
+  mobile_phone String   @unique @db.VarChar(80)
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
@@ -24,7 +24,7 @@ model User {
 
 model Address {
   id           String   @id
-  user_id      String
+  user_id      String   @db.VarChar(255)
   zipcode      String   @db.VarChar(80)
   address      String   @db.VarChar(80)
   number       String   @db.VarChar(80)

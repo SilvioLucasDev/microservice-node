@@ -23,9 +23,9 @@ model Event {
 
 model Ticket {
   id         String   @id
-  event_id   String
-  user_id    String
-  status     String
+  event_id   String   @db.VarChar(255)
+  user_id    String   @db.VarChar(255)
+  status     String   @db.VarChar(60)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 

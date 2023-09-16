@@ -9,11 +9,11 @@ datasource db {
 
 model Card {
   id         String   @id
-  user_id    String
+  user_id    String   @db.VarChar(255)
   alias      String   @db.VarChar(80)
   number     String   @db.VarChar(80)
   brand      String   @db.VarChar(80)
-  token      String
+  token      String   @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -25,14 +25,14 @@ model Card {
 model Transaction {
   id                 String   @id
   ticket_id          String   @unique
-  payment_type       String
-  card_id            String?
+  payment_type       String   @db.VarChar(60)
+  card_id            String?  @db.VarChar(255)
   total              Float
   installments       Int?
   due_date           DateTime
   processor_response String
-  transaction_id     String   @unique
-  status             String
+  transaction_id     String   @unique @db.VarChar(255)
+  status             String   @db.VarChar(60)
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
 
