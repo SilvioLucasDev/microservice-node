@@ -1,0 +1,13 @@
+# Dockerfile para o microserviço 'email'
+FROM node:20
+
+WORKDIR /usr/src/email
+
+COPY email/package*.json ./
+COPY email/. .
+
+RUN npm install
+
+COPY . .
+
+CMD ["bash", "-c", "npm run dev"]

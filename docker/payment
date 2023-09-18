@@ -1,0 +1,15 @@
+# Dockerfile para o microserviço 'payment'
+FROM node:20
+
+WORKDIR /usr/src/payment
+
+COPY payment/package*.json ./
+COPY payment/. .
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 8081
+
+CMD ["bash", "-c", "npx prisma migrate dev && npm run dev"]

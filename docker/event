@@ -1,0 +1,16 @@
+# Dockerfile para o microserviço 'event'
+FROM node:20
+
+WORKDIR /usr/src/event
+
+COPY event/package*.json ./
+COPY event/. .
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 8080
+
+CMD ["bash", "-c", "npx prisma migrate dev && npm run dev"]
+

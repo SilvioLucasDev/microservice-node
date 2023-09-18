@@ -1,0 +1,15 @@
+# Dockerfile para o microserviço 'user'
+FROM node:20
+
+WORKDIR /usr/src/user
+
+COPY user/package*.json ./
+COPY user/. .
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 8082
+
+CMD ["bash", "-c", "npx prisma migrate dev && npm run dev"]
