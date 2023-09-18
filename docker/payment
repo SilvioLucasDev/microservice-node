@@ -1,4 +1,4 @@
-# Dockerfile para o microserviço 'payment'
+# Dockerfile para o microsserviço 'payment'
 FROM node:20
 
 WORKDIR /usr/src/payment

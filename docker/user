@@ -1,4 +1,4 @@
-# Dockerfile para o microserviço 'user'
+# Dockerfile para o microsserviço 'user'
 FROM node:20
 
 WORKDIR /usr/src/user

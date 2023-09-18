@@ -1,5 +1,5 @@
 # microservice-node
-Microserviço em Node.js que utiliza RabbitMQ para mensageria, Mailtrap para envio de e-mails e Asaas como gateway de pagamento. Utiliza banco de dados relacional Postgres com Prisma como ORM. O projeto foi desenvolvido desenvolvido seguindo a metodologia TDD (Test-Driven Development) e aplicando os princípios SOLID, Clean Architecture e Design Patterns para resolver desafios comuns de desenvolvimento.
+Microsserviço em Node.js que utiliza RabbitMQ para mensageria, Mailtrap para envio de e-mails e Asaas como gateway de pagamento. Utiliza banco de dados relacional Postgres com Prisma como ORM. O projeto foi desenvolvido desenvolvido seguindo a metodologia TDD (Test-Driven Development) e aplicando os princípios SOLID, Clean Architecture e Design Patterns para resolver desafios comuns de desenvolvimento.
 
 Para ter uma ideia mais concreta do projeto, você pode assistir a um vídeo demonstrando o fluxo de compra de ingressos por boleto [aqui](https://youtu.be/i4mEDs2KDvk?si=XQTRArN0_zesnPr_
 )

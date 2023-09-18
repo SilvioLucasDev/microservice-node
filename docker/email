@@ -1,4 +1,4 @@
-# Dockerfile para o microserviço 'email'
+# Dockerfile para o microsserviço 'email'
 FROM node:20
 
 WORKDIR /usr/src/email

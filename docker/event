@@ -1,4 +1,4 @@
-# Dockerfile para o microserviço 'event'
+# Dockerfile para o microsserviço 'event'
 FROM node:20
 
 WORKDIR /usr/src/event
