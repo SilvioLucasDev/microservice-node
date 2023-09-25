@@ -1,6 +1,8 @@
 import { RabbitMQAdapterMock } from '@/tests/main/routes/mocks'
-import { app } from '@/main'
+import { makeHttpServer as initHttpServer } from '@/main/factories/main/routes'
 
+import express, { type Application } from 'express'
+import { type Server } from 'http'
 import request from 'supertest'
 
 jest.mock('@/infra/adapters/queue/rabbitmq', () => ({
@@ -15,8 +17,20 @@ describe('WebHookRouter', () => {
     invoiceUrl: string
   }
 
+  let server: Server
+  let app: Application
+
   beforeAll(() => {
     payment = { status: 'CONFIRMED', externalReference: 'any_external_reference', billingType: 'BOLETO', invoiceUrl: 'any_url' }
+  })
+
+  beforeEach(() => {
+    app = express()
+    server = initHttpServer(app)
+  })
+
+  afterEach(() => {
+    server.close()
   })
 
   describe('POST /asaas/process-payment', () => {

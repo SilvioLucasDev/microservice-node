@@ -1,6 +1,7 @@
 import { type ListenServer, type OnServer } from '@/application/contracts/adapters'
 
 import { json, type Request, type Response } from 'express'
+import { type Server } from 'http'
 import cors from 'cors'
 
 export class ExpressAdapter implements OnServer, ListenServer {
@@ -24,7 +25,7 @@ export class ExpressAdapter implements OnServer, ListenServer {
     })
   }
 
-  listen (): void {
-    this.app.listen(this.port, () => console.log(`Server running at http://localhost:${this.port}`))
+  listen (): Server {
+    return this.app.listen(this.port, () => console.log(`Server running at http://localhost:${this.port}`))
   }
 }

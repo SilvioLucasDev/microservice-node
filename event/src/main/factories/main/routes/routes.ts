@@ -1,11 +1,11 @@
-import { env } from '@/main/config/env'
 import { makeExpressAdapter } from '@/main/factories/presentation/adapters'
 import { TicketRouter } from '@/main/routes'
 
 import { type Application } from 'express'
+import { type Server } from 'http'
 
-export const makeHttpServer = (app: Application): void => {
+export const makeHttpServer = (app: Application): Server => {
   const httpServer = makeExpressAdapter(app)
   new TicketRouter(httpServer)
-  if (env.nodeEnv !== 'test') httpServer.listen()
+  return httpServer.listen()
 }

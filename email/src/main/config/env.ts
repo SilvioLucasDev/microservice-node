@@ -1,5 +1,4 @@
 export const env = {
-  nodeEnv: process.env.NODE_ENV,
   rabbitMQUrl: process.env.RABBITMQ_URL ?? '',
   email: {
     host: process.env.EMAIL_HOST ?? '',

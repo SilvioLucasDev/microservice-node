@@ -1,7 +1,9 @@
 import { prismaMock } from '@/tests/infra/repositories/postgres/mocks'
 import { AsaasGatewayMock, UUIDAdapterMock } from '@/tests/main/routes/mocks'
-import { app } from '@/main'
+import { makeHttpServer as initHttpServer } from '@/main/factories/main/routes'
 
+import express, { type Application } from 'express'
+import { type Server } from 'http'
 import request from 'supertest'
 
 jest.mock('@/infra/adapters/gateways/asaas', () => ({
@@ -22,6 +24,9 @@ describe('CardRouter', () => {
   let userId: string
   let cardId: string
 
+  let server: Server
+  let app: Application
+
   beforeAll(() => {
     alias = 'any_alias'
     holderName = 'Any U. Teste'
@@ -31,6 +36,15 @@ describe('CardRouter', () => {
     cvv = '318'
     userId = '443315ee-4c25-11ee-be56-0242ac120002'
     cardId = 'any_uuid'
+  })
+
+  beforeEach(() => {
+    app = express()
+    server = initHttpServer(app)
+  })
+
+  afterEach(() => {
+    server.close()
   })
 
   afterAll(async () => {

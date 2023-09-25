@@ -1,6 +1,8 @@
 import { prismaMock } from '@/tests/infra/repositories/postgres/mocks'
-import { app } from '@/main'
+import { makeHttpServer as initHttpServer } from '@/main/factories/main/routes'
 
+import express, { type Application } from 'express'
+import { type Server } from 'http'
 import request from 'supertest'
 import { type Prisma, type User as UserPrisma } from '@prisma/client'
 
@@ -17,6 +19,9 @@ describe('UserRouter', () => {
   let neighborhood: string
   let user: object
 
+  let server: Server
+  let app: Application
+
   beforeAll(() => {
     userId = '443315ee-4c25-11ee-be56-0242ac120002'
     name = 'Any User Test'
@@ -29,6 +34,15 @@ describe('UserRouter', () => {
     complement = 'a'
     neighborhood = 'Plano Diretor Norte'
     user = { id: userId, name, document, email, mobilePhone, zipcode, address, number, complement, neighborhood }
+  })
+
+  beforeEach(() => {
+    app = express()
+    server = initHttpServer(app)
+  })
+
+  afterEach(() => {
+    server.close()
   })
 
   afterAll(async () => {

@@ -1,8 +1,10 @@
 import { prismaMock } from '@/tests/infra/repositories/postgres/mocks'
 import { RabbitMQAdapterMock } from '@/tests/main/routes/mocks'
 import { EventNotFoundError } from '@/application/errors'
-import { app } from '@/main'
+import { makeHttpServer as initHttpServer } from '@/main/factories/main/routes'
 
+import express, { type Application } from 'express'
+import { type Server } from 'http'
 import request from 'supertest'
 import { type Prisma, type Event as EventPrisma } from '@prisma/client'
 
@@ -19,6 +21,9 @@ describe('TicketRouter', () => {
   let name: string
   let price: number
 
+  let server: Server
+  let app: Application
+
   beforeAll(() => {
     paymentType = 'credit_card'
     eventId = 'c08c6ed4-757f-44da-b5df-cb856dfdf897'
@@ -27,6 +32,15 @@ describe('TicketRouter', () => {
     installments = 3
     name = 'JavaScript Global Summit'
     price = 300
+  })
+
+  beforeEach(() => {
+    app = express()
+    server = initHttpServer(app)
+  })
+
+  afterEach(() => {
+    server.close()
   })
 
   afterAll(async () => {
